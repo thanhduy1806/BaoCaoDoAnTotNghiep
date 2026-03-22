@@ -1,0 +1,123 @@
+% % ==========================================================
+% % CHƯƠNG 1: GIỚI THIỆU ĐỀ TÀI
+% % ==========================================================
+
+% \chapter{Giới thiệu đề tài}
+% \thispagestyle{fancy} % <--- THÊM DÒNG NÀY VÀO ĐÂY
+% \markright{1. Giới thiệu đề tài}
+% \label{ch:gioi_thieu}
+
+
+% Chương này trình bày về bối cảnh nghiên cứu, mục tiêu của đề tài và phạm vi thực hiện của đồ án liên quan đến việc thiết kế module thí nghiệm cho vệ tinh nhỏ.
+
+% \section{Tổng quan về công nghệ vệ tinh nhỏ}
+% \label{sec:tong_quan}
+
+% Trong những năm gần đây, kỷ nguyên "New Space" đã chứng kiến sự bùng nổ của các vệ tinh nhỏ, đặc biệt là chuẩn CubeSat. Với ưu điểm chi phí thấp và thời gian phát triển ngắn, CubeSat đã trở thành nền tảng lý tưởng cho các mục tiêu giáo dục và nghiên cứu khoa học.
+
+% \subsection{Bối cảnh nghiên cứu}
+% Vấn đề nghiên cứu xuất phát từ nhu cầu thực tiễn trong việc tối ưu hóa không gian và năng lượng trên các vệ tinh. Các vệ tinh nhỏ thường bị giới hạn về kích thước vật lý (ví dụ chuẩn 1U, 3U) và nguồn năng lượng cung cấp từ pin năng lượng mặt trời. Do đó, việc thiết kế một module thí nghiệm có khả năng tích hợp cao là cực kỳ cấp thiết.
+
+% \subsection{Lý do chọn đề tài}
+% Dự án SpaceLiin Satellite đòi hỏi một hệ thống có khả năng xử lý dữ liệu tại chỗ (in-orbit computing) để giảm tải cho băng thông truyền dẫn về trái đất. Việc tích hợp nhiều chức năng thí nghiệm vào một module duy nhất giúp giảm thiểu chi phí phóng và vận hành, đồng thời tăng tính linh hoạt cho các nhiệm vụ khoa học khác nhau.
+
+% % Lệnh ép sang trang để kiểm tra Header trang 2
+% \newpage 
+
+% \section{Mục tiêu đề tài}
+% \label{sec:muc_tieu}
+
+% Đề tài tập trung vào việc thiết kế và thực hiện module thí nghiệm đa năng với các mục tiêu cụ thể sau:
+
+% \begin{itemize}
+%     \item \textbf{Thiết kế phần cứng:} Xây dựng cấu trúc PCB đa lớp sử dụng Altium Designer, đảm bảo tính toàn vẹn tín hiệu và tương thích với chuẩn vệ tinh.
+%     \item \textbf{Hệ thống nhúng:} Phát triển driver và firmware cho vi điều khiển (như dòng SAMV71) để quản lý cảm biến qua các giao tiếp I2C, SPI.
+%     \item \textbf{Xử lý dữ liệu:} Tối ưu hóa thuật toán xử lý dữ liệu ngay trên vệ tinh để lọc bỏ các nhiễu từ môi trường không gian.
+%     \item \textbf{Kiểm định:} Sử dụng các công cụ mô phỏng như Renode và Robot Framework để kiểm tra tính ổn định của firmware trước khi triển khai.
+% \end{itemize}
+
+% \newpage
+
+% \section{Phạm vi và phương pháp nghiên cứu}
+% \label{sec:pham_vi}
+
+% Nghiên cứu này tập trung vào phần payload của vệ tinh, không đi sâu vào hệ thống truyền dẫn vô tuyến (RF) tầm xa. Phương pháp thực hiện bao gồm nghiên cứu lý thuyết, thiết kế sơ đồ nguyên lý, layout PCB và thực hiện kiểm thử thực tế tại phòng thí nghiệm dưới sự hướng dẫn của ThS. Nguyễn Trung Hiếu.
+
+% \section{Cấu trúc đồ án}
+% \label{sec:cau_truc_do_an}
+
+% Nội dung đồ án bao gồm các chương sau:
+% \begin{itemize}
+%     \item \textbf{Chương 2:} Cơ sở lý thuyết về hệ thống vệ tinh và vệ tinh nhỏ.
+%     \item \textbf{Chương 3:} Thiết kế chi tiết phần cứng hệ thống (Sơ đồ nguyên lý và Layout).
+%     \item \textbf{Chương 4:} Xây dựng phần mềm và thuật toán điều khiển nhúng.
+%     \item \textbf{Chương 5:} Thực nghiệm, đánh giá kết quả và hướng phát triển.
+% \end{itemize}
+
+% \newpage
+
+
+% ==========================================================
+% CHƯƠNG 1: GIỚI THIỆU ĐỀ TÀI
+% ==========================================================
+
+\chapter{Giới thiệu đề tài}
+\label{ch:gioi_thieu}
+% "Mồi" dữ liệu cho trang đầu tiên của chương
+\markright{1. Giới thiệu đề tài}
+
+Chương này trình bày về bối cảnh nghiên cứu, mục tiêu của đề tài và phạm vi thực hiện của đồ án liên quan đến việc thiết kế module thí nghiệm cho vệ tinh nhỏ.
+
+\section{Tổng quan về công nghệ vệ tinh nhỏ}
+\label{sec:tong_quan}
+
+Trong những năm gần đây, kỷ nguyên "New Space" đã chứng kiến sự bùng nổ của các vệ tinh nhỏ, đặc biệt là chuẩn CubeSat. Với ưu điểm chi phí thấp và thời gian phát triển ngắn, CubeSat đã trở thành nền tảng lý tưởng cho các mục tiêu giáo dục và nghiên cứu khoa học.
+
+\subsection{Bối cảnh nghiên cứu}
+
+Trong những năm gần đây, công nghệ vệ tinh nhỏ (Small Satellite, đặc biệt là CubeSat) đã có sự phát triển mạnh mẽ nhờ vào xu hướng thu nhỏ linh kiện điện tử, giảm chi phí phóng và sự tham gia ngày càng lớn của các trường đại học và tổ chức nghiên cứu. Vệ tinh nhỏ cho phép triển khai nhanh các nhiệm vụ thử nghiệm, quan sát Trái Đất, viễn thông và nghiên cứu khoa học với chi phí thấp hơn nhiều so với vệ tinh truyền thống.
+
+Song song với đó, nhu cầu thực hiện các thí nghiệm khoa học trong môi trường không gian ngày càng gia tăng, đặc biệt trong các lĩnh vực như vật lý, sinh học, vật liệu và công nghệ cảm biến. Tuy nhiên, các nền tảng thí nghiệm trên vệ tinh nhỏ hiện nay thường mang tính chuyên biệt, khó tái sử dụng và thiếu tính linh hoạt khi thay đổi mục tiêu nhiệm vụ.
+
+Do đó, việc nghiên cứu và phát triển một mô đun thí nghiệm đa năng có khả năng tích hợp linh hoạt trên vệ tinh nhỏ là một hướng đi tiềm năng, góp phần tối ưu hóa tài nguyên và mở rộng khả năng ứng dụng của các hệ thống vệ tinh.
+
+\subsection{Lý do chọn đề tài}
+Trong bối cảnh công nghệ vệ tinh nhỏ đang phát triển mạnh mẽ, các quốc gia và tổ chức nghiên cứu ngày càng quan tâm đến việc làm chủ công nghệ thiết kế, chế tạo và vận hành vệ tinh. Đặc biệt, đối với các cơ sở đào tạo và nghiên cứu trong nước, việc tiếp cận và phát triển các hệ thống thử nghiệm trên vệ tinh nhỏ là một bước quan trọng nhằm nâng cao năng lực nghiên cứu và đào tạo nguồn nhân lực trong lĩnh vực công nghệ vũ trụ.
+
+Bên cạnh đó, việc xây dựng các mô hình thí nghiệm có khả năng hoạt động trong môi trường không gian giúp kiểm chứng các giải pháp kỹ thuật, đánh giá độ tin cậy của linh kiện và hệ thống trước khi triển khai trên các nhiệm vụ thực tế. Điều này có ý nghĩa quan trọng trong việc giảm thiểu rủi ro và tối ưu chi phí cho các dự án vệ tinh.
+
+Xuất phát từ những nhu cầu trên, đề tài “Thiết kế mô đun thí nghiệm đa năng trên vệ tinh nhỏ” được lựa chọn nhằm nghiên cứu và phát triển một giải pháp kỹ thuật có khả năng phục vụ cho mục đích thử nghiệm, đánh giá và ứng dụng trên nền tảng vệ tinh nhỏ.
+
+\newpage 
+
+\section{Mục tiêu đề tài}
+\label{sec:muc_tieu}
+
+Đề tài tập trung vào việc thiết kế và thực hiện module thí nghiệm đa năng với các mục tiêu cụ thể sau:
+
+\begin{itemize}
+    \item \textbf{Thiết kế phần cứng:} Xây dựng cấu trúc PCB đa lớp sử dụng Altium Designer.
+    \item \textbf{Hệ thống nhúng:} Phát triển driver và firmware cho vi điều khiển SAMV71.
+    \item \textbf{Xử lý dữ liệu:} Tối ưu hóa thuật toán xử lý dữ liệu ngay trên vệ tinh.
+    \item \textbf{Kiểm định:} Sử dụng Renode và Robot Framework để kiểm tra tính ổn định.
+\end{itemize}
+
+\newpage
+
+\section{Phạm vi và phương pháp nghiên cứu}
+\label{sec:pham_vi}
+
+Nghiên cứu này tập trung vào phần payload của vệ tinh. Phương pháp thực hiện bao gồm nghiên cứu lý thuyết, thiết kế sơ đồ nguyên lý, layout PCB và thực hiện kiểm thử thực tế.
+
+\section{Cấu trúc đồ án}
+\label{sec:cau_truc_do_an}
+
+Nội dung đồ án bao gồm các chương sau:
+\begin{itemize}
+    \item \textbf{Chương 2:} Cơ sở lý thuyết về hệ thống vệ tinh và vệ tinh nhỏ.
+    \item \textbf{Chương 3:} Thiết kế chi tiết phần cứng hệ thống.
+    \item \textbf{Chương 4:} Xây dựng phần mềm và thuật toán điều khiển nhúng.
+    \item \textbf{Chương 5:} Thực nghiệm, đánh giá kết quả và hướng phát triển.
+\end{itemize}
+
+\newpage

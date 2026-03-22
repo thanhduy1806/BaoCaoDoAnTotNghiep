@@ -1,0 +1,48 @@
+\begin{titlepage}
+
+    \begin{tikzpicture}[overlay, remember picture]
+        \draw [line width=2pt]
+            ($ (current page.north west) + (3.0cm,-1.5cm) $) 
+            rectangle
+            ($ (current page.south east) + (-1.5cm,1.5cm) $);
+        % Vẽ thêm một đường mảnh bên trong (cách đường cũ 2mm)
+        \draw [line width=0.5pt]
+            ($ (current page.north west) + (3.2cm,-1.7cm) $) 
+            rectangle
+            ($ (current page.south east) + (-1.7cm,1.7cm) $);
+            \end{tikzpicture}
+
+    \begin{center}
+        {\fontsize{13pt}{15pt}\selectfont \textbf{ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH}} \\
+        {\fontsize{13pt}{15pt}\selectfont \textbf{TRƯỜNG ĐẠI HỌC BÁCH KHOA}} \\
+        {\fontsize{13pt}{15pt}\selectfont \textbf{KHOA ĐIỆN -- ĐIỆN TỬ}} \\
+        {\fontsize{13pt}{15pt}\selectfont \textbf{BỘ MÔN ĐIỆN TỬ}} \\
+        \vspace{0.2cm}
+        ---------o0o---------
+        
+        \vspace{1.5cm}
+        \includegraphics[width=8cm]{picture/logo.png} 
+        
+        \vspace{1.5cm}
+        {\fontsize{16pt}{19pt}\selectfont \textbf{LUẬN VĂN TỐT NGHIỆP ĐẠI HỌC}} \\
+        
+        \vspace{1.5cm}
+        {\fontsize{20pt}{24pt}\selectfont \textbf{THIẾT KẾ MODULE THÍ NGHIỆM ĐA NĂNG TRÊN VỆ TINH NHỎ}} \\
+        
+        \vfill
+        
+        \begin{flushright}
+            \begin{minipage}{0.65\textwidth} % Tăng nhẹ độ rộng để bảng thoải mái hơn
+                \begin{tabular}{ll c l} % Thêm cột để căn lề
+                    \textbf{GVHD:} & \multicolumn{3}{l}{ThS. Bùi Quốc Bảo} \\ [0.2cm] % Khoảng cách dòng cho dễ nhìn
+                    \textbf{SVTH:} & Nguyễn Thanh Duy & -- & 2210527 \\
+                                & Trần Hoàn Kiên   & -- & 2211736
+                \end{tabular}
+            \end{minipage}
+        \end{flushright}    
+        
+        \vspace{2.5cm}
+        {\fontsize{13pt}{15pt}\selectfont \textbf{TP. HỒ CHÍ MINH, THÁNG 03 NĂM 2026}}
+    \end{center}
+
+\end{titlepage}
