@@ -1,0 +1,157 @@
+﻿% ==========================================================
+% CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
+% ==========================================================
+
+\chapter{Cơ sở lý thuyết}
+\label{ch:co_so_ly_thuyet}
+\section{Tổng quan về vệ tinh nhỏ và nhu cầu mô đun thí nghiệm đa năng}
+\label{sec:tong_quan_chuong2}
+
+Vệ tinh nhỏ, đặc biệt là CubeSat, là nền tảng nghiên cứu và trình diễn công nghệ được sử dụng phổ biến trong các trường đại học, viện nghiên cứu và doanh nghiệp không gian mới. So với vệ tinh truyền thống, CubeSat có ưu điểm nổi bật là chi phí phát triển thấp hơn, thời gian thiết kế ngắn hơn và quy trình tích hợp linh hoạt hơn. Tuy nhiên, các hệ thống trên CubeSat luôn bị ràng buộc đồng thời bởi giới hạn kích thước, khối lượng, công suất và môi trường vận hành khắc nghiệt.
+
+Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các bo mạch chức năng. Cụ thể, hệ thống bao gồm bo mạch OBC, bo mạch EXP, bo mạch IF, bo mạch LASER, bo mạch PHOTO. Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
+
+\subsection{Khái niệm CubeSat và phương thức triển khai quỹ đạo}
+\label{subsec:khai_niem_cubesat}
+
+Trong phạm vi luận văn, thuật ngữ vệ tinh được hiểu là vệ tinh nhân tạo, tức các hệ thống được phóng lên quỹ đạo để thực hiện nhiệm vụ cụ thể. CubeSat là một lớp vệ tinh nhỏ sử dụng triết lý thiết kế mô-đun, cho phép cấu hình linh hoạt theo mục tiêu nhiệm vụ và tài nguyên sẵn có.
+
+Về triển khai quỹ đạo, CubeSat thường đi theo hai phương thức chính. Thứ nhất, CubeSat được đặt trong các cơ cấu chứa/phóng chuyên dụng (dispenser/deployer) gắn trên tên lửa, sau đó được tách ra quỹ đạo bằng cơ chế lò xo. Trong kịch bản này, CubeSat thường đóng vai trò tải phụ hoặc tham gia các chuyến phóng rideshare. Thứ hai, CubeSat được vận chuyển lên Trạm Vũ trụ Quốc tế (ISS), sau đó được nạp vào các hệ deployer của ISS và thả ra quỹ đạo hoạt động.
+
+Tương tự các vệ tinh lớn, hệ CubeSat được phân tách thành hai nhóm chức năng: \textit{satellite bus} và \textit{satellite payload}. \textit{Bus} là phần hạ tầng duy trì hoạt động của vệ tinh trong suốt nhiệm vụ, thường gồm các phân hệ: kết cấu (\textit{STRU}), truyền thông (\textit{COMM}), điều khiển tư thế và quỹ đạo (\textit{AOCS}), nguồn điện (\textit{EPS}), xử lý dữ liệu trên bo (\textit{OBDH}), telemetry--tracking--command (\textit{TT\&C}) và điều khiển nhiệt (\textit{TCS}). Ngược lại, \textit{payload} là cụm thiết bị trực tiếp cung cấp năng lực nhiệm vụ của vệ tinh, ví dụ cảm biến quang học đối với vệ tinh quan sát hoặc cụm anten/phát--thu đối với vệ tinh thông tin.
+
+Với cách phân tách này, \textit{bus} không trực tiếp tạo dữ liệu nhiệm vụ nhưng quyết định độ ổn định vận hành của toàn hệ; còn \textit{payload} tạo ra dữ liệu đầu ra nhưng phụ thuộc vào \textit{bus} để được cấp nguồn, điều khiển, đồng bộ và truyền dữ liệu. Trong phạm vi đề tài, OBC và IF thuộc lớp hạ tầng điều khiển/giao tiếp, cụm LASER--PHOTO thuộc lớp tải thí nghiệm, còn EXP đóng vai trò điều phối cục bộ giữa hai lớp này. Cách ánh xạ này là cơ sở để tổ chức kiến trúc kỹ thuật và xác định luồng dữ liệu trong các mục tiếp theo.
+
+\subsection{Chuẩn kích thước CubeSat (đơn vị U)}
+\label{subsec:chuan_u}
+
+Kiến trúc CubeSat được hình thành từ năm 1999 trong khuôn khổ dự án CubeSat do GS. Jordi Puig-Suari (California Polytechnic State University) và GS. Bob Twiggs (Stanford University) khởi xướng. CubeSat sử dụng chuẩn mô-đun theo đơn vị U (Unit), trong đó 1U tương ứng với một khối lập phương xấp xỉ 10 x 10 x 10 cm. Các cấu hình lớn hơn được tạo bằng cách ghép nhiều khối 1U theo các tổ hợp khác nhau, ví dụ 2U, 3U, 6U, 8U, 12U và 16U. Chuẩn hóa theo đơn vị U có ý nghĩa kỹ thuật quan trọng vì quyết định không gian khả dụng cho mạch điện, dây dẫn, đầu nối, kết cấu cơ khí và giải pháp tản nhiệt.
+
+Về cơ khí, CubeSat thường được thiết kế với các rail nhôm dọc theo cạnh để tương thích với cơ cấu chứa/phóng (dispenser/deployer), do đó giới hạn kích thước thường được xác định tại vùng rail. Ngoài các chuẩn phổ biến, một số cấu hình nhỏ hơn như 0.25U đã từng được sử dụng, đồng thời các cấu hình lớn hơn như 24U và 27U cũng đã được đề xuất cho các nhiệm vụ tương lai.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/cube-sat-size.png}
+    \caption{Kích thước chuẩn CubeSat theo đơn vị U}
+    \label{fig:cubesat_size_u}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Kích thước tối đa và khối lượng tối đa cho phép của CubeSat theo kích cỡ}
+    \label{tab:cubesat_size_weight}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{CubeSat Size} & \textbf{Maximum Dimensions (cm)} & \textbf{Maximum Weight (kg)} \\ \hline
+        1U    & 10 x 10 x 11.35       & 2  \\ \hline
+        1.5U  & 10 x 10 x 17.02       & 3  \\ \hline
+        2U    & 10 x 10 x 22.70       & 4  \\ \hline
+        3U    & 10 x 10 x 34.05       & 6  \\ \hline
+        6U    & 22.63 x 10 x 34.05    & 12 \\ \hline
+        6U XL & 22.63 x 10 x 36.60    & 12 \\ \hline
+        8U    & 22.63 x 10 x 45.40    & 16 \\ \hline
+        12U   & 22.63 x 22.63 x 34.05 & 24 \\ \hline
+        16U   & 22.63 x 22.63 x 45.40 & 32 \\ \hline
+    \end{tabular}
+\end{table}
+
+Các giá trị kích thước và khối lượng trong bảng là giới hạn điển hình theo chuẩn hình học CubeSat. Trên thực tế, giá trị cho phép cuối cùng phụ thuộc vào loại dispenser cụ thể của từng chiến dịch phóng; một số vùng có thể cho phép chi tiết nhô ra ngoài kích thước rail theo quy định kỹ thuật đi kèm.
+
+Đối với hệ thống đề tài, ràng buộc theo chuẩn U tác động trực tiếp đến bố trí phần cứng, chiều dài liên kết, khả năng tản nhiệt và phương án kết nối dữ liệu giữa các bo mạch. Việc hiểu rõ ràng buộc hình học này giúp quá trình thiết kế giao diện cơ--điện hợp lý ngay từ đầu.
+
+\subsection{Chuẩn hóa nền tảng CubeSat và ý nghĩa thiết kế}
+\label{subsec:chuan_hoa_nen_tang_cubesat}
+
+Bên cạnh chuẩn kích thước U, hệ CubeSat còn được hưởng lợi từ nhiều mức chuẩn hóa nền tảng. Về chuẩn hóa cơ khí phóng, các cơ cấu deployer như P-POD giúp bảo đảm tương thích với nhiều phương án phóng và giảm độ phức tạp tích hợp. Về chuẩn hóa điện tử, dù chưa có một chuẩn bắt buộc duy nhất, dạng bo xếp chồng theo triết lý PC/104 được sử dụng rộng rãi trong avionics CubeSat nhờ tận dụng thể tích tốt và thuận lợi cho lắp ghép mô-đun.
+
+Ở khối nguồn, pin trụ 18650 dạng COTS thường được dùng để cấu hình bộ pin cho EPS theo hướng chi phí hợp lý và dễ thay thế linh kiện. Các mức chuẩn hóa nói trên cho thấy tư duy thiết kế CubeSat hiện đại ưu tiên tính mô-đun, tính tích hợp nhanh và khả năng kế thừa giữa các phiên bản hệ thống.
+
+\subsection{Chuẩn giao tiếp dữ liệu và nhu cầu mô đun thí nghiệm đa năng}
+\label{subsec:nhu_cau_module_da_nang}
+
+Trong khối truyền thông nội bộ, CubeSat thường sử dụng các giao thức chuẩn như SPI, CAN Bus, I2C, UART, SpaceWire và Ethernet để liên kết các phân hệ. Việc lựa chọn giao thức phụ thuộc vào băng thông yêu cầu, độ phức tạp triển khai, khả năng chống nhiễu và mức độ mở rộng hệ thống. Cách tiếp cận theo giao thức chuẩn giúp giảm rủi ro tích hợp, tăng khả năng tương thích giữa các bo mạch và thuận lợi cho quá trình kiểm thử.
+
+Nhiều nhiệm vụ CubeSat hiện nay yêu cầu tải thí nghiệm có khả năng cấu hình linh hoạt để phục vụ nhiều kịch bản đo khác nhau. Điều này dẫn đến nhu cầu phát triển các mô đun đa năng theo hướng ``một kiến trúc, nhiều chế độ vận hành''. Với hướng tiếp cận này, hệ thống có thể tiết kiệm thời gian phát triển, giảm chi phí tạo mẫu và tăng khả năng kế thừa cho các phiên bản sau.
+
+Với đề tài hiện tại, mô đun đa năng được thể hiện ở khả năng phối hợp nhiều bo mạch: EXP điều khiển LASER/PHOTO và giao tiếp dữ liệu hai chiều với OBC thông qua hạ tầng kết nối mở rộng từ IF. Vì vậy, trọng tâm kỹ thuật của luận văn là thiết kế kiến trúc giao tiếp OBC--EXP--IF và cơ chế truyền dữ liệu hai chiều có độ tin cậy cao.
+
+\section{Cơ sở lý thuyết kiến trúc hệ thống OBC--EXP--IF}
+\label{sec:kien_truc_obc_exp_if}
+
+Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. OBC là lớp điều khiển cấp cao, chịu trách nhiệm gửi lệnh tác vụ, nhận dữ liệu thí nghiệm và quản lý trạng thái toàn hệ thống. EXP là lớp điều khiển cục bộ cho thí nghiệm, trực tiếp phát lệnh đến bo LASER và thu dữ liệu từ bo PHOTO. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
+
+Cách chia vai trò này giúp giảm tải cho OBC, đồng thời giữ cho luồng điều khiển thí nghiệm có tính thời gian thực ở phía EXP. Kiến trúc phân lớp cũng giúp cô lập lỗi tốt hơn và thuận lợi cho mở rộng hệ thống.
+
+\subsection{Vai trò bo OBC}
+\label{subsec:vai_tro_obc}
+
+Bo OBC (On-Board Computer) là trung tâm xử lý ở mức hệ thống. Trong phạm vi đề tài, OBC thực hiện các chức năng chính gồm: phát lệnh khởi tạo/chạy/dừng thí nghiệm, tiếp nhận dữ liệu từ EXP, ghi nhận trạng thái hệ thống và quản lý quá trình trao đổi dữ liệu theo chu kỳ hoặc theo sự kiện.
+
+\subsection{Vai trò bo EXP}
+\label{subsec:vai_tro_exp}
+
+Bo EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó còn thu thập nhiệt độ từ cảm biến nhiệt NTC, và trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. EXP cũng là nơi tổng hợp dữ liệu cục bộ, đóng gói dữ liệu theo khung truyền và gửi lên OBC.
+
+\subsection{Vai trò bo IF}
+\label{subsec:vai_tro_if}
+
+Bo IF (Interface board) là lớp giao tiếp mở rộng giữa OBC và EXP, đồng thời có thể bổ sung các cổng kết nối tùy cấu hình hệ thống. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
+
+% \section{Cơ sở lý thuyết giao tiếp dữ liệu giữa OBC--EXP và IF--EXP}
+% \label{sec:giao_tiep_du_lieu}
+
+% Trong hệ nhúng đa bo, giao tiếp dữ liệu phải đáp ứng các tiêu chí cơ bản: đúng nội dung, đúng thứ tự, đúng thời điểm và có khả năng phát hiện lỗi. Để đạt được điều đó, hệ thống cần định nghĩa rõ tầng giao tiếp vật lý và tầng khung dữ liệu logic.
+
+% Ở tầng vật lý, có thể sử dụng UART, I2C, SPI hoặc CAN tùy mục tiêu thiết kế. Trong bối cảnh demo truyền dữ liệu giữa các bo, điều quan trọng là giao thức được chọn có cấu trúc khung rõ ràng, cơ chế kiểm lỗi rõ ràng và có khả năng kiểm chứng bằng thực nghiệm.
+
+% \subsection{Khung dữ liệu đề xuất}
+% \label{subsec:khung_du_lieu}
+
+% Một khung dữ liệu tham khảo cho hệ OBC--EXP có thể gồm các trường sau:
+
+% \begin{itemize}
+%     \item \textbf{SOF (Start of Frame):} Byte đánh dấu bắt đầu gói.
+%     \item \textbf{ID:} Định danh nguồn/đích hoặc loại thiết bị.
+%     \item \textbf{CMD:} Mã lệnh điều khiển hoặc mã loại dữ liệu.
+%     \item \textbf{LEN:} Độ dài payload.
+%     \item \textbf{PAYLOAD:} Dữ liệu chính (nhiệt độ, trạng thái laser, dữ liệu photo, cờ lỗi).
+%     \item \textbf{CRC/CHECKSUM:} Mã kiểm tra lỗi.
+%     \item \textbf{EOF (End of Frame):} Byte đánh dấu kết thúc gói.
+% \end{itemize}
+
+% \subsection{Cơ chế bắt tay và phản hồi}
+% \label{subsec:co_che_bat_tay}
+
+% Để đảm bảo dữ liệu không bị mất hoặc xử lý nhầm, hệ thống nên áp dụng cơ chế phản hồi ACK/NACK theo nguyên tắc:
+
+% \begin{itemize}
+%     \item OBC gửi lệnh điều khiển đến EXP.
+%     \item EXP xác nhận đã nhận lệnh (ACK) hoặc báo lỗi khung (NACK).
+%     \item Sau khi thực thi lệnh, EXP gửi gói kết quả kèm mã trạng thái.
+%     \item OBC phản hồi xác nhận nhận dữ liệu thành công.
+% \end{itemize}
+
+% Khi hết thời gian chờ (timeout) mà không nhận phản hồi, bên gửi sẽ thực hiện truyền lại theo số lần tối đa định trước.
+
+% \subsection{Chỉ tiêu đánh giá giao tiếp}
+% \label{subsec:chi_tieu_danh_gia}
+
+% Các chỉ tiêu đánh giá chất lượng truyền dữ liệu trong đề tài gồm tỉ lệ gói tin thành công, tỉ lệ lỗi CRC/checksum, độ trễ lệnh--phản hồi, số lần truyền lại trung bình và khả năng phục hồi sau lỗi.
+
+% \section{Cơ sở lý thuyết điều khiển quy trình thí nghiệm quang học}
+% \label{sec:dieu_khien_thi_nghiem_quang}
+
+% Hệ thống thí nghiệm được tổ chức theo chuỗi tác vụ: ổn định điều kiện môi trường trong buồng thí nghiệm, kích hoạt chiếu laser qua mẫu, thu nhận tín hiệu ánh sáng bằng bo photo, sau đó đóng gói và gửi dữ liệu về OBC. Vì khâu đo quang chi tiết đã được nghiên cứu ở công trình trước, trọng tâm của đề tài hiện tại là logic điều phối và truyền dữ liệu giữa các bo.
+
+% Để đảm bảo vận hành rõ ràng, quy trình được biểu diễn dưới dạng máy trạng thái (state machine) với các trạng thái cơ bản:
+
+% \begin{itemize}
+%     \item \textbf{IDLE:} Chờ lệnh từ OBC.
+%     \item \textbf{PREPARE:} Kiểm tra điều kiện hệ thống, đặc biệt là nhiệt độ.
+%     \item \textbf{MEASURE:} Điều khiển laser và thu dữ liệu photo.
+%     \item \textbf{PACKETIZE:} Chuẩn hóa dữ liệu thành khung truyền.
+%     \item \textbf{TRANSMIT:} Gửi dữ liệu về OBC.
+%     \item \textbf{SAFE:} Đưa hệ thống về trạng thái an toàn khi phát hiện lỗi.
+% \end{itemize}
+
+\newpage

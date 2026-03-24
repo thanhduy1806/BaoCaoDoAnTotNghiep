@@ -45,7 +45,7 @@
 % % Đảm bảo tên file trong thư mục chapters phải khớp với ở đây
 % \include{chapters/chuong1}
 % \include{chapters/chuong2}
-% \include{chapters/chuong3}
+% \include{chapters/chapter3}
 
 % \newpage
 % \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
@@ -67,12 +67,15 @@
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{indentfirst}
+\usepackage[unicode,hidelinks]{hyperref}
+\hypersetup{linktoc=all}
 \usetikzlibrary{calc}
 
 % --- Cấu hình Header/Footer ---
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\renewcommand{\chaptermark}[1]{}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
 
 \lhead{\footnotesize \itshape \nouppercase{\rightmark}} 
 \rhead{\footnotesize \itshape GVHD: ThS. Bùi Quốc Bảo}
@@ -93,12 +96,16 @@
 \include{trangbia} 
 
 \pagenumbering{roman}
-\markright{Lời cảm ơn} 
 \include{chapters/loicamon}
 
 \newpage
-\markright{Mục lục}
 \tableofcontents
+\newpage
+
+\listoffigures
+\newpage
+
+\listoftables
 \newpage
 
 \pagenumbering{arabic} 
@@ -106,10 +113,10 @@
 % Bắt đầu nội dung chính
 \include{chapters/chuong1}
 \include{chapters/chuong2}
-\include{chapters/chuong3}
+\include{chapters/chapter3}
 
 \newpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
-\markright{Tài liệu tham khảo}
 
 \end{document}
