@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.17)  25 MAR 2026 01:03
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.17)  25 MAR 2026 23:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -727,7 +727,7 @@ Package babel Info: 'vietnamese' activates 'vietnamese' shorthands.
 (babel)             Reported on input line 9.
 
 (chapters/loicamon.aux) (chapters/chuong1.aux) (chapters/chuong2.aux)
-(chapters/chapter3.aux))
+(chapters/chuong3.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
@@ -920,29 +920,34 @@ Chương 2.
 File: picture/cube-sat-size.png Graphic file (type bmp)
 <picture/cube-sat-size.png>
  [4] [5] [6])
-\openout2 = `chapters/chapter3.aux'.
+\openout2 = `chapters/chuong3.aux'.
 
- (chapters/chapter3.tex) [7
+ (chapters/chuong3.tex
+Chương 3.
+[7
 
 
 
-] (main.aux (trangbia.aux)
-(chapters/loicamon.aux) (chapters/chuong1.aux) (chapters/chuong2.aux)
-(chapters/chapter3.aux))
+
+] [8]
+File: picture/so-do-tong-quat.png Graphic file (type bmp)
+<picture/so-do-tong-quat.png>
+ [9] [10]) (main.aux (trangbia.aux) (chapters/loicamon.aux)
+(chapters/chuong1.aux) (chapters/chuong2.aux) (chapters/chuong3.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 34CCC30E651B7C3D03D248A35D897FC5;4100.
+(rerunfilecheck)             Checksum: 978EE7149F09DF816DC0A0A077530FE6;7066.
  ) 
 Here is how much of TeX's memory you used:
- 23698 strings out of 402983
- 483176 string characters out of 5448482
- 949496 words of memory out of 5000000
- 52027 multiletter control sequences out of 15000+600000
+ 23722 strings out of 402983
+ 483805 string characters out of 5448482
+ 953339 words of memory out of 5000000
+ 52050 multiletter control sequences out of 15000+600000
  631065 words of font info for 81 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 84i,12n,104p,773b,416s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,104p,773b,484s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (12 pages).
+Output written on main.pdf (15 pages).

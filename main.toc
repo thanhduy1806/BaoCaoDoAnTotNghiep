@@ -16,3 +16,15 @@
 \contentsline {subsection}{\numberline {2.2.1}Vai trò bo OBC}{5}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Vai trò bo EXP}{6}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Vai trò bo IF}{6}{subsection.2.2.3}%
+\contentsline {chapter}{\numberline {3}Thiết kế và thực hiện phần cứng}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Yêu cầu thiết kế}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Phân tích phương pháp thiết kế}{8}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Phân tích theo kiến trúc kết nối phần cứng}{8}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Phân tích theo tổ chức điều khiển hệ thống}{9}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Kết luận lựa chọn phương pháp}{9}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Sơ đồ khối tổng quát}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Sơ đồ khối chi tiết}{10}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Bo máy tính điều khiển trung tâm - OBC}{10}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Bo điều khiển thí nghiệm - EXP}{10}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Bo phát năng lượng ánh sáng - LASER}{10}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Bo thu năng lượng ánh sáng - PHOTO}{10}{subsection.3.4.4}%

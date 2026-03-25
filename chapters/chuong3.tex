@@ -1,0 +1,144 @@
+% ==========================================================
+% CHƯƠNG 3: THIẾT KẾ VÀ THỰC HIỆN PHẦN CỨNG
+% ==========================================================
+
+\chapter{Thiết kế và thực hiện phần cứng}
+\label{ch:thiet_ke_phan_cung}
+
+Chương này trình bày định hướng thiết kế và triển khai phần cứng cho mô đun thí nghiệm đa năng trên vệ tinh nhỏ, bám theo mục tiêu đã nêu ở Chương 1 và cơ sở lý thuyết ở Chương 2. Trọng tâm của chương là chuyển các yêu cầu nhiệm vụ thành các chỉ tiêu kỹ thuật cụ thể để làm cơ sở cho thiết kế sơ đồ khối, lựa chọn linh kiện, thiết kế mạch và kiểm thử.
+
+\section{Yêu cầu thiết kế}
+\label{sec:yeu_cau_thiet_ke}
+
+Từ các mục tiêu đã nêu ở Chương 1 và kiến trúc OBC--EXP--IF trình bày trong Chương 2, yêu cầu của phần cứng trong đề tài không chỉ dừng ở việc vận hành từng bo riêng lẻ mà phải bảo đảm toàn hệ hoạt động như một khối thống nhất, trong đó giao tiếp dữ liệu liên bo là mục tiêu trung tâm.
+
+\begin{itemize}
+    \item \textbf{Yêu cầu tích hợp hệ thống:}
+    Hệ thống phải được thiết kế để các bo OBC, EXP, IF, LASER và PHOTO kết nối thành một cấu trúc đồng bộ.
+    Việc bố trí phần cứng phải bảo đảm tín hiệu điều khiển và tín hiệu đo được truyền ổn định giữa các bo, giảm sai lệch do nhiễu và sai khác vị trí lắp đặt.
+
+    \item \textbf{Yêu cầu về giao tiếp dữ liệu giữa các bo:}
+    Luồng dữ liệu phải được tổ chức rõ ràng theo chiều điều khiển và chiều phản hồi:
+    OBC gửi lệnh xuống EXP, EXP điều phối hoạt động thí nghiệm, điều khiển bo LASER và thu dữ liệu từ PHOTO. Bên cạnh đó còn đọc các điều kiện môi trường thí nghiệm như nhiệt độ, độ ẩm từ các cảm biến để điều khiển môi trường thí nghiệm. Từ dữ liệu thu thập được trên bo PHOTO, EXP gửi về lại OBC, sau khi phân tích đóng gói dữ liệu bo OBC gửi dữ liệu về cho người dùng, bên cạnh đó bo IF đóng vai trò là bo interface của hệ thống, dùng để giao tiếp với các module phần cứng bên ngoài khác và giao tiếp nội bộ với 2 bo điều khiển chính của hệ thống là OBC và EXP.
+    Hệ thống đồng thời phải hỗ trợ lưu vết trạng thái hoạt động để phục vụ giám sát và phân tích sau thí nghiệm.
+
+    \item \textbf{Yêu cầu lưu trữ và giám sát:}
+    Hệ thống phải lưu được hành vi thí nghiệm và dữ liệu mẫu vật theo từng phiên đo.
+    Dữ liệu và trạng thái hệ thống cần được chuyển về máy tính giám sát để người vận hành theo dõi và đánh giá kết quả.
+
+    \item \textbf{Yêu cầu an toàn và độ bền:}
+    Phần cứng phải có bảo vệ quá dòng, quá áp cho toàn hệ và cho các khối công suất.
+    Kết cấu và kết nối phải đủ chắc chắn để hệ thống làm việc ổn định lâu dài trong điều kiện phòng thí nghiệm, hạn chế lỗi do rung lắc, tiếp xúc kém hoặc quá nhiệt cục bộ.
+
+    \item \textbf{Yêu cầu đối với khối điều khiển trung tâm:}
+    Khối điều khiển phải hỗ trợ các giao tiếp ngoại vi phục vụ tích hợp mô đun (như UART/I2C/SPI), cho phép tự động hóa quy trình theo kịch bản thí nghiệm.
+    Hệ thống cần hỗ trợ lấy mẫu và truyền tín hiệu với tốc độ phù hợp để đáp ứng bài toán theo dõi tín hiệu quang theo thời gian thực.
+
+    \item \textbf{Yêu cầu đối với khối giám sát và điều khiển nhiệt độ:}
+    Mạch đo nhiệt độ cần sử dụng cảm biến NTC có độ nhạy cao để theo dõi liên tục điều kiện nhiệt của buồng thí nghiệm.
+    Khối gia nhiệt và làm mát (HEATER/TEC) phải phối hợp với bộ điều khiển để duy trì nhiệt độ theo giá trị đặt trước.
+
+    \item \textbf{Yêu cầu đối với khối phát quang (LASER):}
+    Công suất và mức kích hoạt laser cần điều chỉnh được theo từng chế độ làm việc và từng loại mẫu.
+    Mạch điều khiển laser phải bảo đảm hoạt động ổn định, có cơ chế ngắt an toàn khi xuất hiện trạng thái bất thường.
+
+    \item \textbf{Yêu cầu đối với khối thu quang (PHOTO):}
+    Khối thu phải có độ nhạy cao, đi kèm mạch khuếch đại và lọc tín hiệu phù hợp để giảm nhiễu.
+    Tín hiệu quang sau mẫu cần được thu nhận chính xác và chuyển đổi sang dữ liệu số để truyền về khối điều khiển, phục vụ xử lý và đánh giá.
+\end{itemize}
+
+Các yêu cầu trên là nền tảng cho các phần tiếp theo của chương về phân tích phương án, thiết kế sơ đồ khối và triển khai mạch thực tế.
+
+\section{Phân tích phương pháp thiết kế}
+\label{sec:phan_tich_phuong_phap}
+
+Từ yêu cầu ở Mục 3.1 có thể thấy bài toán trọng tâm của hệ thống là bảo đảm giao tiếp dữ liệu tin cậy giữa các bo trong khi vẫn duy trì tính mô đun, khả năng mở rộng và độ ổn định vận hành. Vì vậy, quá trình thiết kế được phân tích theo ba hướng chính: kiến trúc kết nối phần cứng, phương thức giao tiếp dữ liệu và cách tổ chức điều khiển hệ thống.
+
+\subsection{Phân tích theo kiến trúc kết nối phần cứng}
+\label{subsec:phan_tich_kien_truc_ket_noi}
+
+\textbf{Phương pháp 1: Tích hợp toàn bộ chức năng trên một bo mạch duy nhất}
+\begin{itemize}
+    \item Ưu điểm: giảm số lượng đầu nối liên bo, giảm độ phức tạp dây nối, thuận lợi cho tối ưu kích thước.
+    \item Khuyết điểm: khó mở rộng hoặc thay đổi từng khối chức năng; khi một khối lỗi có thể ảnh hưởng toàn hệ; khó kiểm thử độc lập từng phần LASER/PHOTO/giao tiếp.
+\end{itemize}
+
+\textbf{Phương pháp 2: Kiến trúc đa bo theo phân lớp chức năng (OBC--EXP--IF--LASER--PHOTO)}
+\begin{itemize}
+    \item Ưu điểm: tách biệt rõ vai trò từng bo, dễ kiểm thử và thay thế; thuận lợi mở rộng giao diện qua IF; giảm rủi ro tích hợp theo từng giai đoạn. Phù hợp với kích thước của tiêu chuẩn payload satellite.
+    \item Khuyết điểm: tăng số lượng liên kết liên bo, yêu cầu đồng bộ tín hiệu và chống nhiễu tốt hơn; thiết kế cơ khí và dây nối phức tạp hơn.
+\end{itemize}
+
+Với mục tiêu nghiên cứu mô đun đa năng và nhấn mạnh luồng dữ liệu liên bo, phương pháp 2 phù hợp hơn do phản ánh đúng kiến trúc thực tế của đề tài và cho phép đánh giá riêng từng lớp chức năng.
+
+\subsection{Phân tích theo tổ chức điều khiển hệ thống}
+\label{subsec:phan_tich_to_chuc_dieu_khien}
+
+\textbf{Phương pháp 1: OBC điều khiển trực tiếp toàn bộ LASER/PHOTO}
+\begin{itemize}
+    \item Ưu điểm: logic tập trung tại một điểm, dễ quản lý ở mức tổng thể.
+    \item Khuyết điểm: tăng tải xử lý cho OBC, giảm tính thời gian thực ở khối thí nghiệm, khó mở rộng khi tăng số tác vụ cục bộ.
+\end{itemize}
+
+\textbf{Phương pháp 2: Điều khiển phân cấp, OBC giao nhiệm vụ, EXP điều phối cục bộ}
+\begin{itemize}
+    \item Ưu điểm: giảm tải cho OBC; EXP xử lý nhanh các tác vụ thời gian thực (điều khiển LASER/PHOTO, đọc nhiệt, điều khiển TEC/HEATER); tăng tính mô đun và khả năng tái sử dụng.
+    \item Khuyết điểm: cần định nghĩa rõ giao thức lệnh-trạng thái giữa OBC và EXP để tránh xung đột điều khiển.
+\end{itemize}
+
+Phương pháp 2 được lựa chọn vì phù hợp trực tiếp với kiến trúc lý thuyết đã xây dựng ở Chương 2 và hỗ trợ tốt mục tiêu chính của đề tài là kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu giữa các bo.
+
+\subsection{Kết luận lựa chọn phương pháp}
+\label{subsec:ket_luan_lua_chon}
+
+Từ các phân tích trên, phương pháp thiết kế được chọn cho đề tài là: \textit{kiến trúc đa bo phân lớp chức năng, giao tiếp dữ liệu theo khung có kiểm lỗi, điều khiển phân cấp OBC--EXP}. Cách lựa chọn này cân bằng giữa tính khả thi triển khai, độ tin cậy truyền dữ liệu và mục tiêu nghiên cứu của luận văn.
+
+\section{Sơ đồ khối tổng quát}
+\label{sec:so_do_khoi_tong_quat}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/so-do-tong-quat.png}
+    \caption{Sơ đồ khối tổng quát}
+    \label{fig:so-do-tong-quat}
+\end{figure}
+
+\textbf{Bo điều khiển trung tâm (OBC):}
+OBC là khối điều phối ở mức hệ thống, tiếp nhận lệnh từ phía người vận hành và phát lệnh tác vụ xuống khối thí nghiệm.
+Bo này đồng thời thu nhận dữ liệu phản hồi từ EXP, tổng hợp trạng thái toàn hệ và lưu các thông tin quan trọng của phiên thí nghiệm để phục vụ theo dõi và hậu kiểm.
+Trong cấu hình triển khai, OBC đóng vai trò \textit{master} của mạng điều khiển nội bộ.
+
+\textbf{Bo điều khiển thí nghiệm (EXP):}
+EXP là bộ điều khiển cục bộ của tải thí nghiệm.
+Khi nhận lệnh từ OBC, EXP thực hiện chu trình thí nghiệm: điều khiển bo LASER, thu dữ liệu từ bo PHOTO, đọc dữ liệu cảm biến môi trường (như NTC) và điều phối phần tử chấp hành nhiệt (HEATER/TEC).
+Sau mỗi chu kỳ đo, EXP chuẩn hóa và đóng gói dữ liệu trước khi gửi ngược lên OBC.
+
+\textbf{Bo giao tiếp trung gian (IF):}
+IF là tầng \textit{interface}, có nhiệm vụ chuẩn hóa kết nối, tổ chức đường tín hiệu và hỗ trợ mở rộng ngoại vi.
+Khối này giúp tách lớp điều khiển chính khỏi các ràng buộc kết nối phần cứng, nhờ đó hệ thống dễ tích hợp thêm module mới, đồng thời giảm độ phức tạp khi thay đổi cấu hình thử nghiệm.
+
+\textbf{Bo phát quang (LASER):}
+Bo LASER tạo nguồn sáng kích thích cho quá trình đo mẫu.
+Mạch được thiết kế theo cấu trúc nhiều kênh độc lập, cho phép lựa chọn từng kênh phát theo lệnh điều khiển từ EXP.
+Cường độ phát có thể hiệu chỉnh để phù hợp với từng điều kiện thí nghiệm và từng loại mẫu vật.
+
+\textbf{Bo thu quang (PHOTO):}
+Bo PHOTO tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu và biến đổi thành tín hiệu điện phục vụ đo lường.
+Khối này tích hợp mạch khuếch đại, lọc nhiễu và chuyển đổi ADC để bảo đảm tín hiệu thu có chất lượng tốt trước khi truyền về EXP.
+Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên bo LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
+
+\section{Sơ đồ khối chi tiết}
+\subsection{Bo máy tính điều khiển trung tâm - OBC}
+\label{subsec:bo-dieu-khien-trung-tam-obc}
+
+\subsection{Bo điều khiển thí nghiệm - EXP}
+\label{subsec:bo-dieu-khien-thi-nghiem-exp}
+
+\subsection{Bo phát năng lượng ánh sáng - LASER}
+\label{subsec:bo-phat-laser}
+
+\subsection{Bo thu năng lượng ánh sáng - PHOTO}
+\label{subsec:bo-thu-photo}
+
+
+\newpage
