@@ -1,0 +1,21 @@
+# LaTeX build files
+*.aux
+*.lof
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# PDF (tuỳ chọn)
+*.pdf
+
+# Temporary Word files
+~$*.docx
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -6,3 +6,39 @@
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Sơ đồ khối tổng quát}}{9}{figure.3.1}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Sơ đồ khối chi tiết của bo điều khiển OBC}}{10}{figure.3.2}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Sơ đồ khối chi tiết của bo điều khiển EXP}}{11}{figure.3.3}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Sơ đồ khối chi tiết board EXP}}{12}{figure.3.4}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Schematic khối SAMA7G54 (MPU)}}{14}{figure.3.5}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Schematic khối DDR3 cho SAMA7G54}}{15}{figure.3.6}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Schematic khối chân PIO của SAMA7G54}}{15}{figure.3.7}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Schematic khối MCU SAMV71Q21B}}{16}{figure.3.8}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Schematic khối FRAM}}{16}{figure.3.9}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Schematic khối MRAM kết nối MPU}}{17}{figure.3.10}%
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Schematic khối MRAM kết nối MCU}}{17}{figure.3.11}%
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Schematic khối PRAM}}{18}{figure.3.12}%
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Schematic khối RTC}}{18}{figure.3.13}%
+\contentsline {figure}{\numberline {3.14}{\ignorespaces Schematic khối eMMC}}{19}{figure.3.14}%
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Schematic khối SD Card}}{19}{figure.3.15}%
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Schematic khối Debug}}{20}{figure.3.16}%
+\contentsline {figure}{\numberline {3.17}{\ignorespaces Schematic khối nguồn 1}}{20}{figure.3.17}%
+\contentsline {figure}{\numberline {3.18}{\ignorespaces Schematic khối nguồn 2}}{21}{figure.3.18}%
+\contentsline {figure}{\numberline {3.19}{\ignorespaces Schematic khối nguồn 3}}{22}{figure.3.19}%
+\contentsline {figure}{\numberline {3.20}{\ignorespaces Schematic khối nguồn 4}}{23}{figure.3.20}%
+\contentsline {figure}{\numberline {3.21}{\ignorespaces Schematic khối PMIC và giám sát dòng}}{23}{figure.3.21}%
+\contentsline {figure}{\numberline {3.22}{\ignorespaces Schematic khối hole (cơ khí/tiếp địa)}}{24}{figure.3.22}%
+\contentsline {figure}{\numberline {3.23}{\ignorespaces Schematic khối CAN transceiver}}{25}{figure.3.23}%
+\contentsline {figure}{\numberline {3.24}{\ignorespaces Schematic khối chuyển mạch USB}}{25}{figure.3.24}%
+\contentsline {figure}{\numberline {3.25}{\ignorespaces Schematic khối connector của mạch USB switch}}{26}{figure.3.25}%
+\contentsline {figure}{\numberline {3.26}{\ignorespaces Schematic nhóm connector thí nghiệm}}{26}{figure.3.26}%
+\contentsline {figure}{\numberline {3.27}{\ignorespaces Schematic connector HD4}}{27}{figure.3.27}%
+\contentsline {figure}{\numberline {3.28}{\ignorespaces Schematic khối Heater}}{27}{figure.3.28}%
+\contentsline {figure}{\numberline {3.29}{\ignorespaces Schematic khối TEC}}{28}{figure.3.29}%
+\contentsline {figure}{\numberline {3.30}{\ignorespaces Schematic khối MPD200A}}{28}{figure.3.30}%
+\contentsline {figure}{\numberline {3.31}{\ignorespaces Schematic khối driver HD4}}{29}{figure.3.31}%
+\contentsline {figure}{\numberline {3.32}{\ignorespaces Schematic khối điều khiển solenoid (IC)}}{29}{figure.3.32}%
+\contentsline {figure}{\numberline {3.33}{\ignorespaces Schematic khối công suất solenoid (FET)}}{30}{figure.3.33}%
+\contentsline {figure}{\numberline {3.34}{\ignorespaces Schematic khối NTC}}{31}{figure.3.34}%
+\contentsline {figure}{\numberline {3.35}{\ignorespaces Schematic khối giao tiếp flow sensor}}{32}{figure.3.35}%
+\contentsline {figure}{\numberline {3.36}{\ignorespaces Schematic cảm biến BMP390 onboard}}{32}{figure.3.36}%
+\contentsline {figure}{\numberline {3.37}{\ignorespaces Schematic connector BMP390}}{32}{figure.3.37}%
+\contentsline {figure}{\numberline {3.38}{\ignorespaces Schematic cảm biến gia tốc}}{33}{figure.3.38}%
+\contentsline {figure}{\numberline {3.39}{\ignorespaces Schematic khối watchdog}}{33}{figure.3.39}%

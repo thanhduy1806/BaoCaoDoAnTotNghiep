@@ -26,5 +26,12 @@
 \contentsline {section}{\numberline {3.4}Sơ đồ khối chi tiết}{10}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Bo máy tính điều khiển trung tâm - OBC}{10}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Bo điều khiển thí nghiệm - EXP}{11}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Bo phát năng lượng ánh sáng - LASER}{12}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Bo thu năng lượng ánh sáng - PHOTO}{12}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.3}Bo giao tiếp - IF}{14}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Bo phát năng lượng ánh sáng - LASER}{14}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Bo thu năng lượng ánh sáng - PHOTO}{14}{subsection.3.4.5}%
+\contentsline {section}{\numberline {3.5}Sơ đồ nguyên lí chi tiết}{14}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Bo máy tính điều khiển trung tâm - OBC}{14}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Bo điều khiển thí nghiệm - EXP}{14}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Bo giao tiếp - IF}{33}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Bo phát năng lượng ánh sáng - LASER}{33}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Bo thu năng lượng ánh sáng - PHOTO}{33}{subsection.3.5.5}%

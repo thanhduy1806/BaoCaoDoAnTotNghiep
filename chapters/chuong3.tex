@@ -221,6 +221,72 @@ Giao tiếp mở rộng:
 - CONNECTOR RS422: Giao tiếp nối tiếp công nghiệp khoảng cách xa.
 
 - CONNECTOR USB: Cổng USB ngoại vi.
+Trong kiến trúc tổng thể của hệ thống, board EXP đóng vai trò như một ``trung tâm điều phối thí nghiệm'', nơi hội tụ các luồng tín hiệu đo lường, các kênh điều khiển cơ cấu chấp hành và các giao tiếp ngoại vi quan trọng. Từ khâu tiếp nhận dữ liệu cảm biến, xử lý lệnh điều khiển theo thời gian thực đến phân phối tín hiệu tới các bo chức năng liên quan, EXP bảo đảm quá trình vận hành diễn ra đồng bộ, ổn định và chính xác, tạo nền tảng cho các phép đo có độ tin cậy cao.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/so-do-khoi-exp.png}
+    \caption{Sơ đồ khối chi tiết board EXP}
+    \label{fig:so-do-khoi-exp}
+\end{figure}
+
+Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối chính của board EXP gồm:
+\begin{itemize}
+    \item \textbf{Khối SAMA7G54:} là bộ xử lý chính, thực hiện điều phối tác vụ cấp hệ thống, quản lý truyền thông và trao đổi dữ liệu với MCU qua UART.
+
+    \item \textbf{Khối MCU SAMV71Q21B:} là bộ điều khiển thời gian thực, trực tiếp đọc tín hiệu cảm biến và phát lệnh điều khiển tới các tải chấp hành.
+
+    \item \textbf{Khối DDR3L:} bộ nhớ làm việc tốc độ cao cho SAMA7G54 trong các tác vụ xử lý dữ liệu.
+
+    \item \textbf{Khối MRAM:} bộ nhớ không mất dữ liệu dùng lưu tham số/cấu hình cần giữ lại sau khi mất nguồn.
+
+    \item \textbf{Khối x2 eMMC:} bộ nhớ lưu trữ dung lượng lớn cho chương trình, dữ liệu hệ thống và nhật ký vận hành.
+
+    \item \textbf{Khối PMIC \& current monitors:} cấp nguồn cho các rail điện áp và giám sát dòng tiêu thụ của board.
+
+    \item \textbf{Khối SDCARD:} giao tiếp SDMMC để mở rộng lưu trữ và thuận tiện cho nạp/thu hồi dữ liệu.
+
+    \item \textbf{Khối MICRO USB:} giao tiếp USB phục vụ nạp chương trình, cấu hình hoặc chẩn đoán hệ thống.
+
+    \item \textbf{Khối USB\_SWITCH:} chuyển mạch đường USB theo tín hiệu điều khiển từ SAMA7G54 để chọn tuyến kết nối phù hợp.
+
+    \item \textbf{Khối RS422 TRANSCEIVER:} chuyển mức tín hiệu UART sang RS422, tăng độ bền nhiễu và khoảng cách truyền.
+
+    \item \textbf{Khối CAN TRANSCEIVER:} giao tiếp CAN TX/RX (CAN H/L) để kết nối bus công nghiệp với các thiết bị ngoài.
+
+    \item \textbf{Khối TEC DRIVER:} mạch công suất điều khiển phần tử TEC theo lệnh từ MCU.
+
+    \item \textbf{Khối MPD:} mạch điều khiển/điều áp cao áp (HV\_O +/-) theo DAC/PWM/GPIO từ MCU.
+
+    \item \textbf{Khối mp-HighDriver4:} mạch driver công suất điều khiển tải ngoài (ví dụ cụm bơm) theo tín hiệu ADC/I2C liên quan.
+
+    \item \textbf{Khối TEMP:} kênh đo nhiệt độ đưa về MCU qua ADC để giám sát trạng thái nhiệt.
+
+    \item \textbf{Khối RTC:} đồng hồ thời gian thực, cung cấp mốc thời gian ổn định cho ghi log và điều khiển theo lịch.
+
+    \item \textbf{Khối MRAM 4bits:} vùng nhớ phụ giao tiếp QSPI cho lưu trạng thái nhanh của MCU.
+
+    \item \textbf{Khối PRAM:} bộ nhớ phụ giao tiếp SPI, dùng cho lưu tham số và trao đổi dữ liệu cục bộ.
+
+    \item \textbf{Khối BMP390:} cảm biến áp suất/độ cao kết nối I2C, cung cấp dữ liệu môi trường cho điều khiển.
+
+    \item \textbf{Khối ANA:} đầu vào tín hiệu analog đưa về MCU qua ADC để đo các đại lượng tương tự.
+
+    \item \textbf{Khối LSM6DSOX:} cảm biến IMU (gia tốc - con quay) giao tiếp I2C phục vụ giám sát dao động/chuyển động.
+
+    \item \textbf{Khối WATCHDOG:} phần cứng giám sát hoạt động MCU, tự động can thiệp khi hệ thống treo hoặc mất đáp ứng.
+
+    \item \textbf{Khối PCA9508DP:} mở rộng I/O qua I2C, làm cầu nối điều khiển/đọc thêm các kênh ngoại vi.
+
+    \item \textbf{Khối DEBUG CONSOLE:} cổng UART phục vụ debug, theo dõi log và chẩn đoán khi phát triển.
+
+    \item \textbf{Khối SWITCH:} các công tắc chuyển mạch nội bộ (SPI/ADC) dùng để chọn đường tín hiệu, cấu hình tuyến đo và phân phối tín hiệu điều khiển.
+
+    \item \textbf{Khối connector kết nối đến:} gồm \textit{CAMERA}, \textit{IF}, \textit{MICRO USB}, \textit{RS422}, \textit{TEC}, \textit{HD4}, \textit{NTC}, \textit{FLOW\_SENSOR}, \textit{BMP390}, \textit{HEATER}, \textit{LASER}, \textit{PHOTO}, \textit{SOLENOID}, \textit{BUMP}; đây là các đầu nối vật lý để EXP giao tiếp và điều khiển các mô-đun bên ngoài.
+\end{itemize}
+
+\subsection{Bo giao tiếp - IF}
+\label{subsec:bo-giao-tiep-if}
 
 \subsection{Bo phát năng lượng ánh sáng - LASER}
 \label{subsec:bo-phat-laser}
@@ -228,5 +294,353 @@ Giao tiếp mở rộng:
 \subsection{Bo thu năng lượng ánh sáng - PHOTO}
 \label{subsec:bo-thu-photo}
 
+\section{Sơ đồ nguyên lí chi tiết}
+
+\subsection{Bo máy tính điều khiển trung tâm - OBC}
+\label{subsec:sche-bo-dieu-khien-trung-tam-obc}
+
+\subsection{Bo điều khiển thí nghiệm - EXP}
+\label{subsec:sche-bo-dieu-khien-thi-nghiem-exp}
+
+Phần này trình bày chi tiết các sơ đồ nguyên lý của board EXP theo từng khối chức năng. Toàn bộ hình schematic được lấy từ thư mục \texttt{picture/exp}, ngoại trừ hình \texttt{so-do-khoi-exp.png} (đã trình bày ở phần sơ đồ khối).
+
+\textbf{1) Khối xử lý và bộ nhớ trung tâm}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
+    \caption{Schematic khối SAMA7G54 (MPU)}
+    \label{fig:exp-sche-khoi-sam-mpu}
+\end{figure}
+\textbf{Chức năng:} Đây là khối xử lý chính của EXP, đảm nhiệm điều phối toàn hệ thống, quản lý luồng giao tiếp và phân phối tác vụ đến các ngoại vi theo vai trò điều khiển cấp cao.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-ddr3.png}
+    \caption{Schematic khối DDR3 cho SAMA7G54}
+    \label{fig:exp-sche-khoi-sam-ddr3}
+\end{figure}
+\textbf{Chức năng:} Khối DDR3 cung cấp vùng nhớ làm việc tốc độ cao cho MPU, phục vụ các tác vụ xử lý dữ liệu và chạy phần mềm hệ thống.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-pio.png}
+    \caption{Schematic khối chân PIO của SAMA7G54}
+    \label{fig:exp-sche-khoi-sam-pio}
+\end{figure}
+\textbf{Chức năng:} Khối này tổ chức các chân I/O của MPU, bao gồm định tuyến tín hiệu, điện trở kéo và các đường điều khiển ra/vào tới từng khối phụ trợ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-mcu.png}
+    \caption{Schematic khối MCU SAMV71Q21B}
+    \label{fig:exp-sche-khoi-mcu}
+\end{figure}
+\textbf{Chức năng:} MCU SAMV71Q21B xử lý các tác vụ thời gian thực, đọc cảm biến và điều khiển tải chấp hành với độ trễ thấp, đồng thời trao đổi dữ liệu với MPU.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/fram.png}
+    \caption{Schematic khối FRAM}
+    \label{fig:exp-sche-fram}
+\end{figure}
+\textbf{Chức năng:} FRAM là bộ nhớ không mất dữ liệu có tốc độ ghi cao, phù hợp lưu tham số vận hành thường xuyên thay đổi và dữ liệu cần độ bền ghi lớn.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mram-mpu.png}
+    \caption{Schematic khối MRAM kết nối MPU}
+    \label{fig:exp-sche-mram-mpu}
+\end{figure}
+\textbf{Chức năng:} MRAM phía MPU lưu dữ liệu cấu hình/hệ thống cần bảo toàn trạng thái, hỗ trợ khởi động và phục hồi thông số nhanh.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mram-mcu.png}
+    \caption{Schematic khối MRAM kết nối MCU}
+    \label{fig:exp-sche-mram-mcu}
+\end{figure}
+\textbf{Chức năng:} MRAM phía MCU phục vụ lưu trạng thái điều khiển cục bộ và các tham số hiệu chuẩn liên quan đến vòng điều khiển thời gian thực.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/pram.png}
+    \caption{Schematic khối PRAM}
+    \label{fig:exp-sche-pram}
+\end{figure}
+\textbf{Chức năng:} PRAM bổ sung vùng lưu trữ tham số/biến cấu hình phục vụ các nhánh xử lý cần truy cập nhanh và ổn định.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/rtc.png}
+    \caption{Schematic khối RTC}
+    \label{fig:exp-sche-rtc}
+\end{figure}
+\textbf{Chức năng:} RTC duy trì thời gian thực cho hệ thống, hỗ trợ đóng dấu thời gian log, theo dõi phiên thí nghiệm và đồng bộ sự kiện.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-emmc.png}
+    \caption{Schematic khối eMMC}
+    \label{fig:exp-sche-khoi-emmc}
+\end{figure}
+\textbf{Chức năng:} eMMC là bộ nhớ lưu trữ chính cho firmware/hệ điều hành và dữ liệu dài hạn của board EXP.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sdcard.png}
+    \caption{Schematic khối SD Card}
+    \label{fig:exp-sche-sdcard}
+\end{figure}
+\textbf{Chức năng:} Mạch SD Card cung cấp kênh lưu trữ tháo lắp linh hoạt, phục vụ cập nhật dữ liệu, log đo và kiểm thử.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-debug.png}
+    \caption{Schematic khối Debug}
+    \label{fig:exp-sche-khoi-debug}
+\end{figure}
+\textbf{Chức năng:} Khối debug đưa ra các giao diện kiểm tra và nạp chương trình, giúp quan sát trạng thái hệ thống trong quá trình phát triển và bảo trì.
+
+\textbf{2) Khối nguồn và giám sát nguồn}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-1.png}
+    \caption{Schematic khối nguồn 1}
+    \label{fig:exp-sche-khoi-nguon-1}
+\end{figure}
+\textbf{Chức năng:} Khối nguồn 1 tạo các mức điện áp nền cho phần xử lý số, đồng thời thực hiện lọc nhiễu đầu vào cơ bản.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-2.png}
+    \caption{Schematic khối nguồn 2}
+    \label{fig:exp-sche-khoi-nguon-2}
+\end{figure}
+\textbf{Chức năng:} Khối nguồn 2 phân phối thêm các rail phụ trợ cho ngoại vi, đảm bảo tách miền nguồn theo yêu cầu tải.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-3.png}
+    \caption{Schematic khối nguồn 3}
+    \label{fig:exp-sche-khoi-nguon-3}
+\end{figure}
+\textbf{Chức năng:} Khối nguồn 3 phục vụ các tuyến nguồn cho nhóm cảm biến/driver, tăng độ ổn định khi hệ thống chuyển trạng thái tải.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-4.png}
+    \caption{Schematic khối nguồn 4}
+    \label{fig:exp-sche-khoi-nguon-4}
+\end{figure}
+\textbf{Chức năng:} Khối nguồn 4 hoàn thiện tầng cấp nguồn còn lại, thường bao gồm lọc cục bộ và phân phối tới các nhánh chức năng chuyên biệt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
+    \caption{Schematic khối PMIC và giám sát dòng}
+    \label{fig:exp-sche-khoi-pmic}
+\end{figure}
+\textbf{Chức năng:} PMIC quản lý trình tự cấp nguồn, giám sát điện áp/dòng tiêu thụ và hỗ trợ cơ chế bảo vệ khi quá tải hoặc bất thường nguồn.
+\textbf{Tính toán từ schematic (khi có R shunt/điện áp đo):}
+\[
+    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\cdot I_{rail}
+\]
+\textit{Cách tính:} lấy \(R_{SHUNT}\) và điện áp rơi trên shunt đúng theo giá trị ghi trên hình, thay trực tiếp vào công thức để ra dòng và công suất từng rail.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/hole.png}
+    \caption{Schematic khối hole (cơ khí/tiếp địa)}
+    \label{fig:exp-sche-hole}
+\end{figure}
+\textbf{Chức năng:} Nhóm điểm hole phục vụ cố định cơ khí và/hoặc tiếp địa tham chiếu cho PCB, góp phần nâng độ bền và ổn định nhiễu EMC.
+
+\textbf{3) Khối giao tiếp và kết nối ngoại vi}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/CAN-transceiver.png}
+    \caption{Schematic khối CAN transceiver}
+    \label{fig:exp-sche-can-transceiver}
+\end{figure}
+\textbf{Chức năng:} Mạch CAN transceiver chuyển đổi mức vật lý CAN H/L, tăng khả năng chống nhiễu và bảo đảm truyền thông tin cậy trên bus.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sw-usb.png}
+    \caption{Schematic khối chuyển mạch USB}
+    \label{fig:exp-sche-sw-usb}
+\end{figure}
+\textbf{Chức năng:} Mạch switch USB lựa chọn đường tín hiệu USB theo chế độ vận hành, cho phép chia sẻ cổng và tối ưu routing tín hiệu tốc độ cao.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sw-usb-connector.png}
+    \caption{Schematic khối connector của mạch USB switch}
+    \label{fig:exp-sche-sw-usb-connector}
+\end{figure}
+\textbf{Chức năng:} Khối này là phần đầu nối của tuyến USB switch, đảm bảo ghép nối chuẩn cơ điện giữa board EXP và thiết bị bên ngoài.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-thi-nghiem.png}
+    \caption{Schematic nhóm connector thí nghiệm}
+    \label{fig:exp-sche-connector-thi-nghiem}
+\end{figure}
+\textbf{Chức năng:} Đây là nhóm đầu nối chính đưa tín hiệu điều khiển/đo lường ra hệ thí nghiệm, đóng vai trò giao diện vật lý giữa EXP và tải ngoài.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-hd4.png}
+    \caption{Schematic connector HD4}
+    \label{fig:exp-sche-connector-hd4}
+\end{figure}
+\textbf{Chức năng:} Connector HD4 là đầu nối chuyên dụng cho nhánh driver HD4, bảo đảm truyền tín hiệu điều khiển và nguồn tới tải tương ứng.
+
+\textbf{4) Khối điều khiển tải, cảm biến và an toàn}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-heater.png}
+    \caption{Schematic khối Heater}
+    \label{fig:exp-sche-khoi-heater}
+\end{figure}
+\textbf{Chức năng:} Khối heater điều khiển phần tử gia nhiệt bằng PWM/driver công suất, phục vụ ổn định nhiệt độ theo kịch bản thí nghiệm.
+\textbf{Tính toán từ schematic (heater tải trở):}
+\[
+    I_{heater}=\frac{V_{heater}}{R_{heater}}, \qquad
+    P_{heater}=\frac{V_{heater}^2}{R_{heater}}
+\]
+\[
+    P_{avg}\approx D\cdot P_{heater}
+\]
+với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\), điện áp cấp và duty ghi trong mạch điều khiển để tính công suất tức thời/trung bình.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-tec.png}
+    \caption{Schematic khối TEC}
+    \label{fig:exp-sche-khoi-tec}
+\end{figure}
+\textbf{Chức năng:} Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
+\textbf{Tính toán từ schematic (nhánh TEC):}
+\[
+    I_{TEC}=\frac{V_{TEC}}{R_{eq}}, \qquad
+    P_{TEC}=V_{TEC}\cdot I_{TEC}
+\]
+\textit{Cách tính:} với mạch có điện trở cảm dòng thì lấy \(I_{TEC}\) theo \(V_{SHUNT}/R_{SHUNT}\); với mạch giới hạn dòng thì thay đúng giá trị điện trở đặt dòng ghi trên schematic để suy ra ngưỡng dòng cực đại.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mpd200a.png}
+    \caption{Schematic khối MPD200A}
+    \label{fig:exp-sche-mpd200a}
+\end{figure}
+\textbf{Chức năng:} MPD200A thực hiện nhánh điều khiển/giám sát liên quan nguồn HV hoặc tải đặc thù theo cấu hình hệ quang - đo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/driver-hd4.png}
+    \caption{Schematic khối driver HD4}
+    \label{fig:exp-sche-driver-hd4}
+\end{figure}
+\textbf{Chức năng:} Driver HD4 khuếch đại và đệm tín hiệu điều khiển từ MCU để kích tải công suất ở mức dòng/áp phù hợp.
+\textbf{Tính toán từ schematic (nếu có tầng op-amp):}
+\[
+    A_v=1+\frac{R_f}{R_g}, \qquad V_{OUT}=A_v\cdot V_{IN}
+\]
+\textit{Cách tính:} lấy đúng cặp điện trở hồi tiếp \(R_f, R_g\) ghi trên hình để tính hệ số khuếch đại và biên độ đầu ra.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
+    \caption{Schematic khối điều khiển solenoid (IC)}
+    \label{fig:exp-sche-solenoid-ic}
+\end{figure}
+\textbf{Chức năng:} Solenoid IC tạo tầng điều khiển logic/driver trung gian cho cuộn coil solenoid, bảo đảm chuyển mạch đúng ngưỡng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
+    \caption{Schematic khối công suất solenoid (FET)}
+    \label{fig:exp-sche-solenoid-fet}
+\end{figure}
+\textbf{Chức năng:} Solenoid FET là tầng công suất đóng/cắt dòng tải cuộn từ, thường đi kèm phần dập xung để bảo vệ linh kiện.
+\textbf{Tính toán từ schematic (nhánh MOSFET):}
+\[
+    I_{coil}\approx \frac{V_{coil}}{R_{coil}}, \qquad
+    P_{MOS}\approx I_{RMS}^2\cdot R_{DS(on)}
+\]
+\textit{Cách tính:} thay \(R_{coil}\) của cuộn van và \(R_{DS(on)}\) theo datasheet linh kiện dùng trong hình để kiểm tra tổn hao và điều kiện tản nhiệt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.png}
+    \caption{Schematic khối NTC}
+    \label{fig:exp-sche-khoi-ntc}
+\end{figure}
+\textbf{Chức năng:} Khối NTC tiếp nhận tín hiệu cảm biến nhiệt điện trở, chuyển đổi thành mức ADC để MCU giám sát nhiệt độ tức thời.
+\textbf{Tính toán từ schematic (cầu phân áp NTC):}
+\[
+    V_{ADC}=V_{REF}\cdot \frac{R_{NTC}}{R_{FIX}+R_{NTC}}
+\]
+\[
+    R_{NTC}=R_{FIX}\cdot \frac{V_{ADC}}{V_{REF}-V_{ADC}}
+\]
+\[
+    \frac{1}{T}=\frac{1}{T_0}+\frac{1}{B}\ln\!\left(\frac{R_{NTC}}{R_0}\right)
+\]
+\textit{Cách tính:} lấy \(R_{FIX}\), \(V_{REF}\) đúng theo schematic, đo/đọc \(V_{ADC}\) để suy ra \(R_{NTC}\), sau đó đổi sang nhiệt độ bằng tham số \(B\) của NTC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
+    \caption{Schematic khối giao tiếp flow sensor}
+    \label{fig:exp-sche-flow-ic}
+\end{figure}
+\textbf{Chức năng:} Mạch flow sensor xử lý giao tiếp với cảm biến lưu lượng, đọc dữ liệu và chuyển về bus điều khiển nội bộ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-onboard.png}
+    \caption{Schematic cảm biến BMP390 onboard}
+    \label{fig:exp-sche-bmp390-onboard}
+\end{figure}
+\textbf{Chức năng:} BMP390 onboard đo áp suất/độ cao tại board, cung cấp dữ liệu môi trường phục vụ bù sai số và giám sát điều kiện làm việc.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-connector.png}
+    \caption{Schematic connector BMP390}
+    \label{fig:exp-sche-bmp390-connector}
+\end{figure}
+\textbf{Chức năng:} Mạch connector BMP390 cho phép kết nối cảm biến BMP390 ngoài, mở rộng linh hoạt vị trí đo thực nghiệm.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/cam-bien-gia-toc.png}
+    \caption{Schematic cảm biến gia tốc}
+    \label{fig:exp-sche-cam-bien-gia-toc}
+\end{figure}
+\textbf{Chức năng:} Khối cảm biến gia tốc (IMU) theo dõi rung/chuyển động, hỗ trợ đánh giá điều kiện cơ học ảnh hưởng đến phép đo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
+    \caption{Schematic khối watchdog}
+    \label{fig:exp-sche-watchdog}
+\end{figure}
+\textbf{Chức năng:} Watchdog giám sát nhịp hoạt động của bộ điều khiển; khi phát hiện treo hệ thống sẽ kích hoạt cơ chế phục hồi để tăng độ an toàn vận hành.
+
+\subsection{Bo giao tiếp - IF}
+\label{subsec:sche-bo-giao-tiep-if}
+
+\subsection{Bo phát năng lượng ánh sáng - LASER}
+\label{subsec:sche-bo-phat-laser}
+
+\subsection{Bo thu năng lượng ánh sáng - PHOTO}
+\label{subsec:sche-bo-thu-photo}
 
 \newpage
