@@ -131,8 +131,96 @@ Vị trí các kênh thu được bố trí tương ứng với các kênh phát
 \subsection{Bo máy tính điều khiển trung tâm - OBC}
 \label{subsec:bo-dieu-khien-trung-tam-obc}
 
+Bo OBC là trung tâm điều khiển và xử lý dữ liệu của hệ thống, đảm nhiệm vai trò giao tiếp với người vận hành, 
+quản lý các tác vụ điều khiển và lưu trữ dữ liệu thí nghiệm. Sơ đồ khối chi tiết của bo OBC được trình bày trong Hình \ref{fig:so-do-chi-tiet-obc}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/OBC.png}
+    \caption{Sơ đồ khối chi tiết của bo điều khiển OBC}
+    \label{fig:so-do-chi-tiet-obc}
+\end{figure}
+
+- MCU - STM32H7: Là khối xử lí trung tâm đóng vai trò là "bộ não" điều khiển chính, chịu trách nhiệm quản lý toàn bộ vận hành của hệ thống. Tiếp nhận và thực thi lệnh từ CM4, điều phối dữ 
+liệu giữa các bo mạch ngoại vi.
+
+- Compute Module 4 - CM4: Đảm nhiệm các tác vụ tầng cao bao gồm: giao tiếp mạng, truyền nhận lệnh, lưu trữ cơ sở dữ liệu và thực thi các chương trình giám sát hệ thống.
+
+- SPI Flash & SPI FRAM: Cung cấp bộ nhớ lưu trữ dữ liệu thí nghiệm, nhật ký hoạt động và các thông tin quan trọng khác.
+
+- Watchdog: Đảm bảo MCU tự reset nếu phần mềm bị treo.
+
+- I2C RTC: Chip thời gian thực để duy trì giờ hệ thống.
+
+- USB VCP: Cổng USB ảo để giao tiếp với máy tính, phục vụ truyền dữ liệu và nhận lệnh.
+
+- Giao tiếp cách ly (UART ISO, SPI ISO, GPIO ISO, I2C ISO): Các cổng giao tiếp này được cách ly giúp bảo vệ MCU khỏi điện áp cao.
+
+
 \subsection{Bo điều khiển thí nghiệm - EXP}
 \label{subsec:bo-dieu-khien-thi-nghiem-exp}
+
+Bo điều khiển thí nghiệm (EXP) là trung tâm xử lý và điều phối hoạt động của thí nghiệm, đóng vai trò cầu nối giữa OBC và các khối chức năng như LASER, PHOTO, 
+cảm biến môi trường và phần tử chấp hành nhiệt. Sơ đồ khối chi tiết của bo EXP được trình bày trong Hình \ref{fig:so-do-chi-tiet-exp}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/Block-EXP.png}
+    \caption{Sơ đồ khối chi tiết của bo điều khiển EXP}
+    \label{fig:so-do-chi-tiet-exp}
+\end{figure}
+
+1. Trung tâm xử lý:
+
+Board EXP được chia thành 2 phần chính kết nối với nhau qua giao tiếp CAN và UART:
+
+- MCU - SAMV71 (Microchip): Đây là vi điều khiển dòng ARM Cortex-M7 hiệu suất cao. Nó đóng vai trò xử lý các tác vụ thời gian thực (Real-time), quản lý các giao tiếp cách ly và bảo vệ hệ thống (Watchdog).
+
+- SOM - SAMA7G54 (Microchip): Đây là một System-on-Module mạnh mẽ hơn (thường chạy Linux nhúng). Nó đảm nhiệm các tác vụ nặng như xử lý hình ảnh (Camera), lưu trữ dữ liệu lớn và truyền thông tốc độ cao.
+
+2. Các thành phần kết nối với MCU (SAMV71):
+
+- SPI FLASH: Lưu trữ dữ liệu.
+
+- SPI FRAM: Bộ nhớ truy cập ngẫu nhiên điện tĩnh (Ferroelectric RAM), ghi xóa nhanh và bền bỉ, dùng cho dữ liệu cần lưu trữ tức thời khi mất điện.
+
+- Giao tiếp cách ly (UART ISO, SPI ISO, GPIO ISO): Các cổng giao tiếp này được cách ly giúp bảo vệ MCU khỏi điện áp cao.
+
+- Watchdog: Đảm bảo MCU tự reset nếu phần mềm bị treo.
+
+- I2C RTC: Chip thời gian thực để duy trì giờ hệ thống.
+
+- USB VCP: Cổng USB ảo để giao tiếp với máy tính.
+
+- CONSOLE: Cổng UART để debug/log.
+
+3. Các thành phần kết nối với SOM (SAMA7G54):
+
+Bộ nhớ hệ thống:
+
+- DDRL3 / DDR3: Bộ nhớ RAM tốc độ cao để chạy hệ điều hành.
+
+- eMMC: Bộ nhớ lưu trữ hệ điều hành (OS) và ứng dụng chính.
+
+- SD CARD: Khe cắm thẻ nhớ mở rộng (qua giao tiếp SDMMC2).
+
+- MRAM: Bộ nhớ RAM điện từ (Magnetoresistive RAM), truy cập cực nhanh và không mất dữ liệu.
+
+Hình ảnh & Cảm biến:
+
+- CAMERA: Kết nối qua giao tiếp MIPI (tốc độ cao) và cấu hình qua I2C.
+
+- CURRENT MONITOR: Giám sát dòng điện tiêu thụ qua I2C.
+
+- CONNECTOR PHOTO: Kết nối cảm biến quang qua ADC (analog) và SPI.
+
+Giao tiếp mở rộng:
+
+- CONNECTOR TO IF: Cổng kết nối trung gian (Interface) hỗ trợ SPI, I2C, USB.
+
+- CONNECTOR RS422: Giao tiếp nối tiếp công nghiệp khoảng cách xa.
+
+- CONNECTOR USB: Cổng USB ngoại vi.
 
 \subsection{Bo phát năng lượng ánh sáng - LASER}
 \label{subsec:bo-phat-laser}
