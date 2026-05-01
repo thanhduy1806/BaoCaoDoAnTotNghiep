@@ -22,7 +22,7 @@ Tương tự các vệ tinh lớn, hệ CubeSat được phân tách thành hai 
 
 Với cách phân tách này, \textit{bus} không trực tiếp tạo dữ liệu nhiệm vụ nhưng quyết định độ ổn định vận hành của toàn hệ; còn \textit{payload} tạo ra dữ liệu đầu ra nhưng phụ thuộc vào \textit{bus} để được cấp nguồn, điều khiển, đồng bộ và truyền dữ liệu. Trong phạm vi đề tài, OBC và IF thuộc lớp hạ tầng điều khiển/giao tiếp, cụm LASER--PHOTO thuộc lớp tải thí nghiệm, còn EXP đóng vai trò điều phối cục bộ giữa hai lớp này. Cách ánh xạ này là cơ sở để tổ chức kiến trúc kỹ thuật và xác định luồng dữ liệu trong các mục tiếp theo.
 
-\subsection{Chuẩn kích thước CubeSat (đơn vị U)}
+\subsection{Chuẩn kích thước CubeSat(đơn vị U)}
 \label{subsec:chuan_u}
 
 Kiến trúc CubeSat được hình thành từ năm 1999 trong khuôn khổ dự án CubeSat do GS. Jordi Puig-Suari (California Polytechnic State University) và GS. Bob Twiggs (Stanford University) khởi xướng. CubeSat sử dụng chuẩn mô-đun theo đơn vị U (Unit), trong đó 1U tương ứng với một khối lập phương xấp xỉ 10 x 10 x 10 cm. Các cấu hình lớn hơn được tạo bằng cách ghép nhiều khối 1U theo các tổ hợp khác nhau, ví dụ 2U, 3U, 6U, 8U, 12U và 16U. Chuẩn hóa theo đơn vị U có ý nghĩa kỹ thuật quan trọng vì quyết định không gian khả dụng cho mạch điện, dây dẫn, đầu nối, kết cấu cơ khí và giải pháp tản nhiệt.

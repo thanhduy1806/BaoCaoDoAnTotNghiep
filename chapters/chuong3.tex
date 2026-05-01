@@ -1,4 +1,4 @@
-% ==========================================================
+﻿% ==========================================================
 % CHƯƠNG 3: THIẾT KẾ VÀ THỰC HIỆN PHẦN CỨNG
 % ==========================================================
 
@@ -259,12 +259,92 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối c
 
 \subsection{Bo giao tiếp - IF}
 \label{subsec:bo-giao-tiep-if}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/so-do-khoi-if.png}
+    \caption{Sơ đồ khối chi tiết board IF}
+    \label{fig:so-do-khoi-if}
+\end{figure}
+
+Board IF giữ vai trò là nơi giao tiếp hệ thống thí nghiệm với các chức năng bên ngoài, đồng thời hỗ trợ nhiều chuẩn giao tiếp công nghiệp như RS422, LVDS. Sơ đồ khối chi tiết của board IF được trình bày trong Hình \ref{fig:so-do-khoi-if}.
+
+Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối chính của board IF gồm:
+\begin{itemize}
+    \item \textbf{Khối SAMA7D65:} là bộ xử lý trung tâm của IF, đảm nhiệm điều phối toàn bộ luồng giao tiếp, quản lý dữ liệu giữa các cổng kết nối và điều khiển các ngoại vi đi kèm.
+
+    \item \textbf{Khối CON\_EXP:} là cổng kết nối chính với board EXP, trao đổi các đường \textit{CAN}, \textit{SPI}, \textit{I2C} và \textit{USB} để đồng bộ lệnh và dữ liệu liên bo.
+
+    \item \textbf{Khối USB micro -- USB\_SWITCH -- CON\_USB:} tạo tuyến giao tiếp USB linh hoạt, cho phép chuyển mạch đường USB giữa cổng vào và cổng ra theo cấu hình vận hành.
+
+    \item \textbf{Nhóm cổng mở rộng ngoại vi:} gồm \textit{CON\_OEM719A}, \textit{PC104-H1}, \textit{CON\_AX100U}, \textit{CON\_I2C}, \textit{CON\_SPI}, \textit{CON\_RS485/422}; cung cấp các chuẩn giao tiếp \textit{UART/CAN/SPI/I2C/IO} để tích hợp thiết bị ngoài.
+
+    \item \textbf{Khối SN65HVD230DR và LTC2865HMSE\#TRPBF:} là các transceiver truyền thông, thực hiện chuyển mức và tăng khả năng chống nhiễu cho các đường truyền công nghiệp.
+
+    \item \textbf{Khối SDCARD:} cung cấp lưu trữ rời qua giao tiếp \textit{SDMMC}, phục vụ ghi log, lưu cấu hình và trích xuất dữ liệu hệ thống.
+
+    \item \textbf{Khối DDR3L và eMMCx2:} cung cấp bộ nhớ làm việc tốc độ cao và bộ nhớ lưu trữ không mất dữ liệu cho tác vụ xử lý và vận hành của IF.
+
+    \item \textbf{Khối EEPROM:} lưu các tham số cấu hình và thông tin hiệu chỉnh cần giữ bền vững trong quá trình vận hành.
+
+    \item \textbf{Khối WATCHDOG:} giám sát trạng thái xử lý của bộ điều khiển; khi phát hiện bất thường sẽ kích hoạt cơ chế phục hồi nhằm tăng độ tin cậy hệ thống.
+
+    \item \textbf{Khối TEMP\_SENS/CURENT\_SENS, PMIC và PMIC CURRENT MONITORS:} đo nhiệt độ, dòng tiêu thụ và quản lý nguồn, hỗ trợ giám sát hệ thống theo thời gian thực.
+
+    \item \textbf{Khối RTC, UART\_DEBUG, JTAG và DS90LT012AQ-Q1/CON\_STX:} hỗ trợ đóng dấu thời gian, debug -- nạp chương trình và truyền/nhận tín hiệu chuyên dụng phục vụ kiểm thử, khai thác hệ thống.
+\end{itemize}
 
 \subsection{Bo phát năng lượng ánh sáng - LASER}
 \label{subsec:bo-phat-laser}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/laser/so-do-khoi-laser.jpg}
+    \caption{Sơ đồ khối chi tiết board LASER}
+    \label{fig:so-do-khoi-laser}
+\end{figure}
+
+Bo phát năng lượng ánh sáng (LASER) đảm nhiệm vai trò tạo tín hiệu kích thích quang theo kênh, cho phép lựa chọn vị trí phát và điều chỉnh mức kích tương ứng với từng cấu hình thí nghiệm.
+Sơ đồ khối chi tiết của board LASER được trình bày trong Hình \ref{fig:so-do-khoi-laser}.
+
+Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối chính của board LASER gồm:
+\begin{itemize}
+    \item \textbf{Khối CONNECTOR:} là giao diện kết nối giữa board LASER với board điều khiển, nhận nguồn cấp \(12V\), nhận lệnh điều khiển và trả về tín hiệu trạng thái theo bus \textit{SPI}.
+
+    \item \textbf{Khối DAC:} chuyển đổi lệnh số từ bộ điều khiển thành mức điện áp tham chiếu tương tự, làm đầu vào đặt mức cho mạch phát dòng.
+
+    \item \textbf{Khối CURRENT SOURCE:} tạo dòng kích ổn định cho nhánh phát quang theo mức tham chiếu từ DAC, giúp duy trì cường độ phát theo giá trị đặt.
+
+    \item \textbf{Khối SWITCHING 6x6:} thực hiện ma trận chọn kênh phát, định tuyến dòng kích từ mạch nguồn dòng đến từng phần tử laser theo lệnh điều khiển.
+
+    \item \textbf{Khối LASER 6x6:} là ma trận phần tử phát quang đầu ra, phát ánh sáng theo kênh đã được chọn để kích thích mẫu trong buồng đo.
+\end{itemize}
+
 
 \subsection{Bo thu năng lượng ánh sáng - PHOTO}
 \label{subsec:bo-thu-photo}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/photo/so-do-khoi-photo.jpg}
+    \caption{Sơ đồ khối chi tiết board PHOTO}
+    \label{fig:so-do-khoi-photo}
+\end{figure}
+
+Bo thu năng lượng ánh sáng (PHOTO) đảm nhiệm vai trò thu tín hiệu quang sau tương tác với mẫu, khuếch đại - lọc tín hiệu và đưa về tín hiệu phù hợp để số hóa.
+Sơ đồ khối chi tiết của board PHOTO được trình bày trong Hình \ref{fig:so-do-khoi-photo}.
+
+Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối chính của board PHOTO gồm:
+\begin{itemize}
+    \item \textbf{Khối CONNECTOR:} là giao diện kết nối với board điều khiển, trao đổi tín hiệu điều khiển/thu thập dữ liệu qua bus \textit{SPI}.
+
+    \item \textbf{Khối PHOTO 6x6:} là ma trận phần tử thu quang, tiếp nhận tín hiệu ánh sáng từ hệ quang và tạo tín hiệu dòng tương ứng cường độ thu được.
+
+    \item \textbf{Khối SWITCHING 6x6:} thực hiện chọn kênh thu trong ma trận PHOTO, định tuyến tín hiệu từ phần tử thu được chọn sang chuỗi xử lý tương tự.
+
+    \item \textbf{Khối TRANSIMPEDANCE AMPLIFIER:} chuyển đổi dòng quang điện sang điện áp và khuếch đại tín hiệu mức nhỏ từ cảm biến quang.
+
+    \item \textbf{Khối ANTIALIAS:} lọc giới hạn băng thông tín hiệu trước khi số hóa, giảm nhiễu cao tần và hạn chế méo aliasing trong quá trình lấy mẫu.
+
+    \item \textbf{Khối DAC:} tạo mức tham chiếu/bù offset cho chuỗi xử lý tương tự theo cấu hình đo, giúp tối ưu dải đo tại ngõ vào bộ chuyển đổi số.
+\end{itemize}
 
 \section{Sơ đồ nguyên lí chi tiết}
 
@@ -294,11 +374,67 @@ Connector này kết nối với board IF thông qua các tín hiệu CAN, SPI, 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-1.png}
-    \caption{Khối nguồn thứ nhất}
-    \label{fig:exp-sche-khoi-nguon-1}
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12v-if.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vsam.png}\\[0.8em]
+
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vtec.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vhd4.png}\\[0.8em]
+
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-solenoid.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vlp.png}\\[0.8em]
+
+    \makebox[\textwidth][c]{\includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vheater.png}}
+    \caption{Khối efuse}
+    \label{fig:exp-efuse}
 \end{figure}
-\textbf{Chức năng:} Khối nguồn 1 tạo các mức điện áp nền cho phần xử lý số, đồng thời thực hiện lọc nhiễu đầu vào cơ bản.
+\textbf{Chức năng:} Các eFuse (cầu chì điện tử) sử dụng IC TPS259470ARPWR có chức năng bảo vệ quá áp, thiếu áp và quá dòng. Ngưỡng bảo vệ có thể thiết lập bằng điện trở ngoài, đồng thời IC hỗ trợ xuất tín hiệu giám sát để MCU theo dõi trạng thái dòng/áp.
+
+Theo datasheet TPS25947xx, ngoài ngưỡng khóa thấp mặc định nội bộ, chân \textit{EN/UVLO} còn cho phép đặt lại ngưỡng Undervoltage Protection thông qua cầu phân áp ngoài. Vì vậy ngưỡng điện áp vào kích hoạt bảo vệ có thể điều chỉnh theo yêu cầu thiết kế.
+
+Quan hệ đặt ngưỡng UVLO:
+\begin{equation}
+V_{IN(UV)} = \frac{V_{UVLO}\times(R1+R2)}{R2}
+\end{equation}
+
+Trong đó \(V_{UVLO}\) là điện áp tham chiếu tại chân \textit{EN/UVLO} theo datasheet, \(R1\) là điện trở nối từ \(V_{IN}\) đến chân \textit{EN/UVLO}, và \(R2\) là điện trở nối từ chân \textit{EN/UVLO} xuống GND. Do đó có thể thay đổi tỉ số \(R1/R2\) để chọn ngưỡng điện áp thiếu áp phù hợp cho từng nhánh nguồn eFuse.
+
+Tương tự, theo mục Overvoltage Lockout (OVLO) của TPS259470x/4x, ngưỡng bảo vệ quá áp được đặt tại chân \textit{OVLO} bằng cầu phân áp ngoài. Khi điện áp tại chân \textit{OVLO} vượt ngưỡng lên \(V_{OV(R)}\), eFuse sẽ ngắt nguồn ra để bảo vệ tải. Thiết bị chỉ cho phép bật lại khi điện áp giảm xuống dưới ngưỡng xuống \(V_{OV(F)}\), trong đó hai ngưỡng này khác nhau một khoảng nhỏ để tạo hysteresis, tránh đóng cắt liên tục khi tín hiệu vào dao động gần ngưỡng.
+
+Quan hệ đặt ngưỡng OVLO:
+\begin{equation}
+V_{IN(OV)} = \frac{V_{OV}\times(R1+R2)}{R2}
+\end{equation}
+
+Với \(V_{OV}\) là điện áp tham chiếu của bộ so sánh OVLO theo datasheet. Như vậy, bằng cách chọn tỉ số \(R1/R2\), người thiết kế có thể chủ động đặt ngưỡng quá áp phù hợp để bảo vệ từng nhánh tải trong khối eFuse.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vmcu.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vperi.png}
+    \caption{Khối BUCK}
+    \label{fig:exp-buck}
+\end{figure}
+Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. IC được sử dụng là TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ chân BOOT và VSENSE.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/cong-thuc/output-buck.png}\\
+    \caption{Công thức ngõ ra IC buck}
+    \label{fig:cong-thuc-vout-buck}
+\end{figure}
+Hình ảnh từ datasheet của IC TPS5430DDAR, dùng để điều chỉnh điện áp ngõ ra mong muốn bằng cầu phân áp 2 điện trở như đã trình bày. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vmcu-3v3muc.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vsam-3v3sam.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-3vsol.png}
+    \caption{Khối LDO}
+    \label{fig:exp-ldo}
+\end{figure}
+Sử dụng mạch LDO để hạ áp điện áp từ 5V xuống điện áp 3V3 sử dụng cho MPU, MCU và các IC chức năng khác. Với khoảng rơi áp khá nhỏ ta dùng nguồn ldo thay vì nguồn buck, việc sử dụng LDO sẽ làm cho nguồn ra ổn định hơn so với buck
+
+
 
 
 \begin{figure}[H]
@@ -399,30 +535,6 @@ Connector này kết nối với board IF thông qua các tín hiệu CAN, SPI, 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-2.png}
-    \caption{Schematic khối nguồn 2}
-    \label{fig:exp-sche-khoi-nguon-2}
-\end{figure}
-\textbf{Chức năng:} Khối nguồn 2 phân phối thêm các rail phụ trợ cho ngoại vi, đảm bảo tách miền nguồn theo yêu cầu tải.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-3.png}
-    \caption{Schematic khối nguồn 3}
-    \label{fig:exp-sche-khoi-nguon-3}
-\end{figure}
-\textbf{Chức năng:} Khối nguồn 3 phục vụ các tuyến nguồn cho nhóm cảm biến/driver, tăng độ ổn định khi hệ thống chuyển trạng thái tải.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-nguon-4.png}
-    \caption{Schematic khối nguồn 4}
-    \label{fig:exp-sche-khoi-nguon-4}
-\end{figure}
-\textbf{Chức năng:} Khối nguồn 4 hoàn thiện tầng cấp nguồn còn lại, thường bao gồm lọc cục bộ và phân phối tới các nhánh chức năng chuyên biệt.
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
     \caption{Schematic khối PMIC và giám sát dòng}
     \label{fig:exp-sche-khoi-pmic}
@@ -482,15 +594,6 @@ Connector này kết nối với board IF thông qua các tín hiệu CAN, SPI, 
     \label{fig:exp-sche-khoi-heater}
 \end{figure}
 \textbf{Chức năng:} Khối heater điều khiển phần tử gia nhiệt bằng PWM/driver công suất, phục vụ ổn định nhiệt độ theo kịch bản thí nghiệm.
-\textbf{Tính toán từ schematic (heater tải trở):}
-\[
-    I_{heater}=\frac{V_{heater}}{R_{heater}}, \qquad
-    P_{heater}=\frac{V_{heater}^2}{R_{heater}}
-\]
-\[
-    P_{avg}\approx D\cdot P_{heater}
-\]
-với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\), điện áp cấp và duty ghi trong mạch điều khiển để tính công suất tức thời/trung bình.
 
 \begin{figure}[H]
     \centering
@@ -499,11 +602,7 @@ với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\),
     \label{fig:exp-sche-khoi-tec}
 \end{figure}
 \textbf{Chức năng:} Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
-\textbf{Tính toán từ schematic (nhánh TEC):}
-\[
-    I_{TEC}=\frac{V_{TEC}}{R_{eq}}, \qquad
-    P_{TEC}=V_{TEC}\cdot I_{TEC}
-\]
+
 \textit{Cách tính:} với mạch có điện trở cảm dòng thì lấy \(I_{TEC}\) theo \(V_{SHUNT}/R_{SHUNT}\); với mạch giới hạn dòng thì thay đúng giá trị điện trở đặt dòng ghi trên schematic để suy ra ngưỡng dòng cực đại.
 
 \begin{figure}[H]
@@ -522,9 +621,6 @@ với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\),
 \end{figure}
 \textbf{Chức năng:} Driver HD4 khuếch đại và đệm tín hiệu điều khiển từ MCU để kích tải công suất ở mức dòng/áp phù hợp.
 \textbf{Tính toán từ schematic (nếu có tầng op-amp):}
-\[
-    A_v=1+\frac{R_f}{R_g}, \qquad V_{OUT}=A_v\cdot V_{IN}
-\]
 \textit{Cách tính:} lấy đúng cặp điện trở hồi tiếp \(R_f, R_g\) ghi trên hình để tính hệ số khuếch đại và biên độ đầu ra.
 
 \begin{figure}[H]
@@ -542,12 +638,6 @@ với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\),
     \label{fig:exp-sche-solenoid-fet}
 \end{figure}
 \textbf{Chức năng:} Solenoid FET là tầng công suất đóng/cắt dòng tải cuộn từ, thường đi kèm phần dập xung để bảo vệ linh kiện.
-\textbf{Tính toán từ schematic (nhánh MOSFET):}
-\[
-    I_{coil}\approx \frac{V_{coil}}{R_{coil}}, \qquad
-    P_{MOS}\approx I_{RMS}^2\cdot R_{DS(on)}
-\]
-\textit{Cách tính:} thay \(R_{coil}\) của cuộn van và \(R_{DS(on)}\) theo datasheet linh kiện dùng trong hình để kiểm tra tổn hao và điều kiện tản nhiệt.
 
 \begin{figure}[H]
     \centering
@@ -556,17 +646,6 @@ với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\),
     \label{fig:exp-sche-khoi-ntc}
 \end{figure}
 \textbf{Chức năng:} Khối NTC tiếp nhận tín hiệu cảm biến nhiệt điện trở, chuyển đổi thành mức ADC để MCU giám sát nhiệt độ tức thời.
-\textbf{Tính toán từ schematic (cầu phân áp NTC):}
-\[
-    V_{ADC}=V_{REF}\cdot \frac{R_{NTC}}{R_{FIX}+R_{NTC}}
-\]
-\[
-    R_{NTC}=R_{FIX}\cdot \frac{V_{ADC}}{V_{REF}-V_{ADC}}
-\]
-\[
-    \frac{1}{T}=\frac{1}{T_0}+\frac{1}{B}\ln\!\left(\frac{R_{NTC}}{R_0}\right)
-\]
-\textit{Cách tính:} lấy \(R_{FIX}\), \(V_{REF}\) đúng theo schematic, đo/đọc \(V_{ADC}\) để suy ra \(R_{NTC}\), sau đó đổi sang nhiệt độ bằng tham số \(B\) của NTC.
 
 \begin{figure}[H]
     \centering
@@ -608,13 +687,17 @@ với \(D\) là duty PWM. \textit{Cách tính:} dùng giá trị \(R_{heater}\),
 \end{figure}
 \textbf{Chức năng:} Watchdog giám sát nhịp hoạt động của bộ điều khiển; khi phát hiện treo hệ thống sẽ kích hoạt cơ chế phục hồi để tăng độ an toàn vận hành.
 
-\subsection{Bo giao tiếp - IF}
-\label{subsec:sche-bo-giao-tiep-if}
+% \subsection{Bo giao tiếp - IF}
+% \label{subsec:sche-bo-giao-tiep-if}
 
-\subsection{Bo phát năng lượng ánh sáng - LASER}
-\label{subsec:sche-bo-phat-laser}
+% \subsection{Bo phát năng lượng ánh sáng - LASER}
+% \label{subsec:sche-bo-phat-laser}
 
-\subsection{Bo thu năng lượng ánh sáng - PHOTO}
-\label{subsec:sche-bo-thu-photo}
+% \subsection{Bo thu năng lượng ánh sáng - PHOTO}
+% \label{subsec:sche-bo-thu-photo}
 
 \newpage
+
+
+
+

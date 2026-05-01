@@ -1,0 +1,717 @@
+﻿% ==========================================================
+% CHÆ¯Æ NG 3: THIáº¾T Káº¾ VÃ€ THá»°C HIá»†N PHáº¦N Cá»¨NG
+% ==========================================================
+
+\chapter{Thiáº¿t káº¿ vÃ  thá»±c hiá»‡n pháº§n cá»©ng}
+\label{ch:thiet_ke_phan_cung}
+
+ChÆ°Æ¡ng nÃ y trÃ¬nh bÃ y Ä‘á»‹nh hÆ°á»›ng thiáº¿t káº¿ vÃ  triá»ƒn khai pháº§n cá»©ng cho mÃ´ Ä‘un thÃ­ nghiá»‡m Ä‘a nÄƒng trÃªn vá»‡ tinh nhá», bÃ¡m theo má»¥c tiÃªu Ä‘Ã£ nÃªu á»Ÿ ChÆ°Æ¡ng 1 vÃ  cÆ¡ sá»Ÿ lÃ½ thuyáº¿t á»Ÿ ChÆ°Æ¡ng 2. Trá»ng tÃ¢m cá»§a chÆ°Æ¡ng lÃ  chuyá»ƒn cÃ¡c yÃªu cáº§u nhiá»‡m vá»¥ thÃ nh cÃ¡c chá»‰ tiÃªu ká»¹ thuáº­t cá»¥ thá»ƒ Ä‘á»ƒ lÃ m cÆ¡ sá»Ÿ cho thiáº¿t káº¿ sÆ¡ Ä‘á»“ khá»‘i, lá»±a chá»n linh kiá»‡n, thiáº¿t káº¿ máº¡ch vÃ  kiá»ƒm thá»­.
+
+\section{YÃªu cáº§u thiáº¿t káº¿}
+\label{sec:yeu_cau_thiet_ke}
+
+Tá»« cÃ¡c má»¥c tiÃªu Ä‘Ã£ nÃªu á»Ÿ ChÆ°Æ¡ng 1 vÃ  kiáº¿n trÃºc OBC--EXP--IF trÃ¬nh bÃ y trong ChÆ°Æ¡ng 2, yÃªu cáº§u cá»§a pháº§n cá»©ng trong Ä‘á» tÃ i khÃ´ng chá»‰ dá»«ng á»Ÿ viá»‡c váº­n hÃ nh tá»«ng bo riÃªng láº» mÃ  pháº£i báº£o Ä‘áº£m toÃ n há»‡ hoáº¡t Ä‘á»™ng nhÆ° má»™t khá»‘i thá»‘ng nháº¥t, trong Ä‘Ã³ giao tiáº¿p dá»¯ liá»‡u liÃªn bo lÃ  má»¥c tiÃªu trung tÃ¢m.
+
+\begin{itemize}
+    \item \textbf{YÃªu cáº§u tÃ­ch há»£p há»‡ thá»‘ng:}
+    Há»‡ thá»‘ng pháº£i Ä‘Æ°á»£c thiáº¿t káº¿ Ä‘á»ƒ cÃ¡c bo OBC, EXP, IF, LASER vÃ  PHOTO káº¿t ná»‘i thÃ nh má»™t cáº¥u trÃºc Ä‘á»“ng bá»™.
+    Viá»‡c bá»‘ trÃ­ pháº§n cá»©ng pháº£i báº£o Ä‘áº£m tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn vÃ  tÃ­n hiá»‡u Ä‘o Ä‘Æ°á»£c truyá»n á»•n Ä‘á»‹nh giá»¯a cÃ¡c bo, giáº£m sai lá»‡ch do nhiá»…u vÃ  sai khÃ¡c vá»‹ trÃ­ láº¯p Ä‘áº·t.
+
+    \item \textbf{YÃªu cáº§u vá» giao tiáº¿p dá»¯ liá»‡u giá»¯a cÃ¡c bo:}
+    Luá»“ng dá»¯ liá»‡u pháº£i Ä‘Æ°á»£c tá»• chá»©c rÃµ rÃ ng theo chiá»u Ä‘iá»u khiá»ƒn vÃ  chiá»u pháº£n há»“i:
+    OBC gá»­i lá»‡nh xuá»‘ng EXP, EXP Ä‘iá»u phá»‘i hoáº¡t Ä‘á»™ng thÃ­ nghiá»‡m, Ä‘iá»u khiá»ƒn bo LASER vÃ  thu dá»¯ liá»‡u tá»« PHOTO. BÃªn cáº¡nh Ä‘Ã³ cÃ²n Ä‘á»c cÃ¡c Ä‘iá»u kiá»‡n mÃ´i trÆ°á»ng thÃ­ nghiá»‡m nhÆ° nhiá»‡t Ä‘á»™, Ä‘á»™ áº©m tá»« cÃ¡c cáº£m biáº¿n Ä‘á»ƒ Ä‘iá»u khiá»ƒn mÃ´i trÆ°á»ng thÃ­ nghiá»‡m. Tá»« dá»¯ liá»‡u thu tháº­p Ä‘Æ°á»£c trÃªn bo PHOTO, EXP gá»­i vá» láº¡i OBC, sau khi phÃ¢n tÃ­ch Ä‘Ã³ng gÃ³i dá»¯ liá»‡u bo OBC gá»­i dá»¯ liá»‡u vá» cho ngÆ°á»i dÃ¹ng, bÃªn cáº¡nh Ä‘Ã³ bo IF Ä‘Ã³ng vai trÃ² lÃ  bo interface cá»§a há»‡ thá»‘ng, dÃ¹ng Ä‘á»ƒ giao tiáº¿p vá»›i cÃ¡c module pháº§n cá»©ng bÃªn ngoÃ i khÃ¡c vÃ  giao tiáº¿p ná»™i bá»™ vá»›i 2 bo Ä‘iá»u khiá»ƒn chÃ­nh cá»§a há»‡ thá»‘ng lÃ  OBC vÃ  EXP.
+    Há»‡ thá»‘ng Ä‘á»“ng thá»i pháº£i há»— trá»£ lÆ°u váº¿t tráº¡ng thÃ¡i hoáº¡t Ä‘á»™ng Ä‘á»ƒ phá»¥c vá»¥ giÃ¡m sÃ¡t vÃ  phÃ¢n tÃ­ch sau thÃ­ nghiá»‡m.
+
+    \item \textbf{YÃªu cáº§u lÆ°u trá»¯ vÃ  giÃ¡m sÃ¡t:}
+    Há»‡ thá»‘ng pháº£i lÆ°u Ä‘Æ°á»£c hÃ nh vi thÃ­ nghiá»‡m vÃ  dá»¯ liá»‡u máº«u váº­t theo tá»«ng phiÃªn Ä‘o.
+    Dá»¯ liá»‡u vÃ  tráº¡ng thÃ¡i há»‡ thá»‘ng cáº§n Ä‘Æ°á»£c chuyá»ƒn vá» mÃ¡y tÃ­nh giÃ¡m sÃ¡t Ä‘á»ƒ ngÆ°á»i váº­n hÃ nh theo dÃµi vÃ  Ä‘Ã¡nh giÃ¡ káº¿t quáº£.
+
+    \item \textbf{YÃªu cáº§u an toÃ n vÃ  Ä‘á»™ bá»n:}
+    Pháº§n cá»©ng pháº£i cÃ³ báº£o vá»‡ quÃ¡ dÃ²ng, quÃ¡ Ã¡p cho toÃ n há»‡ vÃ  cho cÃ¡c khá»‘i cÃ´ng suáº¥t.
+    Káº¿t cáº¥u vÃ  káº¿t ná»‘i pháº£i Ä‘á»§ cháº¯c cháº¯n Ä‘á»ƒ há»‡ thá»‘ng lÃ m viá»‡c á»•n Ä‘á»‹nh lÃ¢u dÃ i trong Ä‘iá»u kiá»‡n phÃ²ng thÃ­ nghiá»‡m, háº¡n cháº¿ lá»—i do rung láº¯c, tiáº¿p xÃºc kÃ©m hoáº·c quÃ¡ nhiá»‡t cá»¥c bá»™.
+
+    \item \textbf{YÃªu cáº§u Ä‘á»‘i vá»›i khá»‘i Ä‘iá»u khiá»ƒn trung tÃ¢m:}
+    Khá»‘i Ä‘iá»u khiá»ƒn pháº£i há»— trá»£ cÃ¡c giao tiáº¿p ngoáº¡i vi phá»¥c vá»¥ tÃ­ch há»£p mÃ´ Ä‘un (nhÆ° UART/I2C/SPI), cho phÃ©p tá»± Ä‘á»™ng hÃ³a quy trÃ¬nh theo ká»‹ch báº£n thÃ­ nghiá»‡m.
+    Há»‡ thá»‘ng cáº§n há»— trá»£ láº¥y máº«u vÃ  truyá»n tÃ­n hiá»‡u vá»›i tá»‘c Ä‘á»™ phÃ¹ há»£p Ä‘á»ƒ Ä‘Ã¡p á»©ng bÃ i toÃ¡n theo dÃµi tÃ­n hiá»‡u quang theo thá»i gian thá»±c.
+
+    \item \textbf{YÃªu cáº§u Ä‘á»‘i vá»›i khá»‘i giÃ¡m sÃ¡t vÃ  Ä‘iá»u khiá»ƒn nhiá»‡t Ä‘á»™:}
+    Máº¡ch Ä‘o nhiá»‡t Ä‘á»™ cáº§n sá»­ dá»¥ng cáº£m biáº¿n NTC cÃ³ Ä‘á»™ nháº¡y cao Ä‘á»ƒ theo dÃµi liÃªn tá»¥c Ä‘iá»u kiá»‡n nhiá»‡t cá»§a buá»“ng thÃ­ nghiá»‡m.
+    Khá»‘i gia nhiá»‡t vÃ  lÃ m mÃ¡t (HEATER/TEC) pháº£i phá»‘i há»£p vá»›i bá»™ Ä‘iá»u khiá»ƒn Ä‘á»ƒ duy trÃ¬ nhiá»‡t Ä‘á»™ theo giÃ¡ trá»‹ Ä‘áº·t trÆ°á»›c.
+
+    \item \textbf{YÃªu cáº§u Ä‘á»‘i vá»›i khá»‘i phÃ¡t quang (LASER):}
+    CÃ´ng suáº¥t vÃ  má»©c kÃ­ch hoáº¡t laser cáº§n Ä‘iá»u chá»‰nh Ä‘Æ°á»£c theo tá»«ng cháº¿ Ä‘á»™ lÃ m viá»‡c vÃ  tá»«ng loáº¡i máº«u.
+    Máº¡ch Ä‘iá»u khiá»ƒn laser pháº£i báº£o Ä‘áº£m hoáº¡t Ä‘á»™ng á»•n Ä‘á»‹nh, cÃ³ cÆ¡ cháº¿ ngáº¯t an toÃ n khi xuáº¥t hiá»‡n tráº¡ng thÃ¡i báº¥t thÆ°á»ng.
+
+    \item \textbf{YÃªu cáº§u Ä‘á»‘i vá»›i khá»‘i thu quang (PHOTO):}
+    Khá»‘i thu pháº£i cÃ³ Ä‘á»™ nháº¡y cao, Ä‘i kÃ¨m máº¡ch khuáº¿ch Ä‘áº¡i vÃ  lá»c tÃ­n hiá»‡u phÃ¹ há»£p Ä‘á»ƒ giáº£m nhiá»…u.
+    TÃ­n hiá»‡u quang sau máº«u cáº§n Ä‘Æ°á»£c thu nháº­n chÃ­nh xÃ¡c vÃ  chuyá»ƒn Ä‘á»•i sang dá»¯ liá»‡u sá»‘ Ä‘á»ƒ truyá»n vá» khá»‘i Ä‘iá»u khiá»ƒn, phá»¥c vá»¥ xá»­ lÃ½ vÃ  Ä‘Ã¡nh giÃ¡.
+\end{itemize}
+
+CÃ¡c yÃªu cáº§u trÃªn lÃ  ná»n táº£ng cho cÃ¡c pháº§n tiáº¿p theo cá»§a chÆ°Æ¡ng vá» phÃ¢n tÃ­ch phÆ°Æ¡ng Ã¡n, thiáº¿t káº¿ sÆ¡ Ä‘á»“ khá»‘i vÃ  triá»ƒn khai máº¡ch thá»±c táº¿.
+
+\section{PhÃ¢n tÃ­ch phÆ°Æ¡ng phÃ¡p thiáº¿t káº¿}
+\label{sec:phan_tich_phuong_phap}
+
+Tá»« yÃªu cáº§u á»Ÿ Má»¥c 3.1 cÃ³ thá»ƒ tháº¥y bÃ i toÃ¡n trá»ng tÃ¢m cá»§a há»‡ thá»‘ng lÃ  báº£o Ä‘áº£m giao tiáº¿p dá»¯ liá»‡u tin cáº­y giá»¯a cÃ¡c bo trong khi váº«n duy trÃ¬ tÃ­nh mÃ´ Ä‘un, kháº£ nÄƒng má»Ÿ rá»™ng vÃ  Ä‘á»™ á»•n Ä‘á»‹nh váº­n hÃ nh. VÃ¬ váº­y, quÃ¡ trÃ¬nh thiáº¿t káº¿ Ä‘Æ°á»£c phÃ¢n tÃ­ch theo ba hÆ°á»›ng chÃ­nh: kiáº¿n trÃºc káº¿t ná»‘i pháº§n cá»©ng, phÆ°Æ¡ng thá»©c giao tiáº¿p dá»¯ liá»‡u vÃ  cÃ¡ch tá»• chá»©c Ä‘iá»u khiá»ƒn há»‡ thá»‘ng.
+
+\subsection{PhÃ¢n tÃ­ch theo kiáº¿n trÃºc káº¿t ná»‘i pháº§n cá»©ng}
+\label{subsec:phan_tich_kien_truc_ket_noi}
+
+\textbf{PhÆ°Æ¡ng phÃ¡p 1: TÃ­ch há»£p toÃ n bá»™ chá»©c nÄƒng trÃªn má»™t bo máº¡ch duy nháº¥t}
+\begin{itemize}
+    \item Æ¯u Ä‘iá»ƒm: giáº£m sá»‘ lÆ°á»£ng Ä‘áº§u ná»‘i liÃªn bo, giáº£m Ä‘á»™ phá»©c táº¡p dÃ¢y ná»‘i, thuáº­n lá»£i cho tá»‘i Æ°u kÃ­ch thÆ°á»›c.
+    \item Khuyáº¿t Ä‘iá»ƒm: khÃ³ má»Ÿ rá»™ng hoáº·c thay Ä‘á»•i tá»«ng khá»‘i chá»©c nÄƒng; khi má»™t khá»‘i lá»—i cÃ³ thá»ƒ áº£nh hÆ°á»Ÿng toÃ n há»‡; khÃ³ kiá»ƒm thá»­ Ä‘á»™c láº­p tá»«ng pháº§n LASER/PHOTO/giao tiáº¿p.
+\end{itemize}
+
+\textbf{PhÆ°Æ¡ng phÃ¡p 2: Kiáº¿n trÃºc Ä‘a bo theo phÃ¢n lá»›p chá»©c nÄƒng (OBC--EXP--IF--LASER--PHOTO)}
+\begin{itemize}
+    \item Æ¯u Ä‘iá»ƒm: tÃ¡ch biá»‡t rÃµ vai trÃ² tá»«ng bo, dá»… kiá»ƒm thá»­ vÃ  thay tháº¿; thuáº­n lá»£i má»Ÿ rá»™ng giao diá»‡n qua IF; giáº£m rá»§i ro tÃ­ch há»£p theo tá»«ng giai Ä‘oáº¡n. PhÃ¹ há»£p vá»›i kÃ­ch thÆ°á»›c cá»§a tiÃªu chuáº©n payload satellite.
+    \item Khuyáº¿t Ä‘iá»ƒm: tÄƒng sá»‘ lÆ°á»£ng liÃªn káº¿t liÃªn bo, yÃªu cáº§u Ä‘á»“ng bá»™ tÃ­n hiá»‡u vÃ  chá»‘ng nhiá»…u tá»‘t hÆ¡n; thiáº¿t káº¿ cÆ¡ khÃ­ vÃ  dÃ¢y ná»‘i phá»©c táº¡p hÆ¡n.
+\end{itemize}
+
+Vá»›i má»¥c tiÃªu nghiÃªn cá»©u mÃ´ Ä‘un Ä‘a nÄƒng vÃ  nháº¥n máº¡nh luá»“ng dá»¯ liá»‡u liÃªn bo, phÆ°Æ¡ng phÃ¡p 2 phÃ¹ há»£p hÆ¡n do pháº£n Ã¡nh Ä‘Ãºng kiáº¿n trÃºc thá»±c táº¿ cá»§a Ä‘á» tÃ i vÃ  cho phÃ©p Ä‘Ã¡nh giÃ¡ riÃªng tá»«ng lá»›p chá»©c nÄƒng.
+
+\subsection{PhÃ¢n tÃ­ch theo tá»• chá»©c Ä‘iá»u khiá»ƒn há»‡ thá»‘ng}
+\label{subsec:phan_tich_to_chuc_dieu_khien}
+
+\textbf{PhÆ°Æ¡ng phÃ¡p 1: OBC Ä‘iá»u khiá»ƒn trá»±c tiáº¿p toÃ n bá»™ LASER/PHOTO}
+\begin{itemize}
+    \item Æ¯u Ä‘iá»ƒm: logic táº­p trung táº¡i má»™t Ä‘iá»ƒm, dá»… quáº£n lÃ½ á»Ÿ má»©c tá»•ng thá»ƒ.
+    \item Khuyáº¿t Ä‘iá»ƒm: tÄƒng táº£i xá»­ lÃ½ cho OBC, giáº£m tÃ­nh thá»i gian thá»±c á»Ÿ khá»‘i thÃ­ nghiá»‡m, khÃ³ má»Ÿ rá»™ng khi tÄƒng sá»‘ tÃ¡c vá»¥ cá»¥c bá»™.
+\end{itemize}
+
+\textbf{PhÆ°Æ¡ng phÃ¡p 2: Äiá»u khiá»ƒn phÃ¢n cáº¥p, OBC giao nhiá»‡m vá»¥, EXP Ä‘iá»u phá»‘i cá»¥c bá»™}
+\begin{itemize}
+    \item Æ¯u Ä‘iá»ƒm: giáº£m táº£i cho OBC; EXP xá»­ lÃ½ nhanh cÃ¡c tÃ¡c vá»¥ thá»i gian thá»±c (Ä‘iá»u khiá»ƒn LASER/PHOTO, Ä‘á»c nhiá»‡t, Ä‘iá»u khiá»ƒn TEC/HEATER); tÄƒng tÃ­nh mÃ´ Ä‘un vÃ  kháº£ nÄƒng tÃ¡i sá»­ dá»¥ng.
+    \item Khuyáº¿t Ä‘iá»ƒm: cáº§n Ä‘á»‹nh nghÄ©a rÃµ giao thá»©c lá»‡nh-tráº¡ng thÃ¡i giá»¯a OBC vÃ  EXP Ä‘á»ƒ trÃ¡nh xung Ä‘á»™t Ä‘iá»u khiá»ƒn.
+\end{itemize}
+
+PhÆ°Æ¡ng phÃ¡p 2 Ä‘Æ°á»£c lá»±a chá»n vÃ¬ phÃ¹ há»£p trá»±c tiáº¿p vá»›i kiáº¿n trÃºc lÃ½ thuyáº¿t Ä‘Ã£ xÃ¢y dá»±ng á»Ÿ ChÆ°Æ¡ng 2 vÃ  há»— trá»£ tá»‘t má»¥c tiÃªu chÃ­nh cá»§a Ä‘á» tÃ i lÃ  kiá»ƒm chá»©ng luá»“ng Ä‘iá»u khiá»ƒn--thu tháº­p--truyá»n dá»¯ liá»‡u giá»¯a cÃ¡c bo.
+
+\subsection{Káº¿t luáº­n lá»±a chá»n phÆ°Æ¡ng phÃ¡p}
+\label{subsec:ket_luan_lua_chon}
+
+Tá»« cÃ¡c phÃ¢n tÃ­ch trÃªn, phÆ°Æ¡ng phÃ¡p thiáº¿t káº¿ Ä‘Æ°á»£c chá»n cho Ä‘á» tÃ i lÃ : \textit{kiáº¿n trÃºc Ä‘a bo phÃ¢n lá»›p chá»©c nÄƒng, giao tiáº¿p dá»¯ liá»‡u theo khung cÃ³ kiá»ƒm lá»—i, Ä‘iá»u khiá»ƒn phÃ¢n cáº¥p OBC--EXP}. CÃ¡ch lá»±a chá»n nÃ y cÃ¢n báº±ng giá»¯a tÃ­nh kháº£ thi triá»ƒn khai, Ä‘á»™ tin cáº­y truyá»n dá»¯ liá»‡u vÃ  má»¥c tiÃªu nghiÃªn cá»©u cá»§a luáº­n vÄƒn.
+
+\section{SÆ¡ Ä‘á»“ khá»‘i tá»•ng quÃ¡t}
+\label{sec:so_do_khoi_tong_quat}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/so-do-tong-quat.png}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i tá»•ng quÃ¡t}
+    \label{fig:so-do-tong-quat}
+\end{figure}
+
+\textbf{Bo Ä‘iá»u khiá»ƒn trung tÃ¢m (OBC):}
+OBC lÃ  khá»‘i Ä‘iá»u phá»‘i á»Ÿ má»©c há»‡ thá»‘ng, tiáº¿p nháº­n lá»‡nh tá»« phÃ­a ngÆ°á»i váº­n hÃ nh vÃ  phÃ¡t lá»‡nh tÃ¡c vá»¥ xuá»‘ng khá»‘i thÃ­ nghiá»‡m.
+Bo nÃ y Ä‘á»“ng thá»i thu nháº­n dá»¯ liá»‡u pháº£n há»“i tá»« EXP, tá»•ng há»£p tráº¡ng thÃ¡i toÃ n há»‡ vÃ  lÆ°u cÃ¡c thÃ´ng tin quan trá»ng cá»§a phiÃªn thÃ­ nghiá»‡m Ä‘á»ƒ phá»¥c vá»¥ theo dÃµi vÃ  háº­u kiá»ƒm.
+Trong cáº¥u hÃ¬nh triá»ƒn khai, OBC Ä‘Ã³ng vai trÃ² \textit{master} cá»§a máº¡ng Ä‘iá»u khiá»ƒn ná»™i bá»™.
+
+\textbf{Bo Ä‘iá»u khiá»ƒn thÃ­ nghiá»‡m (EXP):}
+EXP lÃ  bá»™ Ä‘iá»u khiá»ƒn cá»¥c bá»™ cá»§a táº£i thÃ­ nghiá»‡m.
+Khi nháº­n lá»‡nh tá»« OBC, EXP thá»±c hiá»‡n chu trÃ¬nh thÃ­ nghiá»‡m: Ä‘iá»u khiá»ƒn bo LASER, thu dá»¯ liá»‡u tá»« bo PHOTO, Ä‘á»c dá»¯ liá»‡u cáº£m biáº¿n mÃ´i trÆ°á»ng (nhÆ° NTC) vÃ  Ä‘iá»u phá»‘i pháº§n tá»­ cháº¥p hÃ nh nhiá»‡t (HEATER/TEC).
+Sau má»—i chu ká»³ Ä‘o, EXP chuáº©n hÃ³a vÃ  Ä‘Ã³ng gÃ³i dá»¯ liá»‡u trÆ°á»›c khi gá»­i ngÆ°á»£c lÃªn OBC.
+
+\textbf{Bo giao tiáº¿p trung gian (IF):}
+IF lÃ  táº§ng \textit{interface}, cÃ³ nhiá»‡m vá»¥ chuáº©n hÃ³a káº¿t ná»‘i, tá»• chá»©c Ä‘Æ°á»ng tÃ­n hiá»‡u vÃ  há»— trá»£ má»Ÿ rá»™ng ngoáº¡i vi.
+Khá»‘i nÃ y giÃºp tÃ¡ch lá»›p Ä‘iá»u khiá»ƒn chÃ­nh khá»i cÃ¡c rÃ ng buá»™c káº¿t ná»‘i pháº§n cá»©ng, nhá» Ä‘Ã³ há»‡ thá»‘ng dá»… tÃ­ch há»£p thÃªm module má»›i, Ä‘á»“ng thá»i giáº£m Ä‘á»™ phá»©c táº¡p khi thay Ä‘á»•i cáº¥u hÃ¬nh thá»­ nghiá»‡m.
+
+\textbf{Bo phÃ¡t quang (LASER):}
+Bo LASER táº¡o nguá»“n sÃ¡ng kÃ­ch thÃ­ch cho quÃ¡ trÃ¬nh Ä‘o máº«u.
+Máº¡ch Ä‘Æ°á»£c thiáº¿t káº¿ theo cáº¥u trÃºc nhiá»u kÃªnh Ä‘á»™c láº­p, cho phÃ©p lá»±a chá»n tá»«ng kÃªnh phÃ¡t theo lá»‡nh Ä‘iá»u khiá»ƒn tá»« EXP.
+CÆ°á»ng Ä‘á»™ phÃ¡t cÃ³ thá»ƒ hiá»‡u chá»‰nh Ä‘á»ƒ phÃ¹ há»£p vá»›i tá»«ng Ä‘iá»u kiá»‡n thÃ­ nghiá»‡m vÃ  tá»«ng loáº¡i máº«u váº­t.
+
+\textbf{Bo thu quang (PHOTO):}
+Bo PHOTO tiáº¿p nháº­n tÃ­n hiá»‡u Ã¡nh sÃ¡ng sau khi tÆ°Æ¡ng tÃ¡c vá»›i máº«u vÃ  biáº¿n Ä‘á»•i thÃ nh tÃ­n hiá»‡u Ä‘iá»‡n phá»¥c vá»¥ Ä‘o lÆ°á»ng.
+Khá»‘i nÃ y tÃ­ch há»£p máº¡ch khuáº¿ch Ä‘áº¡i, lá»c nhiá»…u vÃ  chuyá»ƒn Ä‘á»•i ADC Ä‘á»ƒ báº£o Ä‘áº£m tÃ­n hiá»‡u thu cÃ³ cháº¥t lÆ°á»£ng tá»‘t trÆ°á»›c khi truyá»n vá» EXP.
+Vá»‹ trÃ­ cÃ¡c kÃªnh thu Ä‘Æ°á»£c bá»‘ trÃ­ tÆ°Æ¡ng á»©ng vá»›i cÃ¡c kÃªnh phÃ¡t trÃªn bo LASER nháº±m báº£o Ä‘áº£m tÃ­nh Ä‘á»“ng bá»™ khi quÃ©t máº«u.
+
+\section{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t}
+\subsection{Bo mÃ¡y tÃ­nh Ä‘iá»u khiá»ƒn trung tÃ¢m - OBC}
+\label{subsec:bo-dieu-khien-trung-tam-obc}
+
+Bo OBC lÃ  trung tÃ¢m Ä‘iá»u khiá»ƒn vÃ  xá»­ lÃ½ dá»¯ liá»‡u cá»§a há»‡ thá»‘ng, Ä‘áº£m nhiá»‡m vai trÃ² giao tiáº¿p vá»›i ngÆ°á»i váº­n hÃ nh, 
+quáº£n lÃ½ cÃ¡c tÃ¡c vá»¥ Ä‘iá»u khiá»ƒn vÃ  lÆ°u trá»¯ dá»¯ liá»‡u thÃ­ nghiá»‡m. SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a bo OBC Ä‘Æ°á»£c trÃ¬nh bÃ y trong HÃ¬nh \ref{fig:so-do-chi-tiet-obc}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/OBC.png}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a bo Ä‘iá»u khiá»ƒn OBC}
+    \label{fig:so-do-chi-tiet-obc}
+\end{figure}
+
+Dá»±a trÃªn sÆ¡ Ä‘á»“ HÃ¬nh~\ref{fig:so-do-chi-tiet-obc}, chá»©c nÄƒng cÃ¡c khá»‘i chÃ­nh cá»§a board OBC gá»“m:
+\begin{itemize}
+    \item \textbf{Khá»‘i MCU -- STM32H7:} lÃ  bá»™ xá»­ lÃ½ trung tÃ¢m cá»§a OBC, thá»±c hiá»‡n tiáº¿p nháº­n lá»‡nh Ä‘iá»u khiá»ƒn, Ä‘iá»u phá»‘i dá»¯ liá»‡u giá»¯a cÃ¡c bo máº¡ch vÃ  quáº£n lÃ½ luá»“ng váº­n hÃ nh tá»•ng thá»ƒ.
+
+    \item \textbf{Khá»‘i Compute Module 4 (CM4):} Ä‘áº£m nhiá»‡m cÃ¡c tÃ¡c vá»¥ táº§ng cao nhÆ° giao tiáº¿p máº¡ng, quáº£n lÃ½ cÆ¡ sá»Ÿ dá»¯ liá»‡u, truyá»n nháº­n lá»‡nh vÃ  cháº¡y cÃ¡c tiáº¿n trÃ¬nh giÃ¡m sÃ¡t há»‡ thá»‘ng.
+
+    \item \textbf{Khá»‘i SPI Flash \& SPI FRAM:} cung cáº¥p vÃ¹ng nhá»› lÆ°u tham sá»‘, nháº­t kÃ½ váº­n hÃ nh vÃ  dá»¯ liá»‡u thÃ­ nghiá»‡m cáº§n truy cáº­p nhanh vÃ  á»•n Ä‘á»‹nh.
+
+    \item \textbf{Khá»‘i Watchdog:} giÃ¡m sÃ¡t tráº¡ng thÃ¡i hoáº¡t Ä‘á»™ng pháº§n má»m; khi phÃ¡t hiá»‡n treo há»‡ thá»‘ng sáº½ kÃ­ch hoáº¡t cÆ¡ cháº¿ reset Ä‘á»ƒ báº£o Ä‘áº£m tÃ­nh liÃªn tá»¥c váº­n hÃ nh.
+
+    \item \textbf{Khá»‘i I2C RTC:} duy trÃ¬ thá»i gian thá»±c cho há»‡ thá»‘ng, phá»¥c vá»¥ Ä‘Ã³ng dáº¥u thá»i gian cho dá»¯ liá»‡u Ä‘o vÃ  cÃ¡c sá»± kiá»‡n váº­n hÃ nh.
+
+    \item \textbf{Khá»‘i USB VCP:} cung cáº¥p giao diá»‡n USB áº£o Ä‘á»ƒ káº¿t ná»‘i vá»›i mÃ¡y tÃ­nh, há»— trá»£ cáº¥u hÃ¬nh, truyá»n dá»¯ liá»‡u vÃ  debug.
+
+    \item \textbf{Khá»‘i giao tiáº¿p cÃ¡ch ly:} gá»“m \textit{UART ISO}, \textit{SPI ISO}, \textit{GPIO ISO}, \textit{I2C ISO}; cÃ³ chá»©c nÄƒng cÃ¡ch ly Ä‘iá»‡n Ä‘á»ƒ báº£o vá»‡ khá»‘i xá»­ lÃ½ trÆ°á»›c nhiá»…u vÃ  chÃªnh lá»‡ch Ä‘iá»‡n Ã¡p tá»« ngoáº¡i vi.
+\end{itemize}
+
+
+\subsection{Bo Ä‘iá»u khiá»ƒn thÃ­ nghiá»‡m - EXP}
+\label{subsec:bo-dieu-khien-thi-nghiem-exp}
+
+Bo Ä‘iá»u khiá»ƒn thÃ­ nghiá»‡m (EXP) lÃ  trung tÃ¢m xá»­ lÃ½ vÃ  Ä‘iá»u phá»‘i hoáº¡t Ä‘á»™ng cá»§a thÃ­ nghiá»‡m, Ä‘Ã³ng vai trÃ² cáº§u ná»‘i giá»¯a OBC vÃ  cÃ¡c khá»‘i chá»©c nÄƒng nhÆ° LASER, PHOTO, 
+cáº£m biáº¿n mÃ´i trÆ°á»ng vÃ  pháº§n tá»­ cháº¥p hÃ nh nhiá»‡t. SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a bo EXP Ä‘Æ°á»£c trÃ¬nh bÃ y trong HÃ¬nh \ref{fig:so-do-khoi-exp}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/so-do-khoi-exp.png}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t board EXP}
+    \label{fig:so-do-khoi-exp}
+\end{figure}
+
+Dá»±a trÃªn sÆ¡ Ä‘á»“ HÃ¬nh~\ref{fig:so-do-khoi-exp}, chá»©c nÄƒng cÃ¡c khá»‘i chÃ­nh cá»§a board EXP gá»“m:
+\begin{itemize}
+    \item \textbf{Khá»‘i SAMA7G54:} lÃ  bá»™ xá»­ lÃ½ chÃ­nh, thá»±c hiá»‡n Ä‘iá»u phá»‘i tÃ¡c vá»¥ cáº¥p há»‡ thá»‘ng, quáº£n lÃ½ truyá»n thÃ´ng vÃ  trao Ä‘á»•i dá»¯ liá»‡u vá»›i MCU qua UART.
+
+    \item \textbf{Khá»‘i MCU SAMV71Q21B:} lÃ  bá»™ Ä‘iá»u khiá»ƒn thá»i gian thá»±c, trá»±c tiáº¿p Ä‘á»c tÃ­n hiá»‡u cáº£m biáº¿n vÃ  phÃ¡t lá»‡nh Ä‘iá»u khiá»ƒn tá»›i cÃ¡c táº£i cháº¥p hÃ nh.
+
+    \item \textbf{Khá»‘i DDR3L:} bá»™ nhá»› lÃ m viá»‡c tá»‘c Ä‘á»™ cao cho SAMA7G54 trong cÃ¡c tÃ¡c vá»¥ xá»­ lÃ½ dá»¯ liá»‡u.
+
+    \item \textbf{Khá»‘i MRAM:} bá»™ nhá»› khÃ´ng máº¥t dá»¯ liá»‡u dÃ¹ng lÆ°u tham sá»‘/cáº¥u hÃ¬nh cáº§n giá»¯ láº¡i sau khi máº¥t nguá»“n.
+
+    \item \textbf{Khá»‘i x2 eMMC:} bá»™ nhá»› lÆ°u trá»¯ dung lÆ°á»£ng lá»›n cho chÆ°Æ¡ng trÃ¬nh, dá»¯ liá»‡u há»‡ thá»‘ng vÃ  nháº­t kÃ½ váº­n hÃ nh.
+
+    \item \textbf{Khá»‘i PMIC \& current monitors:} cáº¥p nguá»“n cho cÃ¡c rail Ä‘iá»‡n Ã¡p vÃ  giÃ¡m sÃ¡t dÃ²ng tiÃªu thá»¥ cá»§a board.
+
+    \item \textbf{Khá»‘i SDCARD:} giao tiáº¿p SDMMC Ä‘á»ƒ má»Ÿ rá»™ng lÆ°u trá»¯ vÃ  thuáº­n tiá»‡n cho náº¡p/thu há»“i dá»¯ liá»‡u.
+
+    \item \textbf{Khá»‘i MICRO USB:} giao tiáº¿p USB phá»¥c vá»¥ náº¡p chÆ°Æ¡ng trÃ¬nh, cáº¥u hÃ¬nh hoáº·c cháº©n Ä‘oÃ¡n há»‡ thá»‘ng.
+
+    \item \textbf{Khá»‘i USB\_SWITCH:} chuyá»ƒn máº¡ch Ä‘Æ°á»ng USB theo tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn tá»« SAMA7G54 Ä‘á»ƒ chá»n tuyáº¿n káº¿t ná»‘i phÃ¹ há»£p.
+
+    \item \textbf{Khá»‘i RS422 TRANSCEIVER:} chuyá»ƒn má»©c tÃ­n hiá»‡u UART sang RS422, tÄƒng Ä‘á»™ bá»n nhiá»…u vÃ  khoáº£ng cÃ¡ch truyá»n.
+
+    \item \textbf{Khá»‘i CAN TRANSCEIVER:} giao tiáº¿p CAN TX/RX (CAN H/L) Ä‘á»ƒ káº¿t ná»‘i bus cÃ´ng nghiá»‡p vá»›i cÃ¡c thiáº¿t bá»‹ ngoÃ i.
+
+    \item \textbf{Khá»‘i TEC DRIVER:} máº¡ch cÃ´ng suáº¥t Ä‘iá»u khiá»ƒn pháº§n tá»­ TEC theo lá»‡nh tá»« MCU.
+
+    \item \textbf{Khá»‘i MPD:} máº¡ch Ä‘iá»u khiá»ƒn/Ä‘iá»u Ã¡p cao Ã¡p (HV\_O +/-) theo DAC/PWM/GPIO tá»« MCU.
+
+    \item \textbf{Khá»‘i mp-HighDriver4:} máº¡ch driver cÃ´ng suáº¥t Ä‘iá»u khiá»ƒn táº£i ngoÃ i (vÃ­ dá»¥ cá»¥m bÆ¡m) theo tÃ­n hiá»‡u ADC/I2C liÃªn quan.
+
+    \item \textbf{Khá»‘i TEMP:} kÃªnh Ä‘o nhiá»‡t Ä‘á»™ Ä‘Æ°a vá» MCU qua ADC Ä‘á»ƒ giÃ¡m sÃ¡t tráº¡ng thÃ¡i nhiá»‡t.
+
+    \item \textbf{Khá»‘i RTC:} Ä‘á»“ng há»“ thá»i gian thá»±c, cung cáº¥p má»‘c thá»i gian á»•n Ä‘á»‹nh cho ghi log vÃ  Ä‘iá»u khiá»ƒn theo lá»‹ch.
+
+    \item \textbf{Khá»‘i MRAM 4bits:} vÃ¹ng nhá»› phá»¥ giao tiáº¿p QSPI cho lÆ°u tráº¡ng thÃ¡i nhanh cá»§a MCU.
+
+    \item \textbf{Khá»‘i PRAM:} bá»™ nhá»› phá»¥ giao tiáº¿p SPI, dÃ¹ng cho lÆ°u tham sá»‘ vÃ  trao Ä‘á»•i dá»¯ liá»‡u cá»¥c bá»™.
+
+    \item \textbf{Khá»‘i BMP390:} cáº£m biáº¿n Ã¡p suáº¥t/Ä‘á»™ cao káº¿t ná»‘i I2C, cung cáº¥p dá»¯ liá»‡u mÃ´i trÆ°á»ng cho Ä‘iá»u khiá»ƒn.
+
+    \item \textbf{Khá»‘i ANA:} Ä‘áº§u vÃ o tÃ­n hiá»‡u analog Ä‘Æ°a vá» MCU qua ADC Ä‘á»ƒ Ä‘o cÃ¡c Ä‘áº¡i lÆ°á»£ng tÆ°Æ¡ng tá»±.
+
+    \item \textbf{Khá»‘i LSM6DSOX:} cáº£m biáº¿n IMU (gia tá»‘c - con quay) giao tiáº¿p I2C phá»¥c vá»¥ giÃ¡m sÃ¡t dao Ä‘á»™ng/chuyá»ƒn Ä‘á»™ng.
+
+    \item \textbf{Khá»‘i WATCHDOG:} pháº§n cá»©ng giÃ¡m sÃ¡t hoáº¡t Ä‘á»™ng MCU, tá»± Ä‘á»™ng can thiá»‡p khi há»‡ thá»‘ng treo hoáº·c máº¥t Ä‘Ã¡p á»©ng.
+
+    \item \textbf{Khá»‘i PCA9508DP:} má»Ÿ rá»™ng I/O qua I2C, lÃ m cáº§u ná»‘i Ä‘iá»u khiá»ƒn/Ä‘á»c thÃªm cÃ¡c kÃªnh ngoáº¡i vi.
+
+    \item \textbf{Khá»‘i DEBUG CONSOLE:} cá»•ng UART phá»¥c vá»¥ debug, theo dÃµi log vÃ  cháº©n Ä‘oÃ¡n khi phÃ¡t triá»ƒn.
+
+    \item \textbf{Khá»‘i SWITCH:} cÃ¡c cÃ´ng táº¯c chuyá»ƒn máº¡ch ná»™i bá»™ (SPI/ADC) dÃ¹ng Ä‘á»ƒ chá»n Ä‘Æ°á»ng tÃ­n hiá»‡u, cáº¥u hÃ¬nh tuyáº¿n Ä‘o vÃ  phÃ¢n phá»‘i tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn.
+
+    \item \textbf{Khá»‘i connector CAMERA:} káº¿t ná»‘i camera qua giao thá»©c \textit{MIPI} (dá»¯ liá»‡u áº£nh) vÃ  \textit{I2C} (cáº¥u hÃ¬nh).
+
+    \item \textbf{Khá»‘i connector TO IF:} káº¿t ná»‘i sang board IF qua cÃ¡c Ä‘Æ°á»ng \textit{SPI}, \textit{I2C}, \textit{USB} vÃ  \textit{GPIO}.
+
+    \item \textbf{Khá»‘i connector MATO:} giao tiáº¿p ngoáº¡i vi theo chuáº©n \textit{SPI}.
+
+    \item \textbf{Khá»‘i connector MICRO USB:} giao tiáº¿p theo chuáº©n \textit{USB}.
+
+    \item \textbf{Khá»‘i connector USB:} giao tiáº¿p \textit{USB} thÃ´ng qua khá»‘i \textit{USB\_SWITCH}.
+
+    \item \textbf{Khá»‘i connector RS422:} giao tiáº¿p truyá»n thÃ´ng theo chuáº©n \textit{RS422}.
+
+    \item \textbf{Khá»‘i connector TEC:} nháº­n/tÆ°Æ¡ng tÃ¡c tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn - Ä‘o theo Ä‘Æ°á»ng \textit{ADC} cá»§a nhÃ¡nh TEC.
+
+    \item \textbf{Khá»‘i connector HD4:} káº¿t ná»‘i nhÃ¡nh táº£i HD4 theo Ä‘Æ°á»ng cÃ´ng suáº¥t \textit{HV\_O +/-}.
+
+    \item \textbf{Khá»‘i connector NTC:} Ä‘Æ°a tÃ­n hiá»‡u nhiá»‡t Ä‘á»™ vá» MCU qua kÃªnh \textit{ADC}.
+
+    \item \textbf{Khá»‘i connector FLOW\_SENSOR:} káº¿t ná»‘i cáº£m biáº¿n lÆ°u lÆ°á»£ng qua bus \textit{I2C}.
+
+    \item \textbf{Khá»‘i connector BMP390:} káº¿t ná»‘i cáº£m biáº¿n BMP390 qua bus \textit{I2C}.
+
+    \item \textbf{Khá»‘i connector HEATER:} nháº­n tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn cÃ´ng suáº¥t theo \textit{PWM}.
+
+    \item \textbf{Khá»‘i connector LASER:} káº¿t ná»‘i Ä‘iá»u khiá»ƒn/giÃ¡m sÃ¡t qua cÃ¡c Ä‘Æ°á»ng \textit{ADC} vÃ  \textit{SPI}.
+
+    \item \textbf{Khá»‘i connector PHOTO:} nháº­n tÃ­n hiá»‡u Ä‘o quang vá» MCU qua kÃªnh \textit{ADC}.
+
+    \item \textbf{Khá»‘i connector SOLENOID:} Ä‘iá»u khiá»ƒn vÃ  giÃ¡m sÃ¡t táº£i solenoid qua Ä‘Æ°á»ng \textit{ADC}.
+
+    \item \textbf{Khá»‘i connector BUMP:} káº¿t ná»‘i nhÃ¡nh bÆ¡m qua tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn/giÃ¡m sÃ¡t \textit{ADC}.
+\end{itemize}
+
+\subsection{Bo giao tiáº¿p - IF}
+\label{subsec:bo-giao-tiep-if}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/so-do-khoi-if.png}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t board IF}
+    \label{fig:so-do-khoi-if}
+\end{figure}
+
+Board IF giá»¯ vai trÃ² lÃ  nÆ¡i giao tiáº¿p há»‡ thá»‘ng thÃ­ nghiá»‡m vá»›i cÃ¡c chá»©c nÄƒng bÃªn ngoÃ i, Ä‘á»“ng thá»i há»— trá»£ nhiá»u chuáº©n giao tiáº¿p cÃ´ng nghiá»‡p nhÆ° RS422, LVDS. SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a board IF Ä‘Æ°á»£c trÃ¬nh bÃ y trong HÃ¬nh \ref{fig:so-do-khoi-if}.
+
+Dá»±a trÃªn sÆ¡ Ä‘á»“ HÃ¬nh~\ref{fig:so-do-khoi-if}, chá»©c nÄƒng cÃ¡c khá»‘i chÃ­nh cá»§a board IF gá»“m:
+\begin{itemize}
+    \item \textbf{Khá»‘i SAMA7D65:} lÃ  bá»™ xá»­ lÃ½ trung tÃ¢m cá»§a IF, Ä‘áº£m nhiá»‡m Ä‘iá»u phá»‘i toÃ n bá»™ luá»“ng giao tiáº¿p, quáº£n lÃ½ dá»¯ liá»‡u giá»¯a cÃ¡c cá»•ng káº¿t ná»‘i vÃ  Ä‘iá»u khiá»ƒn cÃ¡c ngoáº¡i vi Ä‘i kÃ¨m.
+
+    \item \textbf{Khá»‘i CON\_EXP:} lÃ  cá»•ng káº¿t ná»‘i chÃ­nh vá»›i board EXP, trao Ä‘á»•i cÃ¡c Ä‘Æ°á»ng \textit{CAN}, \textit{SPI}, \textit{I2C} vÃ  \textit{USB} Ä‘á»ƒ Ä‘á»“ng bá»™ lá»‡nh vÃ  dá»¯ liá»‡u liÃªn bo.
+
+    \item \textbf{Khá»‘i USB micro -- USB\_SWITCH -- CON\_USB:} táº¡o tuyáº¿n giao tiáº¿p USB linh hoáº¡t, cho phÃ©p chuyá»ƒn máº¡ch Ä‘Æ°á»ng USB giá»¯a cá»•ng vÃ o vÃ  cá»•ng ra theo cáº¥u hÃ¬nh váº­n hÃ nh.
+
+    \item \textbf{NhÃ³m cá»•ng má»Ÿ rá»™ng ngoáº¡i vi:} gá»“m \textit{CON\_OEM719A}, \textit{PC104-H1}, \textit{CON\_AX100U}, \textit{CON\_I2C}, \textit{CON\_SPI}, \textit{CON\_RS485/422}; cung cáº¥p cÃ¡c chuáº©n giao tiáº¿p \textit{UART/CAN/SPI/I2C/IO} Ä‘á»ƒ tÃ­ch há»£p thiáº¿t bá»‹ ngoÃ i.
+
+    \item \textbf{Khá»‘i SN65HVD230DR vÃ  LTC2865HMSE\#TRPBF:} lÃ  cÃ¡c transceiver truyá»n thÃ´ng, thá»±c hiá»‡n chuyá»ƒn má»©c vÃ  tÄƒng kháº£ nÄƒng chá»‘ng nhiá»…u cho cÃ¡c Ä‘Æ°á»ng truyá»n cÃ´ng nghiá»‡p.
+
+    \item \textbf{Khá»‘i SDCARD:} cung cáº¥p lÆ°u trá»¯ rá»i qua giao tiáº¿p \textit{SDMMC}, phá»¥c vá»¥ ghi log, lÆ°u cáº¥u hÃ¬nh vÃ  trÃ­ch xuáº¥t dá»¯ liá»‡u há»‡ thá»‘ng.
+
+    \item \textbf{Khá»‘i DDR3L vÃ  eMMCx2:} cung cáº¥p bá»™ nhá»› lÃ m viá»‡c tá»‘c Ä‘á»™ cao vÃ  bá»™ nhá»› lÆ°u trá»¯ khÃ´ng máº¥t dá»¯ liá»‡u cho tÃ¡c vá»¥ xá»­ lÃ½ vÃ  váº­n hÃ nh cá»§a IF.
+
+    \item \textbf{Khá»‘i EEPROM:} lÆ°u cÃ¡c tham sá»‘ cáº¥u hÃ¬nh vÃ  thÃ´ng tin hiá»‡u chá»‰nh cáº§n giá»¯ bá»n vá»¯ng trong quÃ¡ trÃ¬nh váº­n hÃ nh.
+
+    \item \textbf{Khá»‘i WATCHDOG:} giÃ¡m sÃ¡t tráº¡ng thÃ¡i xá»­ lÃ½ cá»§a bá»™ Ä‘iá»u khiá»ƒn; khi phÃ¡t hiá»‡n báº¥t thÆ°á»ng sáº½ kÃ­ch hoáº¡t cÆ¡ cháº¿ phá»¥c há»“i nháº±m tÄƒng Ä‘á»™ tin cáº­y há»‡ thá»‘ng.
+
+    \item \textbf{Khá»‘i TEMP\_SENS/CURENT\_SENS, PMIC vÃ  PMIC CURRENT MONITORS:} Ä‘o nhiá»‡t Ä‘á»™, dÃ²ng tiÃªu thá»¥ vÃ  quáº£n lÃ½ nguá»“n, há»— trá»£ giÃ¡m sÃ¡t há»‡ thá»‘ng theo thá»i gian thá»±c.
+
+    \item \textbf{Khá»‘i RTC, UART\_DEBUG, JTAG vÃ  DS90LT012AQ-Q1/CON\_STX:} há»— trá»£ Ä‘Ã³ng dáº¥u thá»i gian, debug -- náº¡p chÆ°Æ¡ng trÃ¬nh vÃ  truyá»n/nháº­n tÃ­n hiá»‡u chuyÃªn dá»¥ng phá»¥c vá»¥ kiá»ƒm thá»­, khai thÃ¡c há»‡ thá»‘ng.
+\end{itemize}
+
+\subsection{Bo phÃ¡t nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng - LASER}
+\label{subsec:bo-phat-laser}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/laser/so-do-khoi-laser.jpg}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t board LASER}
+    \label{fig:so-do-khoi-laser}
+\end{figure}
+
+Bo phÃ¡t nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng (LASER) Ä‘áº£m nhiá»‡m vai trÃ² táº¡o tÃ­n hiá»‡u kÃ­ch thÃ­ch quang theo kÃªnh, cho phÃ©p lá»±a chá»n vá»‹ trÃ­ phÃ¡t vÃ  Ä‘iá»u chá»‰nh má»©c kÃ­ch tÆ°Æ¡ng á»©ng vá»›i tá»«ng cáº¥u hÃ¬nh thÃ­ nghiá»‡m.
+SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a board LASER Ä‘Æ°á»£c trÃ¬nh bÃ y trong HÃ¬nh \ref{fig:so-do-khoi-laser}.
+
+Dá»±a trÃªn sÆ¡ Ä‘á»“ HÃ¬nh~\ref{fig:so-do-khoi-laser}, chá»©c nÄƒng cÃ¡c khá»‘i chÃ­nh cá»§a board LASER gá»“m:
+\begin{itemize}
+    \item \textbf{Khá»‘i CONNECTOR:} lÃ  giao diá»‡n káº¿t ná»‘i giá»¯a board LASER vá»›i board Ä‘iá»u khiá»ƒn, nháº­n nguá»“n cáº¥p \(12V\), nháº­n lá»‡nh Ä‘iá»u khiá»ƒn vÃ  tráº£ vá» tÃ­n hiá»‡u tráº¡ng thÃ¡i theo bus \textit{SPI}.
+
+    \item \textbf{Khá»‘i DAC:} chuyá»ƒn Ä‘á»•i lá»‡nh sá»‘ tá»« bá»™ Ä‘iá»u khiá»ƒn thÃ nh má»©c Ä‘iá»‡n Ã¡p tham chiáº¿u tÆ°Æ¡ng tá»±, lÃ m Ä‘áº§u vÃ o Ä‘áº·t má»©c cho máº¡ch phÃ¡t dÃ²ng.
+
+    \item \textbf{Khá»‘i CURRENT SOURCE:} táº¡o dÃ²ng kÃ­ch á»•n Ä‘á»‹nh cho nhÃ¡nh phÃ¡t quang theo má»©c tham chiáº¿u tá»« DAC, giÃºp duy trÃ¬ cÆ°á»ng Ä‘á»™ phÃ¡t theo giÃ¡ trá»‹ Ä‘áº·t.
+
+    \item \textbf{Khá»‘i SWITCHING 6x6:} thá»±c hiá»‡n ma tráº­n chá»n kÃªnh phÃ¡t, Ä‘á»‹nh tuyáº¿n dÃ²ng kÃ­ch tá»« máº¡ch nguá»“n dÃ²ng Ä‘áº¿n tá»«ng pháº§n tá»­ laser theo lá»‡nh Ä‘iá»u khiá»ƒn.
+
+    \item \textbf{Khá»‘i LASER 6x6:} lÃ  ma tráº­n pháº§n tá»­ phÃ¡t quang Ä‘áº§u ra, phÃ¡t Ã¡nh sÃ¡ng theo kÃªnh Ä‘Ã£ Ä‘Æ°á»£c chá»n Ä‘á»ƒ kÃ­ch thÃ­ch máº«u trong buá»“ng Ä‘o.
+\end{itemize}
+
+
+\subsection{Bo thu nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng - PHOTO}
+\label{subsec:bo-thu-photo}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/photo/so-do-khoi-photo.jpg}
+    \caption{SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t board PHOTO}
+    \label{fig:so-do-khoi-photo}
+\end{figure}
+
+Bo thu nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng (PHOTO) Ä‘áº£m nhiá»‡m vai trÃ² thu tÃ­n hiá»‡u quang sau tÆ°Æ¡ng tÃ¡c vá»›i máº«u, khuáº¿ch Ä‘áº¡i - lá»c tÃ­n hiá»‡u vÃ  Ä‘Æ°a vá» tÃ­n hiá»‡u phÃ¹ há»£p Ä‘á»ƒ sá»‘ hÃ³a.
+SÆ¡ Ä‘á»“ khá»‘i chi tiáº¿t cá»§a board PHOTO Ä‘Æ°á»£c trÃ¬nh bÃ y trong HÃ¬nh \ref{fig:so-do-khoi-photo}.
+
+Dá»±a trÃªn sÆ¡ Ä‘á»“ HÃ¬nh~\ref{fig:so-do-khoi-photo}, chá»©c nÄƒng cÃ¡c khá»‘i chÃ­nh cá»§a board PHOTO gá»“m:
+\begin{itemize}
+    \item \textbf{Khá»‘i CONNECTOR:} lÃ  giao diá»‡n káº¿t ná»‘i vá»›i board Ä‘iá»u khiá»ƒn, trao Ä‘á»•i tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn/thu tháº­p dá»¯ liá»‡u qua bus \textit{SPI}.
+
+    \item \textbf{Khá»‘i PHOTO 6x6:} lÃ  ma tráº­n pháº§n tá»­ thu quang, tiáº¿p nháº­n tÃ­n hiá»‡u Ã¡nh sÃ¡ng tá»« há»‡ quang vÃ  táº¡o tÃ­n hiá»‡u dÃ²ng tÆ°Æ¡ng á»©ng cÆ°á»ng Ä‘á»™ thu Ä‘Æ°á»£c.
+
+    \item \textbf{Khá»‘i SWITCHING 6x6:} thá»±c hiá»‡n chá»n kÃªnh thu trong ma tráº­n PHOTO, Ä‘á»‹nh tuyáº¿n tÃ­n hiá»‡u tá»« pháº§n tá»­ thu Ä‘Æ°á»£c chá»n sang chuá»—i xá»­ lÃ½ tÆ°Æ¡ng tá»±.
+
+    \item \textbf{Khá»‘i TRANSIMPEDANCE AMPLIFIER:} chuyá»ƒn Ä‘á»•i dÃ²ng quang Ä‘iá»‡n sang Ä‘iá»‡n Ã¡p vÃ  khuáº¿ch Ä‘áº¡i tÃ­n hiá»‡u má»©c nhá» tá»« cáº£m biáº¿n quang.
+
+    \item \textbf{Khá»‘i ANTIALIAS:} lá»c giá»›i háº¡n bÄƒng thÃ´ng tÃ­n hiá»‡u trÆ°á»›c khi sá»‘ hÃ³a, giáº£m nhiá»…u cao táº§n vÃ  háº¡n cháº¿ mÃ©o aliasing trong quÃ¡ trÃ¬nh láº¥y máº«u.
+
+    \item \textbf{Khá»‘i DAC:} táº¡o má»©c tham chiáº¿u/bÃ¹ offset cho chuá»—i xá»­ lÃ½ tÆ°Æ¡ng tá»± theo cáº¥u hÃ¬nh Ä‘o, giÃºp tá»‘i Æ°u dáº£i Ä‘o táº¡i ngÃµ vÃ o bá»™ chuyá»ƒn Ä‘á»•i sá»‘.
+\end{itemize}
+
+\section{SÆ¡ Ä‘á»“ nguyÃªn lÃ­ chi tiáº¿t}
+
+\subsection{Bo mÃ¡y tÃ­nh Ä‘iá»u khiá»ƒn trung tÃ¢m - OBC}
+\label{subsec:sche-bo-dieu-khien-trung-tam-obc}
+
+\subsection{Bo Ä‘iá»u khiá»ƒn thÃ­ nghiá»‡m - EXP}
+\label{subsec:sche-bo-dieu-khien-thi-nghiem-exp}
+
+Pháº§n nÃ y trÃ¬nh bÃ y chi tiáº¿t cÃ¡c sÆ¡ Ä‘á»“ nguyÃªn lÃ½ cá»§a board EXP theo tá»«ng khá»‘i chá»©c nÄƒng. ToÃ n bá»™ hÃ¬nh schematic Ä‘Æ°á»£c láº¥y tá»« thÆ° má»¥c \texttt{picture/exp}, ngoáº¡i trá»« hÃ¬nh \texttt{so-do-khoi-exp.png} (Ä‘Ã£ trÃ¬nh bÃ y á»Ÿ pháº§n sÆ¡ Ä‘á»“ khá»‘i).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-if.png}
+    \caption{Connector káº¿t ná»‘i vá»›i board IF}
+    \label{fig:exp-sche-connector-if}
+\end{figure}
+Connector nÃ y káº¿t ná»‘i vá»›i board IF thÃ´ng qua cÃ¡c tÃ­n hiá»‡u CAN, SPI, I2C, USB, tÃ­n hiá»‡u IO Ä‘á»ƒ báº­t nguá»“n cho board IF vÃ  láº¥y nguá»“n chÃ­nh 12V thÃ´ng qua bus 12V chung tá»« board IF.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-thi-nghiem.png}
+    \caption{NhÃ³m connector thÃ­ nghiá»‡m}
+    \label{fig:exp-sche-connector-thi-nghiem}
+\end{figure}
+ÄÃ¢y lÃ  nhÃ³m Ä‘áº§u ná»‘i chÃ­nh Ä‘Æ°a tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn/Ä‘o lÆ°á»ng ra há»‡ thÃ­ nghiá»‡m, Ä‘Ã³ng vai trÃ² giao diá»‡n váº­t lÃ½ giá»¯a EXP vÃ  táº£i ngoÃ i. Connector káº¿t ná»‘i Ä‘áº¿n board PHOTO vÃ  LASER thÃ´ng qua tÃ­n hiá»‡u ADC vÃ  SPI trÃªn core MCU cá»§a EXP, bÃªn cáº¡nh Ä‘Ã³ core MPU cÅ©ng káº¿t ná»‘i Ä‘áº¿n board PHOTO thÃ´ng qua SPI. Má»™t connector camera vá»›i giao tiáº¿p MIPI vÃ  I2C Ä‘á»ƒ thu tháº­p hÃ¬nh áº£nh thÃ­ nghiá»‡m.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12v-if.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vsam.png}\\[0.8em]
+
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vtec.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-5vmcu-5vhd4.png}\\[0.8em]
+
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-solenoid.png}\hfill
+    \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vlp.png}\\[0.8em]
+
+    \makebox[\textwidth][c]{\includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vheater.png}}
+    \caption{Khá»‘i efuse}
+    \label{fig:exp-efuse}
+\end{figure}
+\textbf{Chức năng:} Các eFuse (cầu chì điện tử) sử dụng IC TPS259470ARPWR có chức năng bảo vệ quá áp, thiếu áp và quá dòng. Ngưỡng bảo vệ có thể thiết lập bằng điện trở ngoài, đồng thời IC hỗ trợ xuất tín hiệu giám sát để MCU theo dõi trạng thái dòng/áp.
+
+Theo datasheet TPS25947xx, ngoài ngưỡng khóa thấp mặc định nội bộ, chân \textit{EN/UVLO} còn cho phép đặt lại ngưỡng Undervoltage Protection thông qua cầu phân áp ngoài. Vì vậy ngưỡng điện áp vào kích hoạt bảo vệ có thể điều chỉnh theo yêu cầu thiết kế.
+
+Quan hệ đặt ngưỡng UVLO:
+\begin{equation}
+V_{IN(UV)} = \frac{V_{UVLO}\times(R1+R2)}{R2}
+\end{equation}
+
+Trong đó \(V_{UVLO}\) là điện áp tham chiếu tại chân \textit{EN/UVLO} theo datasheet, \(R1\) là điện trở nối từ \(V_{IN}\) đến chân \textit{EN/UVLO}, và \(R2\) là điện trở nối từ chân \textit{EN/UVLO} xuống GND. Do đó có thể thay đổi tỉ số \(R1/R2\) để chọn ngưỡng điện áp thiếu áp phù hợp cho từng nhánh nguồn eFuse.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vmcu.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vperi.png}
+    \caption{Khá»‘i BUCK}
+    \label{fig:exp-buck}
+\end{figure}
+\textbf Sá»­ dá»¥ng máº¡ch buck Ä‘á»ƒ háº¡ Ã¡p Ä‘iá»‡n Ã¡p tá»« 12V nguá»“n chÃ­nh xuá»‘ng Ä‘iá»‡n Ã¡p 5V sá»­ dá»¥ng cho MPU, MCU vÃ  cÃ¡c IC chá»©c nÄƒng khÃ¡c. Máº¡ch buck dÃ¹ng khi cáº§n háº¡ Ä‘iá»‡n Ã¡p vá»›i má»™t khoáº£ng lá»›n, Ä‘iá»u nÃ y sáº½ Ã­t hao phÃ­ hÆ¡n sá»­ dá»¥ng LDO Ä‘á»ƒ háº¡ khoáº£ng Ã¡p lá»›n. IC Ä‘Æ°á»£c sá»­ dá»¥ng lÃ  TPS5430DDAR cÃ³ thá»ƒ Ä‘iá»u chá»‰nh Ä‘iá»‡n Ã¡p ngÃµ ra dá»±a vÃ o tá»• há»£p 2 giÃ¡ trá»‹ Ä‘iá»‡n trá»Ÿ á»Ÿ cáº§u phÃ¢n Ã¡p tá»« chÃ¢n BOOT vÃ  VSENSE.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vmcu-3v3muc.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vsam-3v3sam.png}\\
+    \includegraphics[width=0.8\textwidth]{picture/exp/ldo-3vsol.png}
+    \caption{Khá»‘i LDO}
+    \label{fig:exp-ldo}
+\end{figure}
+\textbf Sá»­ dá»¥ng máº¡ch LDO Ä‘á»ƒ háº¡ Ã¡p Ä‘iá»‡n Ã¡p tá»« 5V xuá»‘ng Ä‘iá»‡n Ã¡p 3V3 sá»­ dá»¥ng cho MPU, MCU vÃ  cÃ¡c IC chá»©c nÄƒng khÃ¡c. Vá»›i khoáº£ng rÆ¡i Ã¡p khÃ¡ nhá» ta dÃ¹ng nguá»“n ldo thay vÃ¬ nguá»“n buck, viá»‡c sá»­ dá»¥ng LDO sáº½ lÃ m cho nguá»“n ra á»•n Ä‘á»‹nh hÆ¡n so vá»›i buck
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
+    \caption{Schematic khá»‘i SAMA7G54 (MPU)}
+    \label{fig:exp-sche-khoi-sam-mpu}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} ÄÃ¢y lÃ  khá»‘i xá»­ lÃ½ chÃ­nh cá»§a EXP, Ä‘áº£m nhiá»‡m Ä‘iá»u phá»‘i toÃ n há»‡ thá»‘ng, quáº£n lÃ½ luá»“ng giao tiáº¿p vÃ  phÃ¢n phá»‘i tÃ¡c vá»¥ Ä‘áº¿n cÃ¡c ngoáº¡i vi theo vai trÃ² Ä‘iá»u khiá»ƒn cáº¥p cao.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-ddr3.png}
+    \caption{Schematic khá»‘i DDR3 cho SAMA7G54}
+    \label{fig:exp-sche-khoi-sam-ddr3}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i DDR3 cung cáº¥p vÃ¹ng nhá»› lÃ m viá»‡c tá»‘c Ä‘á»™ cao cho MPU, phá»¥c vá»¥ cÃ¡c tÃ¡c vá»¥ xá»­ lÃ½ dá»¯ liá»‡u vÃ  cháº¡y pháº§n má»m há»‡ thá»‘ng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-pio.png}
+    \caption{Schematic khá»‘i chÃ¢n PIO cá»§a SAMA7G54}
+    \label{fig:exp-sche-khoi-sam-pio}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i nÃ y tá»• chá»©c cÃ¡c chÃ¢n I/O cá»§a MPU, bao gá»“m Ä‘á»‹nh tuyáº¿n tÃ­n hiá»‡u, Ä‘iá»‡n trá»Ÿ kÃ©o vÃ  cÃ¡c Ä‘Æ°á»ng Ä‘iá»u khiá»ƒn ra/vÃ o tá»›i tá»«ng khá»‘i phá»¥ trá»£.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-mcu.png}
+    \caption{Schematic khá»‘i MCU SAMV71Q21B}
+    \label{fig:exp-sche-khoi-mcu}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} MCU SAMV71Q21B xá»­ lÃ½ cÃ¡c tÃ¡c vá»¥ thá»i gian thá»±c, Ä‘á»c cáº£m biáº¿n vÃ  Ä‘iá»u khiá»ƒn táº£i cháº¥p hÃ nh vá»›i Ä‘á»™ trá»… tháº¥p, Ä‘á»“ng thá»i trao Ä‘á»•i dá»¯ liá»‡u vá»›i MPU.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/fram.png}
+    \caption{Schematic khá»‘i FRAM}
+    \label{fig:exp-sche-fram}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} FRAM lÃ  bá»™ nhá»› khÃ´ng máº¥t dá»¯ liá»‡u cÃ³ tá»‘c Ä‘á»™ ghi cao, phÃ¹ há»£p lÆ°u tham sá»‘ váº­n hÃ nh thÆ°á»ng xuyÃªn thay Ä‘á»•i vÃ  dá»¯ liá»‡u cáº§n Ä‘á»™ bá»n ghi lá»›n.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mram-mpu.png}
+    \caption{Schematic khá»‘i MRAM káº¿t ná»‘i MPU}
+    \label{fig:exp-sche-mram-mpu}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} MRAM phÃ­a MPU lÆ°u dá»¯ liá»‡u cáº¥u hÃ¬nh/há»‡ thá»‘ng cáº§n báº£o toÃ n tráº¡ng thÃ¡i, há»— trá»£ khá»Ÿi Ä‘á»™ng vÃ  phá»¥c há»“i thÃ´ng sá»‘ nhanh.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mram-mcu.png}
+    \caption{Schematic khá»‘i MRAM káº¿t ná»‘i MCU}
+    \label{fig:exp-sche-mram-mcu}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} MRAM phÃ­a MCU phá»¥c vá»¥ lÆ°u tráº¡ng thÃ¡i Ä‘iá»u khiá»ƒn cá»¥c bá»™ vÃ  cÃ¡c tham sá»‘ hiá»‡u chuáº©n liÃªn quan Ä‘áº¿n vÃ²ng Ä‘iá»u khiá»ƒn thá»i gian thá»±c.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/pram.png}
+    \caption{Schematic khá»‘i PRAM}
+    \label{fig:exp-sche-pram}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} PRAM bá»• sung vÃ¹ng lÆ°u trá»¯ tham sá»‘/biáº¿n cáº¥u hÃ¬nh phá»¥c vá»¥ cÃ¡c nhÃ¡nh xá»­ lÃ½ cáº§n truy cáº­p nhanh vÃ  á»•n Ä‘á»‹nh.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/rtc.png}
+    \caption{Schematic khá»‘i RTC}
+    \label{fig:exp-sche-rtc}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} RTC duy trÃ¬ thá»i gian thá»±c cho há»‡ thá»‘ng, há»— trá»£ Ä‘Ã³ng dáº¥u thá»i gian log, theo dÃµi phiÃªn thÃ­ nghiá»‡m vÃ  Ä‘á»“ng bá»™ sá»± kiá»‡n.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-emmc.png}
+    \caption{Schematic khá»‘i eMMC}
+    \label{fig:exp-sche-khoi-emmc}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} eMMC lÃ  bá»™ nhá»› lÆ°u trá»¯ chÃ­nh cho firmware/há»‡ Ä‘iá»u hÃ nh vÃ  dá»¯ liá»‡u dÃ i háº¡n cá»§a board EXP.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sdcard.png}
+    \caption{Schematic khá»‘i SD Card}
+    \label{fig:exp-sche-sdcard}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Máº¡ch SD Card cung cáº¥p kÃªnh lÆ°u trá»¯ thÃ¡o láº¯p linh hoáº¡t, phá»¥c vá»¥ cáº­p nháº­t dá»¯ liá»‡u, log Ä‘o vÃ  kiá»ƒm thá»­.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-debug.png}
+    \caption{Schematic khá»‘i Debug}
+    \label{fig:exp-sche-khoi-debug}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i debug Ä‘Æ°a ra cÃ¡c giao diá»‡n kiá»ƒm tra vÃ  náº¡p chÆ°Æ¡ng trÃ¬nh, giÃºp quan sÃ¡t tráº¡ng thÃ¡i há»‡ thá»‘ng trong quÃ¡ trÃ¬nh phÃ¡t triá»ƒn vÃ  báº£o trÃ¬.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
+    \caption{Schematic khá»‘i PMIC vÃ  giÃ¡m sÃ¡t dÃ²ng}
+    \label{fig:exp-sche-khoi-pmic}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} PMIC quáº£n lÃ½ trÃ¬nh tá»± cáº¥p nguá»“n, giÃ¡m sÃ¡t Ä‘iá»‡n Ã¡p/dÃ²ng tiÃªu thá»¥ vÃ  há»— trá»£ cÆ¡ cháº¿ báº£o vá»‡ khi quÃ¡ táº£i hoáº·c báº¥t thÆ°á»ng nguá»“n.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (khi cÃ³ R shunt/Ä‘iá»‡n Ã¡p Ä‘o):}
+\[
+    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\cdot I_{rail}
+\]
+\textit{CÃ¡ch tÃ­nh:} láº¥y \(R_{SHUNT}\) vÃ  Ä‘iá»‡n Ã¡p rÆ¡i trÃªn shunt Ä‘Ãºng theo giÃ¡ trá»‹ ghi trÃªn hÃ¬nh, thay trá»±c tiáº¿p vÃ o cÃ´ng thá»©c Ä‘á»ƒ ra dÃ²ng vÃ  cÃ´ng suáº¥t tá»«ng rail.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/exp/hole.png}
+    \caption{Schematic khá»‘i hole (cÆ¡ khÃ­/tiáº¿p Ä‘á»‹a)}
+    \label{fig:exp-sche-hole}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} NhÃ³m Ä‘iá»ƒm hole phá»¥c vá»¥ cá»‘ Ä‘á»‹nh cÆ¡ khÃ­ vÃ /hoáº·c tiáº¿p Ä‘á»‹a tham chiáº¿u cho PCB, gÃ³p pháº§n nÃ¢ng Ä‘á»™ bá»n vÃ  á»•n Ä‘á»‹nh nhiá»…u EMC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/CAN-transceiver.png}
+    \caption{Schematic khá»‘i CAN transceiver}
+    \label{fig:exp-sche-can-transceiver}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Máº¡ch CAN transceiver chuyá»ƒn Ä‘á»•i má»©c váº­t lÃ½ CAN H/L, tÄƒng kháº£ nÄƒng chá»‘ng nhiá»…u vÃ  báº£o Ä‘áº£m truyá»n thÃ´ng tin cáº­y trÃªn bus.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sw-usb.png}
+    \caption{Schematic khá»‘i chuyá»ƒn máº¡ch USB}
+    \label{fig:exp-sche-sw-usb}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Máº¡ch switch USB lá»±a chá»n Ä‘Æ°á»ng tÃ­n hiá»‡u USB theo cháº¿ Ä‘á»™ váº­n hÃ nh, cho phÃ©p chia sáº» cá»•ng vÃ  tá»‘i Æ°u routing tÃ­n hiá»‡u tá»‘c Ä‘á»™ cao.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/sw-usb-connector.png}
+    \caption{Schematic khá»‘i connector cá»§a máº¡ch USB switch}
+    \label{fig:exp-sche-sw-usb-connector}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i nÃ y lÃ  pháº§n Ä‘áº§u ná»‘i cá»§a tuyáº¿n USB switch, Ä‘áº£m báº£o ghÃ©p ná»‘i chuáº©n cÆ¡ Ä‘iá»‡n giá»¯a board EXP vÃ  thiáº¿t bá»‹ bÃªn ngoÃ i.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-hd4.png}
+    \caption{Schematic connector HD4}
+    \label{fig:exp-sche-connector-hd4}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Connector HD4 lÃ  Ä‘áº§u ná»‘i chuyÃªn dá»¥ng cho nhÃ¡nh driver HD4, báº£o Ä‘áº£m truyá»n tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn vÃ  nguá»“n tá»›i táº£i tÆ°Æ¡ng á»©ng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-heater.png}
+    \caption{Schematic khá»‘i Heater}
+    \label{fig:exp-sche-khoi-heater}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i heater Ä‘iá»u khiá»ƒn pháº§n tá»­ gia nhiá»‡t báº±ng PWM/driver cÃ´ng suáº¥t, phá»¥c vá»¥ á»•n Ä‘á»‹nh nhiá»‡t Ä‘á»™ theo ká»‹ch báº£n thÃ­ nghiá»‡m.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (heater táº£i trá»Ÿ):}
+\[
+    I_{heater}=\frac{V_{heater}}{R_{heater}}, \qquad
+    P_{heater}=\frac{V_{heater}^2}{R_{heater}}
+\]
+\[
+    P_{avg}\approx D\cdot P_{heater}
+\]
+vá»›i \(D\) lÃ  duty PWM. \textit{CÃ¡ch tÃ­nh:} dÃ¹ng giÃ¡ trá»‹ \(R_{heater}\), Ä‘iá»‡n Ã¡p cáº¥p vÃ  duty ghi trong máº¡ch Ä‘iá»u khiá»ƒn Ä‘á»ƒ tÃ­nh cÃ´ng suáº¥t tá»©c thá»i/trung bÃ¬nh.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-tec.png}
+    \caption{Schematic khá»‘i TEC}
+    \label{fig:exp-sche-khoi-tec}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i TEC Ä‘iá»u khiá»ƒn pháº§n tá»­ nhiá»‡t Ä‘iá»‡n (lÃ m nÃ³ng/lÃ m láº¡nh), giÃºp duy trÃ¬ mÃ´i trÆ°á»ng nhiá»‡t má»¥c tiÃªu cho buá»“ng Ä‘o.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (nhÃ¡nh TEC):}
+\[
+    I_{TEC}=\frac{V_{TEC}}{R_{eq}}, \qquad
+    P_{TEC}=V_{TEC}\cdot I_{TEC}
+\]
+\textit{CÃ¡ch tÃ­nh:} vá»›i máº¡ch cÃ³ Ä‘iá»‡n trá»Ÿ cáº£m dÃ²ng thÃ¬ láº¥y \(I_{TEC}\) theo \(V_{SHUNT}/R_{SHUNT}\); vá»›i máº¡ch giá»›i háº¡n dÃ²ng thÃ¬ thay Ä‘Ãºng giÃ¡ trá»‹ Ä‘iá»‡n trá»Ÿ Ä‘áº·t dÃ²ng ghi trÃªn schematic Ä‘á»ƒ suy ra ngÆ°á»¡ng dÃ²ng cá»±c Ä‘áº¡i.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/mpd200a.png}
+    \caption{Schematic khá»‘i MPD200A}
+    \label{fig:exp-sche-mpd200a}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} MPD200A thá»±c hiá»‡n nhÃ¡nh Ä‘iá»u khiá»ƒn/giÃ¡m sÃ¡t liÃªn quan nguá»“n HV hoáº·c táº£i Ä‘áº·c thÃ¹ theo cáº¥u hÃ¬nh há»‡ quang - Ä‘o.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/driver-hd4.png}
+    \caption{Schematic khá»‘i driver HD4}
+    \label{fig:exp-sche-driver-hd4}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Driver HD4 khuáº¿ch Ä‘áº¡i vÃ  Ä‘á»‡m tÃ­n hiá»‡u Ä‘iá»u khiá»ƒn tá»« MCU Ä‘á»ƒ kÃ­ch táº£i cÃ´ng suáº¥t á»Ÿ má»©c dÃ²ng/Ã¡p phÃ¹ há»£p.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (náº¿u cÃ³ táº§ng op-amp):}
+\[
+    A_v=1+\frac{R_f}{R_g}, \qquad V_{OUT}=A_v\cdot V_{IN}
+\]
+\textit{CÃ¡ch tÃ­nh:} láº¥y Ä‘Ãºng cáº·p Ä‘iá»‡n trá»Ÿ há»“i tiáº¿p \(R_f, R_g\) ghi trÃªn hÃ¬nh Ä‘á»ƒ tÃ­nh há»‡ sá»‘ khuáº¿ch Ä‘áº¡i vÃ  biÃªn Ä‘á»™ Ä‘áº§u ra.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
+    \caption{Schematic khá»‘i Ä‘iá»u khiá»ƒn solenoid (IC)}
+    \label{fig:exp-sche-solenoid-ic}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Solenoid IC táº¡o táº§ng Ä‘iá»u khiá»ƒn logic/driver trung gian cho cuá»™n coil solenoid, báº£o Ä‘áº£m chuyá»ƒn máº¡ch Ä‘Ãºng ngÆ°á»¡ng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
+    \caption{Schematic khá»‘i cÃ´ng suáº¥t solenoid (FET)}
+    \label{fig:exp-sche-solenoid-fet}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Solenoid FET lÃ  táº§ng cÃ´ng suáº¥t Ä‘Ã³ng/cáº¯t dÃ²ng táº£i cuá»™n tá»«, thÆ°á»ng Ä‘i kÃ¨m pháº§n dáº­p xung Ä‘á»ƒ báº£o vá»‡ linh kiá»‡n.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (nhÃ¡nh MOSFET):}
+\[
+    I_{coil}\approx \frac{V_{coil}}{R_{coil}}, \qquad
+    P_{MOS}\approx I_{RMS}^2\cdot R_{DS(on)}
+\]
+\textit{CÃ¡ch tÃ­nh:} thay \(R_{coil}\) cá»§a cuá»™n van vÃ  \(R_{DS(on)}\) theo datasheet linh kiá»‡n dÃ¹ng trong hÃ¬nh Ä‘á»ƒ kiá»ƒm tra tá»•n hao vÃ  Ä‘iá»u kiá»‡n táº£n nhiá»‡t.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.png}
+    \caption{Schematic khá»‘i NTC}
+    \label{fig:exp-sche-khoi-ntc}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i NTC tiáº¿p nháº­n tÃ­n hiá»‡u cáº£m biáº¿n nhiá»‡t Ä‘iá»‡n trá»Ÿ, chuyá»ƒn Ä‘á»•i thÃ nh má»©c ADC Ä‘á»ƒ MCU giÃ¡m sÃ¡t nhiá»‡t Ä‘á»™ tá»©c thá»i.
+\textbf{TÃ­nh toÃ¡n tá»« schematic (cáº§u phÃ¢n Ã¡p NTC):}
+\[
+    V_{ADC}=V_{REF}\cdot \frac{R_{NTC}}{R_{FIX}+R_{NTC}}
+\]
+\[
+    R_{NTC}=R_{FIX}\cdot \frac{V_{ADC}}{V_{REF}-V_{ADC}}
+\]
+\[
+    \frac{1}{T}=\frac{1}{T_0}+\frac{1}{B}\ln\!\left(\frac{R_{NTC}}{R_0}\right)
+\]
+\textit{CÃ¡ch tÃ­nh:} láº¥y \(R_{FIX}\), \(V_{REF}\) Ä‘Ãºng theo schematic, Ä‘o/Ä‘á»c \(V_{ADC}\) Ä‘á»ƒ suy ra \(R_{NTC}\), sau Ä‘Ã³ Ä‘á»•i sang nhiá»‡t Ä‘á»™ báº±ng tham sá»‘ \(B\) cá»§a NTC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
+    \caption{Schematic khá»‘i giao tiáº¿p flow sensor}
+    \label{fig:exp-sche-flow-ic}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Máº¡ch flow sensor xá»­ lÃ½ giao tiáº¿p vá»›i cáº£m biáº¿n lÆ°u lÆ°á»£ng, Ä‘á»c dá»¯ liá»‡u vÃ  chuyá»ƒn vá» bus Ä‘iá»u khiá»ƒn ná»™i bá»™.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-onboard.png}
+    \caption{Schematic cáº£m biáº¿n BMP390 onboard}
+    \label{fig:exp-sche-bmp390-onboard}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} BMP390 onboard Ä‘o Ã¡p suáº¥t/Ä‘á»™ cao táº¡i board, cung cáº¥p dá»¯ liá»‡u mÃ´i trÆ°á»ng phá»¥c vá»¥ bÃ¹ sai sá»‘ vÃ  giÃ¡m sÃ¡t Ä‘iá»u kiá»‡n lÃ m viá»‡c.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-connector.png}
+    \caption{Schematic connector BMP390}
+    \label{fig:exp-sche-bmp390-connector}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Máº¡ch connector BMP390 cho phÃ©p káº¿t ná»‘i cáº£m biáº¿n BMP390 ngoÃ i, má»Ÿ rá»™ng linh hoáº¡t vá»‹ trÃ­ Ä‘o thá»±c nghiá»‡m.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/cam-bien-gia-toc.png}
+    \caption{Schematic cáº£m biáº¿n gia tá»‘c}
+    \label{fig:exp-sche-cam-bien-gia-toc}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Khá»‘i cáº£m biáº¿n gia tá»‘c (IMU) theo dÃµi rung/chuyá»ƒn Ä‘á»™ng, há»— trá»£ Ä‘Ã¡nh giÃ¡ Ä‘iá»u kiá»‡n cÆ¡ há»c áº£nh hÆ°á»Ÿng Ä‘áº¿n phÃ©p Ä‘o.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
+    \caption{Schematic khá»‘i watchdog}
+    \label{fig:exp-sche-watchdog}
+\end{figure}
+\textbf{Chá»©c nÄƒng:} Watchdog giÃ¡m sÃ¡t nhá»‹p hoáº¡t Ä‘á»™ng cá»§a bá»™ Ä‘iá»u khiá»ƒn; khi phÃ¡t hiá»‡n treo há»‡ thá»‘ng sáº½ kÃ­ch hoáº¡t cÆ¡ cháº¿ phá»¥c há»“i Ä‘á»ƒ tÄƒng Ä‘á»™ an toÃ n váº­n hÃ nh.
+
+\subsection{Bo giao tiáº¿p - IF}
+\label{subsec:sche-bo-giao-tiep-if}
+
+\subsection{Bo phÃ¡t nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng - LASER}
+\label{subsec:sche-bo-phat-laser}
+
+\subsection{Bo thu nÄƒng lÆ°á»£ng Ã¡nh sÃ¡ng - PHOTO}
+\label{subsec:sche-bo-thu-photo}
+
+\newpage
+
+
+
