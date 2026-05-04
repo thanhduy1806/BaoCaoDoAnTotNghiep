@@ -439,15 +439,45 @@ C_{dvdt}(pF) = \frac{2000}{SR(V/ms)}
     \caption{Khối BUCK}
     \label{fig:exp-buck}
 \end{figure}
-Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. IC được sử dụng là TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ ngõ ra về chân VSENSE. IC TPS5430DDAR có dãy điện áp ngõ vào rộng từ 5V5 đến 36V, cho phép dòng chảy liên tục tối đa lên đến 3A và dòng đỉnh tối đa 4A. Hiệu suất chuyển đổi của IC có thể đạt tới 95\% trong điều kiện hoạt động bình thường với điện trở nội Rds(on) trên mosfet là 100m $\Omega$. 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/cong-thuc/output-buck.png}\\
-    \caption{Công thức ngõ ra IC buck}
-    \label{fig:cong-thuc-vout-buck}
-\end{figure}
-Hình ảnh từ datasheet của IC TPS5430DDAR, dùng để điều chỉnh điện áp ngõ ra mong muốn bằng cầu phân áp 2 điện trở như đã trình bày. 
+Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. 
 
+IC TPS5430DDAR có dãy điện áp ngõ vào rộng từ 5V5 đến 36V, cho phép dòng chảy liên tục tối đa lên đến 3A và dòng đỉnh tối đa 4A. Hiệu suất chuyển đổi của IC có thể đạt tới 95\% trong điều kiện hoạt động bình thường với điện trở nội Rds(on) trên mosfet là 100m $\Omega$. Ramp nội bộ 500 kHz làm chuẩn thời gian cho băm xung đầu ra từ việc dùng error voltage từ op-amp (khi so sánh VSENSE với điên áp tham chiếu) so sánh với ramp để tạo duty cycle. IC TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ ngõ ra về chân VSENSE theo công thức bên dưới.
+
+\begin{equation}
+R2 = \frac{R1 \times 1.221}{V_{OUT}- 1.221} 
+\end{equation}
+
+Với R1 là điện trở chia áp kéo lên nguồn và R2 là điện trở chia áp kéo xuống đất, $V_{OUT}$ là điện áp ngõ ra mong muốn. Trong quá trình hoạt động ổn định, điện áp tại chân VSENSE phải bằng điện áp tham chiếu 1.221V
+
+Ngõ vào $V_{in}$ thiết kế dùng 2 tụ lọc nguồn 47 $\mu F$ và 1 $\mu F$. Lí do sử dụng 2 tụ ngõ vào với 2 giá trị chênh lệch khá lớn là vì dùng tụ lớn với mục tiêu nạp/xả chậm, phản ứng tốt với dao động chậm, nhiễu ở tần số thấp, điện dung cao năng lượng được tích trữ lớn giúp giữ ổn định nguồn khi xảy ra sụt áp ở tải. Giá trị tụ nhỏ ngược lại sẽ giúp nạp/xả nhanh, phản ứng tốt với nhiễu ở tần số cao, dùng để triệt nhiễu switching, xung nhanh, hoặc làm tụ bypass gần IC.
+
+Cuộn cảm ngõ ra được đặt để dập các gai dòng trên tụ điện gây ra, do khi mosfet đóng ngắt nhanh trong thời gian ngắn dẫn đến dòng qua tụ có biên độ lớn, cuộn cảm được sử dụng để giảm sự thay đổi nhanh dòng qua tụ. Giá trị cuộn cảm được đề xuất tính theo công thức 
+
+
+
+\begin{equation}
+L_{MIN} = \frac{V_{OUT(MAX)} \times (V_{IN(MAX)} - V_{OUT})}{V_{IN(MAX)} \times K_{IND} \times I_{OUT} \times F_{SW}}
+\end{equation}
+
+Trong thiết kế gốc, datasheet khuyến nghị sử dụng cuộn cảm khoảng 15 µH với hệ số KIND = 0.2. Tuy nhiên, do bo mạch hiện có sẵn cuộn cảm 20 µH, giá trị này được lựa chọn để thuận tiện cho việc lắp ráp. Việc sử dụng cuộn cảm lớn hơn giúp giảm dòng gợn qua cuộn cảm, từ đó điện áp ripple đầu ra nhỏ hơn và mạch duy trì chế độ dẫn liên tục ở tải thấp. Nhược điểm là đáp ứng quá độ có thể chậm hơn so với giá trị 15 µH, nhưng vẫn đảm bảo nguyên lý hoạt động và độ tin cậy của hệ thống. Đây là sự đánh đổi hợp lý giữa điều kiện linh kiện thực tế và yêu cầu thiết kế.
+
+Tụ đầu ra cần được lựa chọn dựa trên ba thông số quan trọng: điện áp DC định mức, khả năng chịu dòng gợn và điện trở tương đương ESR. Điện áp và dòng gợn không được vượt quá giới hạn của tụ, trong khi ESR cùng với dòng gợn qua cuộn cảm quyết định biên độ điện áp ripple đầu ra. Giá trị điện dung không cần chính xác tuyệt đối, nhưng phải đảm bảo mối quan hệ giữa tần số cắt LC của bộ lọc và tần số crossover của vòng điều khiển. Do đặc tính bù bên trong IC, tần số crossover nên nằm trong khoảng 3 kHz đến 30 kHz để có đủ độ lợi pha, đồng thời phải nhỏ hơn tần số zero do ESR của tụ. Trong thiết kế này, tần số crossover được chọn nằm trong khoảng 2.59 kHz đến 24 kHz, thỏa mãn các điều kiện trên và đảm bảo hệ thống hoạt động ổn định. Trong thiết kế tận dụng tụ đầu vào để áp dụng cho đầu ra nhưng vẫn phải đảm bảo phù hợp với ba thông số vừa liệt kê. Công thức chính xác để tính giá trị tụ được mô tả bên dưới dựa vào datasheet.
+
+\begin{equation}
+f_{CO} = \frac{f_{LC}^2}{85 \, V_{OUT}}
+\end{equation}
+
+\begin{equation}
+C_{OUT} = \frac{1}{3357 \times L_{OUT} \times f_{CO} \times V_{OUT}}
+\end{equation} 
+
+Giữa chân BOOT và PH dùng 1 tụ điện cemeamic nối tiếp với ngõ ra có giá trị 0.01 $\mu F$. Tụ này cung cấp điện áp điều khiển cho MOSFET phía cao. Giá trị 0.01 $\mu F$ vừa đủ để nạp/giữ điện áp gate trong mỗi chu kỳ chuyển mạch. Nếu tụ quá lớn thì tốc độ nạp/xả chậm, làm giảm hiệu quả chuyển mạch. Nếu tụ quá nhỏ thì không giữ được điện áp gate ổn định. 0.01 $\mu F$ là giá trị tối ưu mà hãng đã thử nghiệm, đảm bảo MOSFET high-side bật/tắt nhanh, giảm tổn hao chuyển mạch, đồng thời không gây dao động hay trễ.
+
+Trong mạch TPS5430, cần sử dụng một diode bắt (catch diode) ngoài giữa chân PH và GND. Diode này phải đáp ứng các điều kiện tuyệt đối của ứng dụng: điện áp ngược phải lớn hơn điện áp cực đại tại chân PH (VIN(MAX) + 0.5 V), dòng đỉnh phải lớn hơn IOUT(MAX) cộng với một nửa dòng gợn qua cuộn cảm, và điện áp rơi thuận phải nhỏ để đạt hiệu suất cao. Thời gian dẫn của diode thường dài hơn thời gian MOSFET high-side bật, do đó việc chọn diode phù hợp có thể cải thiện đáng kể hiệu suất tổng thể. Ngoài ra, cần đảm bảo diode có khả năng tản nhiệt cho công suất hao phí. Trong thiết kế này, linh kiện SS54 được sử dụng, với điện áp ngược 40 V, dòng thuận 5 A và điện áp rơi thuận thấp, đáp ứng tốt các yêu cầu trên và đảm bảo hiệu suất cũng như độ tin cậy của hệ thống.
+
+Chân ENA cung cấp điều khiển bật và tắt điện áp cho bộ điều chỉnh. Khi điện áp chân ENA vượt quá điện áp ngưỡng, bộ điều chỉnh bắt đầu hoạt động và chế độ khởi động chậm nội bộ bắt đầu tăng dần. Nếu điện áp chân ENA bị kéo xuống dưới điện áp ngưỡng, bộ điều chỉnh sẽ dừng việc chuyển đổi và chế độ khởi động chậm nội bộ sẽ được thiết lập lại. Nối chân này với đất hoặc bất kỳ điện áp nào thấp hơn 0,5V sẽ vô hiệu hóa bộ điều chỉnh và kích hoạt chế độ tắt. Dòng điện không tải của TPS543x trong chế độ tắt thông thường là 15$\mu A$.
+
+Bên cạnh việc thiết kết chủ động từ việc dùng các giá trị điện trở, tụ điện, cuộn cảm để thực hiện được giá trị ngõ ra mong muốn, nội bộ IC còn hỗ trợ một số chức năng giúp bảo vệ IC, bảo vệ hệ thống, giúp hệ thống hoạt động ổn định. Ví dụ như khả nănh bảo vệ quá dòng, bằng cách giám sát điện áp drain–source của MOSFET. Khi dòng vượt ngưỡng, mạch sẽ ngắt MOSFET trong chu kỳ hiện tại (cycle-by-cycle limiting). Trong trường hợp ngắn mạch, thiết bị chuyển sang chế độ hiccup, tạm ngừng hoạt động rồi khởi động lại sau thời gian trễ. Nhờ đó, IC được bảo vệ khỏi hư hỏng và hệ thống duy trì độ tin cậy. Cùng với việc bảo vệ quá dòng, IC cũng tích hợp bảo vệ quá áp bằng cách giám sát điện áp hồi tiếp tại chân VSENSE. Khi điện áp này vượt quá $112.5 \%$ giá trị tham chiếu, MOSFET high-side sẽ bị ngắt để tránh hiện tượng overshoot. Khi điện áp giảm xuống dưới ngưỡng, MOSFET được kích hoạt trở lại. Cơ chế này giúp bảo vệ tải và nâng cao độ tin cậy của hệ thống. Trong môi trường không gian với các mức nhiệt độ khắc nghiệt, đòi hỏi một hệ thống phải có khả năng cảm nhận được nhiệt độ và có những cơ chế bảo vệ thích nghi với điều từ nhiệt độ môi trường cũng như là nhiệt độ hoạt động của linh kiện, IC tích hợp mạch bảo vệ nhiệt nhằm ngăn chặn hư hỏng khi nhiệt độ junction vượt ngưỡng cho phép. Khi nhiệt độ vượt ngưỡng, điện áp tham chiếu bị ngắt và MOSFET high-side tắt. Thiết bị sẽ tự động khởi động lại khi nhiệt độ giảm xuống thấp hơn ngưỡng khoảng 14°C, dưới sự kiểm soát của mạch slow-start. Cơ chế này đảm bảo IC hoạt động an toàn và ổn định trong điều kiện môi trường khắc nghiệt.
 
 \begin{figure}[H]
     \centering
@@ -457,18 +487,28 @@ Hình ảnh từ datasheet của IC TPS5430DDAR, dùng để điều chỉnh đi
     \caption{Khối LDO}
     \label{fig:exp-ldo}
 \end{figure}
+
 Sử dụng mạch LDO để hạ áp điện áp từ 5V xuống điện áp 3V3 sử dụng cho MPU, MCU và các IC chức năng khác. Với khoảng rơi áp khá nhỏ ta dùng nguồn ldo thay vì nguồn buck, việc sử dụng LDO sẽ làm cho nguồn ra ổn định hơn so với buck
 
+LM1117 là IC ổn áp tuyến tính low-dropout có khả năng cung cấp dòng tải đến 800 mA với điện áp rơi thấp, đảm bảo điện áp ra ổn định và chính xác (sai số ±1$\%$). Thiết bị hỗ trợ nhiều mức điện áp cố định và chỉnh được, tích hợp bảo vệ quá nhiệt và giới hạn dòng, đồng thời dễ thiết kế nhờ các package nhỏ gọn. Đây là lựa chọn phổ biến cho nguồn trong thiết bị công nghiệp, server và làm post-regulator cho DC/DC converter.
 
+Các tụ lọc ngõ vào và ngõ ra lựa chọn giá trị 10 $\mu F$ và 47 $\mu F$, các giá trị tụ không bắt buộc các giá trị chính xác, chọn phù hợp với thiết kế và tận dụng các thiết kế có sẵn.
 
-
+Bên cạnh IC LM1117 còn dùng TPS74901. So với các LDO thông thường, TPS74901 có nhiều ưu điểm nổi bật. Thiết kế sử dụng NMOS pass transistor giúp đạt dropout rất thấp (chỉ khoảng 120 mV ở 3A), đồng thời hỗ trợ nguồn bias riêng (VBIAS) để duy trì đáp ứng nhanh ngay cả khi điện áp đầu vào thấp. Thiết bị còn có soft‑start lập trình được, giảm dòng xung khi khởi động và hỗ trợ sequencing nhiều rail nguồn nhờ ngõ ra power‑good. Ngoài ra, TPS74901 ổn định với mọi loại tụ ≥ 2.2 µF, có độ chính xác cao ±1$\%$, độ nhiễu thấp phù hợp cho mạch nhạy cảm, và được đóng gói trong kích thước nhỏ gọn. Những đặc điểm này khiến TPS74901 trở thành giải pháp LDO cao cấp, vượt trội hơn so với các LDO truyền thống vốn chỉ đáp ứng cơ bản về ổn áp.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
-    \caption{Schematic khối SAMA7G54 (MPU)}
-    \label{fig:exp-sche-khoi-sam-mpu}
+    \caption{Schematic khối nguồn và tín hiệu tốc độ cao SAMA7G54 (MPU)}
+    \label{fig:exp-sche-khoi-nguon-tin-hieu-sam-mpu}
 \end{figure}
-\textbf{Chức năng:} Đây là khối xử lý chính của EXP, đảm nhiệm điều phối toàn hệ thống, quản lý luồng giao tiếp và phân phối tác vụ đến các ngoại vi theo vai trò điều khiển cấp cao.
+
+MPU SAMA7G54 dùng 2 nguồn xung ngoài là xung 24MHz và 32.768KHz, mỗi tần số có thể được tạo bởi thạch anh và bộ dao động, trong thiết kế sử dụng thạch anh là mặc định còn bộ dao động là DNP. 
+
+Ở khối U29G thể hiện các tín hiệu tốc độ cao được kết nối từ chân MPU như trong hình như: camera (MIPI\_D/N), USB (USBA,B,C trong đó USB C là USB host only). Một số tín hiệu được điều khiển cho chức năng nguồn như SHDN, LPM, WKUP, nRST.
+
+Khối U29H là các chân nối lên nguồn và nối đất, các chân nối nguồn được thiết kế với các tụ decoupling và bypass. Trên vi xử lý SAMA7G5, hệ thống nguồn được chia thành nhiều miền điện áp khác nhau để tối ưu hiệu năng và tiết kiệm năng lượng. Các mức chính bao gồm: nguồn 3.3 V (VDDIN33) cho nhiều khối I/O và làm đầu vào cho các bộ điều chỉnh nội bộ; nguồn 2.5 V (VDDOUT25) từ LDO bên trong phục vụ các khối analog và PLL; nguồn lõi 0.9–1.2 V (VDDCPU/VDDCORE) cho nhân Cortex-A7 và logic tốc độ cao, có hỗ trợ điều chỉnh động; nguồn 1.8 V hoặc 3.3 V (VDDANA) cho các khối analog như ADC và PLL; nguồn 1.8–3.3 V (VDDBU/VBAT) cho RTC và SRAM backup; các rail VDDIOPx có thể chọn 1.8 V hoặc 3.3 V để tương thích với ngoại vi; nguồn 1.2–1.5 V (VDDIODDR) cho DDR PHY; và nguồn 1.8 V (VDDUTMI) cho USB PHY. Như vậy, MPU này sử dụng nhiều mức điện áp từ 0.9 V đến 3.3 V, mỗi mức phục vụ cho một miền chức năng riêng biệt nhằm đảm bảo hoạt động ổn định và hiệu quả. Các nguồn này được tạo ra bởi một IC MCP16502 QFN-32 tạo nguồn chuyên biệt được thiết kế để cung cấp và theo dõi nguồn trên MPU. 
+
+Để đảm bảo các thành phần hoạt động ổn định, một số chân tín hiệu được kéo trở nối đất sử dụng các giá trị trở được đề xuất theo tài liệu của chip và board EVK của nhà sản xuất.
 
 \begin{figure}[H]
     \centering
@@ -476,7 +516,16 @@ Sử dụng mạch LDO để hạ áp điện áp từ 5V xuống điện áp 3V
     \caption{Schematic khối DDR3 cho SAMA7G54}
     \label{fig:exp-sche-khoi-sam-ddr3}
 \end{figure}
-\textbf{Chức năng:} Khối DDR3 cung cấp vùng nhớ làm việc tốc độ cao cho MPU, phục vụ các tác vụ xử lý dữ liệu và chạy phần mềm hệ thống.
+
+Tổng quan về IC RAM IS43TR16512BL của ISSI là một chip DDR3L SDRAM dung lượng 8Gb, được thiết kế để cung cấp hiệu năng cao và tiêu thụ điện năng thấp. Đây là loại bộ nhớ động đồng bộ tốc độ cao, hoạt động ở điện áp 1.35V, tương thích ngược với DDR3 1.5V. Với tốc độ truyền dữ liệu lên đến DDR3-1866, nó đáp ứng tốt nhu cầu băng thông của các hệ thống nhúng hiện đại. Bộ nhớ DDR3L được tổ chức thành nhiều bank, mỗi bank gồm nhiều hàng và cột. Khi CPU truy xuất, RAM sẽ chọn bank, hàng, rồi cột để đọc/ghi dữ liệu. Các thông số timing quan trọng như CAS Latency (CL), RAS to CAS Delay (tRCD), Row Precharge Time (tRP), và Row Active Time (tRAS) quyết định độ trễ và hiệu năng của RAM.
+
+Một trong những ưu điểm nổi bật của RAM này là khả năng tiết kiệm năng lượng nhờ điện áp thấp, rất phù hợp cho các ứng dụng công nghiệp và thiết bị nhúng cần hoạt động lâu dài. Ngoài ra, dung lượng 8Gb đủ lớn để xử lý các tác vụ phức tạp như multimedia, giao tiếp tốc độ cao, hoặc chạy hệ điều hành nhúng. Chip cũng hỗ trợ nhiều tính năng nâng cao như tự động refresh, partial array self refresh, và on-die termination giúp cải thiện độ ổn định tín hiệu.
+
+Các tín hiệu chính của DDR3 SDRAM bao gồm nhóm nguồn và clock (VDD, VDDQ, CK, CK\#), nhóm địa chỉ và bank (A0–A15, BA0–BA2), nhóm điều khiển (RAS\#, CAS\#, WE\#, CS\#, CKE, RESET\#), nhóm dữ liệu (DQ[0–15], DQS, DQS\#), cùng các tín hiệu hỗ trợ như ODT, ZQ, DM. Mỗi tín hiệu có chức năng riêng: ví dụ DQ truyền dữ liệu, DQS đồng bộ dữ liệu, RAS/CAS/WE điều khiển truy xuất bộ nhớ, còn ODT giúp điều chỉnh trở kháng để giảm phản xạ tín hiệu.
+
+Về trở kháng đường truyền, DDR3 thường yêu cầu thiết kế PCB với trở kháng vi sai khoảng 100 Ω cho các cặp tín hiệu như DQS và CK, trong khi các đường dữ liệu đơn lẻ (DQ) thường nằm trong khoảng 50 $\Omega$. Chip hỗ trợ cấu hình driver strength và on-die termination để khớp trở kháng, đảm bảo tín hiệu ổn định khi truyền ở tốc độ cao.
+
+Các tín hiệu chính của DDR3 SDRAM bao gồm nhóm nguồn và clock (VDD, VDDQ, CK, CK\#), nhóm địa chỉ và bank (A0–A15, BA0–BA2), nhóm điều khiển (RAS\#, CAS\#, WE\#, CS\#, CKE, RESET\#), nhóm dữ liệu (DQ[0–15], DQS, DQS\#), cùng các tín hiệu hỗ trợ như ODT, ZQ, DM. Mỗi tín hiệu có chức năng riêng: ví dụ DQ truyền dữ liệu, DQS đồng bộ dữ liệu, RAS/CAS/WE điều khiển truy xuất bộ nhớ, còn ODT giúp điều chỉnh trở kháng để giảm phản xạ tín hiệu.
 
 \begin{figure}[H]
     \centering
@@ -484,7 +533,12 @@ Sử dụng mạch LDO để hạ áp điện áp từ 5V xuống điện áp 3V
     \caption{Schematic khối chân PIO của SAMA7G54}
     \label{fig:exp-sche-khoi-sam-pio}
 \end{figure}
-\textbf{Chức năng:} Khối này tổ chức các chân I/O của MPU, bao gồm định tuyến tín hiệu, điện trở kéo và các đường điều khiển ra/vào tới từng khối phụ trợ.
+
+Các chân tín hiệu của SAMA7G54 kết nối đến các ngoại vi được thể hiện như trên hình. 
+
+Giao thức SDMMC kết nối với eMMC, ở đây sử dụng SDMMC0 của MPI.
+
+MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SPI
 
 \begin{figure}[H]
     \centering
