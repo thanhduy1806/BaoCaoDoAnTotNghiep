@@ -406,6 +406,32 @@ V_{IN(OV)} = \frac{V_{OV}\times(R1+R2)}{R2}
 \end{equation}
 
 Với \(V_{OV}\) là điện áp tham chiếu của bộ so sánh OVLO theo datasheet. Như vậy, bằng cách chọn tỉ số \(R1/R2\), người thiết kế có thể chủ động đặt ngưỡng quá áp phù hợp để bảo vệ từng nhánh tải trong khối eFuse.
+
+Bên cạnh đó IC còn hỗ trợ khả năng cấu hình ngưỡng dòng điện bằng việc cấu hình bằng điện trở ở chân I\textsubscript{LIM}, được xác đinh bởi công thức 
+\begin{equation}
+R_{ILIM}= \frac{3334}{I_{ILIM}} \,\Omega
+\end{equation}
+
+Từ vị trí chân đấy, có thể dùng để đọc về tín hiệu ADC tại đầu điện trở R\textsubscript{ILIM} để theo dõi được dòng điện tiêu thụ, từ đó giúp hệ thống vận hành ổn định và an toàn.
+
+Ngoài những chức năng chính của efuse là bảo vệ quá dòng, quá áp, đặt các ngưỡng dòng áp cho mạch hoạt động, IC TPS259470ARPWR còn hỗ trợ việc người dùng có thể tùy ý điều chỉnh thời gian ngắt của efuse bằng một tụ điện nối vào chân ITIMER (pin 10) và kéo xuống đất. Trong thực tế việc cần thời gian ngắt dòng chứ không phải ngắt ngay lập tức mang lại nhiều ưu điểm cho mạch phía sau. Ví dụ như tránh false trigger vì tải có thể tạo ra những xung dòng ngắn (transient) khi khởi động hoặc khi chuyển trạng thái nếu IC cắt ngay lập tức, nó sẽ coi những xung ngắn này là lỗi và ngắt nguồn, gây reset hoặc mất ổn định cho hệ thống. Bảo vệ quá dòng kết hợp với bảo vệ sự ổn định của mạch, nếu dòng chỉ vượt ngưỡng trong thời gian ngắn thì không cần thiết phải đóng ngay hệ thống ngay lập tức, tụ chân 10 giúp duy trì một khoảng thời gian ngắt nếu dòng vượt ngưỡng hơn một khoảng thời gian cần thiết thì từ đó mới ngắt mạch.
+
+
+\begin{equation}
+t_{TIMER}(ms) = \frac{\Delta V_{ITIMER}(V) \times C_{TIMER}(nF)}{I_{TIMER}(\mu A)}
+\end{equation}
+
+Tương ứng với việc có thể ngắt dòng tùy theo thời gian thiết lập, IC cũng hỗ trợ khả năng làm mềm quá trình khởi động. Điều này liên quan đến 2 đại lượng ta phải quan tâm tại thời điểm mở nguồn đó là Inrush Current (dòng xung khi bật nguồn) và Slew Rate (dV/dt tốc độ tăng điện áp đầu ra khi IC bật). Thông thường những mạch có nhiều tải sẽ đi kèm với những tụ lọc nguồn ví dụ như ở các con MCU hay MPU, số lượn tụ lọc nguồn là rất nhiều, bên cạnh đó còn có các IC nhớ hay IC driver khác trong mạch. Với số lượng tụ lớn sẽ dễ tạo ra inrush current lớn ngay thời điểm bật nguồn, vì tại thời điểm khi có nguồn dòng nạp rất lớn sẽ chảy vào các tụ trong thời gian ngắn, dòng lớn này có thể gây sụt áp nguồn hay reset hệ thống. Bên cạnh đó khi điện áp đầu ra IC tại thời điểm bật tăng quá nhanh sẽ kéo dòng nạp tụ lớn hơn nữa (I = C × dV/dt), do đó IC cho phép khả năng điều chỉnh tốc độ tăng điện áp ngõ ra ở chân DVDT (pin 7) bằng việc đặt một tụ kéo xuống đất. Với công thức bên dưới.
+
+\begin{equation}
+SR(V/ms) = \frac{I_{INRUSH}(mA)}{C_{out}(\mu F)}
+\end{equation}
+
+\begin{equation}
+C_{dvdt}(pF) = \frac{2000}{SR(V/ms)}
+\end{equation}
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vmcu.png}\\
@@ -413,8 +439,7 @@ Với \(V_{OV}\) là điện áp tham chiếu của bộ so sánh OVLO theo data
     \caption{Khối BUCK}
     \label{fig:exp-buck}
 \end{figure}
-Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. IC được sử dụng là TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ chân BOOT và VSENSE.
-
+Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. IC được sử dụng là TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ ngõ ra về chân VSENSE. IC TPS5430DDAR có dãy điện áp ngõ vào rộng từ 5V5 đến 36V, cho phép dòng chảy liên tục tối đa lên đến 3A và dòng đỉnh tối đa 4A. Hiệu suất chuyển đổi của IC có thể đạt tới 95\% trong điều kiện hoạt động bình thường với điện trở nội Rds(on) trên mosfet là 100m $\Omega$. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/cong-thuc/output-buck.png}\\
