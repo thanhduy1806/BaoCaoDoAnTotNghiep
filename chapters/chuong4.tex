@@ -1,0 +1,85 @@
+
+Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối chính của board EXP gồm:
+\begin{itemize}
+    \item \textbf{Khối SAMA7G54:} là bộ xử lý chính, thực hiện điều phối tác vụ cấp hệ thống, quản lý truyền thông và trao đổi dữ liệu với MCU qua UART.
+
+    \item \textbf{Khối MCU SAMV71Q21B:} là bộ điều khiển thời gian thực, trực tiếp đọc tín hiệu cảm biến và phát lệnh điều khiển tới các tải chấp hành.
+
+    \item \textbf{Khối DDR3L:} bộ nhớ làm việc tốc độ cao cho SAMA7G54 trong các tác vụ xử lý dữ liệu.
+
+    \item \textbf{Khối MRAM:} bộ nhớ không mất dữ liệu dùng lưu tham số/cấu hình cần giữ lại sau khi mất nguồn.
+
+    \item \textbf{Khối x2 eMMC:} bộ nhớ lưu trữ dung lượng lớn cho chương trình, dữ liệu hệ thống và nhật ký vận hành.
+
+    \item \textbf{Khối PMIC \& current monitors:} cấp nguồn cho các rail điện áp và giám sát dòng tiêu thụ của board.
+
+    \item \textbf{Khối SDCARD:} giao tiếp SDMMC để mở rộng lưu trữ và thuận tiện cho nạp/thu hồi dữ liệu.
+
+    \item \textbf{Khối MICRO USB:} giao tiếp USB phục vụ nạp chương trình, cấu hình hoặc chẩn đoán hệ thống.
+
+    \item \textbf{Khối USB\_SWITCH:} chuyển mạch đường USB theo tín hiệu điều khiển từ SAMA7G54 để chọn tuyến kết nối phù hợp.
+
+    \item \textbf{Khối RS422 TRANSCEIVER:} chuyển mức tín hiệu UART sang RS422, tăng độ bền nhiễu và khoảng cách truyền.
+
+    \item \textbf{Khối CAN TRANSCEIVER:} giao tiếp CAN TX/RX (CAN H/L) để kết nối bus công nghiệp với các thiết bị ngoài.
+
+    \item \textbf{Khối TEC DRIVER:} mạch công suất điều khiển phần tử TEC theo lệnh từ MCU.
+
+    \item \textbf{Khối MPD:} mạch điều khiển/điều áp cao áp (HV\_O +/-) theo DAC/PWM/GPIO từ MCU.
+
+    \item \textbf{Khối mp-HighDriver4:} mạch driver công suất điều khiển tải ngoài (ví dụ cụm bơm) theo tín hiệu ADC/I2C liên quan.
+
+    \item \textbf{Khối TEMP:} kênh đo nhiệt độ đưa về MCU qua ADC để giám sát trạng thái nhiệt.
+
+    \item \textbf{Khối RTC:} đồng hồ thời gian thực, cung cấp mốc thời gian ổn định cho ghi log và điều khiển theo lịch.
+
+    \item \textbf{Khối MRAM 4bits:} vùng nhớ phụ giao tiếp QSPI cho lưu trạng thái nhanh của MCU.
+
+    \item \textbf{Khối PRAM:} bộ nhớ phụ giao tiếp SPI, dùng cho lưu tham số và trao đổi dữ liệu cục bộ.
+
+    \item \textbf{Khối BMP390:} cảm biến áp suất/độ cao kết nối I2C, cung cấp dữ liệu môi trường cho điều khiển.
+
+    \item \textbf{Khối ANA:} đầu vào tín hiệu analog đưa về MCU qua ADC để đo các đại lượng tương tự.
+
+    \item \textbf{Khối LSM6DSOX:} cảm biến IMU (gia tốc - con quay) giao tiếp I2C phục vụ giám sát dao động/chuyển động.
+
+    \item \textbf{Khối WATCHDOG:} phần cứng giám sát hoạt động MCU, tự động can thiệp khi hệ thống treo hoặc mất đáp ứng.
+
+    \item \textbf{Khối PCA9508DP:} mở rộng I/O qua I2C, làm cầu nối điều khiển/đọc thêm các kênh ngoại vi.
+
+    \item \textbf{Khối DEBUG CONSOLE:} cổng UART phục vụ debug, theo dõi log và chẩn đoán khi phát triển.
+
+    \item \textbf{Khối SWITCH:} các công tắc chuyển mạch nội bộ (SPI/ADC) dùng để chọn đường tín hiệu, cấu hình tuyến đo và phân phối tín hiệu điều khiển.
+
+    \item \textbf{Khối connector CAMERA:} kết nối camera qua giao thức \textit{MIPI} (dữ liệu ảnh) và \textit{I2C} (cấu hình).
+
+    \item \textbf{Khối connector TO IF:} kết nối sang board IF qua các đường \textit{SPI}, \textit{I2C}, \textit{USB} và \textit{GPIO}.
+
+    \item \textbf{Khối connector MATO:} giao tiếp ngoại vi theo chuẩn \textit{SPI}.
+
+    \item \textbf{Khối connector MICRO USB:} giao tiếp theo chuẩn \textit{USB}.
+
+    \item \textbf{Khối connector USB:} giao tiếp \textit{USB} thông qua khối \textit{USB\_SWITCH}.
+
+    \item \textbf{Khối connector RS422:} giao tiếp truyền thông theo chuẩn \textit{RS422}.
+
+    \item \textbf{Khối connector TEC:} nhận/tương tác tín hiệu điều khiển - đo theo đường \textit{ADC} của nhánh TEC.
+
+    \item \textbf{Khối connector HD4:} kết nối nhánh tải HD4 theo đường công suất \textit{HV\_O +/-}.
+
+    \item \textbf{Khối connector NTC:} đưa tín hiệu nhiệt độ về MCU qua kênh \textit{ADC}.
+
+    \item \textbf{Khối connector FLOW\_SENSOR:} kết nối cảm biến lưu lượng qua bus \textit{I2C}.
+
+    \item \textbf{Khối connector BMP390:} kết nối cảm biến BMP390 qua bus \textit{I2C}.
+
+    \item \textbf{Khối connector HEATER:} nhận tín hiệu điều khiển công suất theo \textit{PWM}.
+
+    \item \textbf{Khối connector LASER:} kết nối điều khiển/giám sát qua các đường \textit{ADC} và \textit{SPI}.
+
+    \item \textbf{Khối connector PHOTO:} nhận tín hiệu đo quang về MCU qua kênh \textit{ADC}.
+
+    \item \textbf{Khối connector SOLENOID:} điều khiển và giám sát tải solenoid qua đường \textit{ADC}.
+
+    \item \textbf{Khối connector BUMP:} kết nối nhánh bơm qua tín hiệu điều khiển/giám sát \textit{ADC}.
+\end{itemize}

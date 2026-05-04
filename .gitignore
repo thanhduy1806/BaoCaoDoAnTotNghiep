@@ -9,7 +9,8 @@
 *.fdb_latexmk
 *.bbl
 *.blg
-
+*.xdv
+*.pdf
 
 # OS files
 .DS_Store
