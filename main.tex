@@ -1,68 +1,15 @@
-% \documentclass[12pt,a4paper]{report}
-% \usepackage{fontspec} % Dùng cho XeLaTeX
-% \usepackage[left=3.5cm,right=2cm,top=2cm,bottom=2cm,headheight=15pt]{geometry}
-% \setmainfont{Times New Roman} % Gọi font hệ thống
-
-% \usepackage[vietnamese]{babel}
-% \usepackage{graphicx}
-% \usepackage{fancyhdr}
-% \usepackage{titlesec}
-% \usepackage{tikz}
-% \usepackage{tabularx} % Thêm gói này để sửa lỗi lệch trang bìa
-
-% \usetikzlibrary{calc}
-
-% % --- Cấu hình Header/Footer (như đã thảo luận) ---
-% \pagestyle{fancy}
-% \fancyhf{}
-% \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
-% \lhead{\footnotesize \itshape \nouppercase{\rightmark}} 
-% \rhead{\footnotesize \itshape GVHD: ThS. Bùi Quốc Bảo}
-% \lfoot{\footnotesize \itshape Đồ án tốt nghiệp}
-% \rfoot{\footnotesize Trang | \thepage}
-% \renewcommand{\headrulewidth}{0.4pt}
-
-% \makeatletter
-% \let\ps@plain\ps@fancy
-% \makeatother
-
-
-% \begin{document}
-
-% \include{trangbia} 
-
-% \pagenumbering{roman}
-% \markright{Lời cảm ơn} 
-% \include{chapters/loicamon}
-
-% \newpage
-% \markright{Mục lục}
-% \tableofcontents
-% \newpage
-
-% \pagenumbering{arabic} 
-
-% % Đảm bảo tên file trong thư mục chapters phải khớp với ở đây
-% \include{chapters/chuong1}
-% \include{chapters/chuong2}
-% \include{chapters/chapter3}
-
-% \newpage
-% \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
-% \markright{Tài liệu tham khảo}
-
-% \end{document}
-
-
-\documentclass[12pt,a4paper]{report}
+﻿\documentclass[13pt,a4paper]{report}
 \usepackage{fontspec}
-\usepackage[left=3.5cm,right=2cm,top=2cm,bottom=2cm,headheight=20pt]{geometry} % Tăng headheight lên 20pt cho an toàn
+\usepackage[left=4cm,right=2.5cm,top=3cm,bottom=2.5cm,headheight=20pt]{geometry}
 \setmainfont{Times New Roman}
 
 \usepackage[vietnamese]{babel}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\LARGE\bfseries\raggedright}{\chaptertitlename\ \thechapter}{16pt}{\LARGE\bfseries\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{50pt}{40pt}
 \usepackage{tikz}
 \usepackage{tabularx}
 \usepackage{float}
@@ -70,6 +17,10 @@
 \usepackage{xcolor}
 \usepackage[unicode,hidelinks]{hyperref}
 \hypersetup{linktoc=all}
+\usepackage{setspace}
+\usepackage{caption}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
 \usetikzlibrary{calc}
 
 % --- Cấu hình Header/Footer ---
@@ -92,6 +43,10 @@
 \let\ps@plain\ps@fancy
 \makeatother
 
+% --- Cấu hình line spacing và paragraph indent ---
+\setstretch{1.5}
+\setlength{\parindent}{2.5em}
+
 \begin{document}
 
 \include{trangbia} 
@@ -111,7 +66,7 @@
 
 \pagenumbering{arabic} 
 
-% Bắt đầu nội dung chính
+
 \include{chapters/chuong1}
 \include{chapters/chuong2}
 \include{chapters/chuong3}
@@ -123,3 +78,6 @@
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
 
 \end{document}
+
+
+
