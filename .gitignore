@@ -11,6 +11,7 @@
 *.blg
 *.xdv
 *.pdf
+*.lot
 
 # OS files
 .DS_Store
