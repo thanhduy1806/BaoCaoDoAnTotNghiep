@@ -97,61 +97,51 @@ Bo EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệ
 
 Bo IF (Interface board) là lớp giao tiếp mở rộng giữa OBC và EXP, đồng thời có thể bổ sung các cổng kết nối tùy cấu hình hệ thống. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
 
-% \section{Cơ sở lý thuyết giao tiếp dữ liệu giữa OBC--EXP và IF--EXP}
-% \label{sec:giao_tiep_du_lieu}
+\section{Cơ sở lý thuyết các linh kiện}
 
-% Trong hệ nhúng đa bo, giao tiếp dữ liệu phải đáp ứng các tiêu chí cơ bản: đúng nội dung, đúng thứ tự, đúng thời điểm và có khả năng phát hiện lỗi. Để đạt được điều đó, hệ thống cần định nghĩa rõ tầng giao tiếp vật lý và tầng khung dữ liệu logic.
+\subsection{Cấu tạo và nguyên lý hoạt động của TEC}
 
-% Ở tầng vật lý, có thể sử dụng UART, I2C, SPI hoặc CAN tùy mục tiêu thiết kế. Trong bối cảnh demo truyền dữ liệu giữa các bo, điều quan trọng là giao thức được chọn có cấu trúc khung rõ ràng, cơ chế kiểm lỗi rõ ràng và có khả năng kiểm chứng bằng thực nghiệm.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/components/TEC.jpg}
+    \caption{Mô-đun TEC (Thermoelectric Cooler)}
+    \label{fig:tec_module}
+\end{figure}
 
-% \subsection{Khung dữ liệu đề xuất}
-% \label{subsec:khung_du_lieu}
+TEC (Thermoelectric Cooler) là phần tử bơm nhiệt rắn, hoạt động dựa trên hiệu ứng nhiệt điện. Một mô-đun TEC điển hình gồm nhiều cặp bán dẫn loại p và loại n mắc điện nối tiếp, nhiệt song song; các cặp này được kẹp giữa hai tấm gốm cách điện (thường là alumina) để vừa cách điện vừa truyền nhiệt tốt. Các thanh dẫn kim loại mỏng liên kết các cặp p-n theo dạng ziczac, tạo thành một khối phẳng gọn nhẹ, không có bộ phận chuyển động cơ khí.
 
-% Một khung dữ liệu tham khảo cho hệ OBC--EXP có thể gồm các trường sau:
+Hiệu ứng Peltier mô tả hiện tượng hấp thụ hoặc giải phóng nhiệt tại mối nối của hai vật liệu khác nhau khi có dòng điện một chiều đi qua. Trong TEC, khi dòng điện chạy theo một chiều xác định, các hạt tải điện mang năng lượng nhiệt từ một mặt sang mặt còn lại: một mặt sẽ hấp thụ nhiệt (mặt lạnh), mặt kia sẽ thải nhiệt (mặt nóng). Nếu đảo chiều dòng điện, vai trò hai mặt cũng đảo ngược.
 
-% \begin{itemize}
-%     \item \textbf{SOF (Start of Frame):} Byte đánh dấu bắt đầu gói.
-%     \item \textbf{ID:} Định danh nguồn/đích hoặc loại thiết bị.
-%     \item \textbf{CMD:} Mã lệnh điều khiển hoặc mã loại dữ liệu.
-%     \item \textbf{LEN:} Độ dài payload.
-%     \item \textbf{PAYLOAD:} Dữ liệu chính (nhiệt độ, trạng thái laser, dữ liệu photo, cờ lỗi).
-%     \item \textbf{CRC/CHECKSUM:} Mã kiểm tra lỗi.
-%     \item \textbf{EOF (End of Frame):} Byte đánh dấu kết thúc gói.
-% \end{itemize}
+Từ đó, nguyên lý hoạt động của TEC có thể hiểu là quá trình bơm nhiệt chủ động: cấp dòng DC để chuyển nhiệt từ buồng cần làm mát sang phía tản nhiệt. Nhiệt độ thực tế đạt được phụ thuộc vào dòng điều khiển, chênh lệch nhiệt độ hai mặt, khả năng tản nhiệt phía nóng và tải nhiệt của hệ thống. Vì vậy trong ứng dụng thực tế, TEC thường đi kèm khối tản nhiệt/quạt và mạch điều khiển (PWM hoặc điều khiển dòng) để ổn định nhiệt độ theo giá trị đặt.
 
-% \subsection{Cơ chế bắt tay và phản hồi}
-% \label{subsec:co_che_bat_tay}
+\subsection{Cấu tạo và nguyên lý hoạt động của HEATER}
 
-% Để đảm bảo dữ liệu không bị mất hoặc xử lý nhầm, hệ thống nên áp dụng cơ chế phản hồi ACK/NACK theo nguyên tắc:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/components/HEATER.jpg}
+    \caption{Phần tử gia nhiệt HEATER}
+    \label{fig:heater_module}
+\end{figure}
 
-% \begin{itemize}
-%     \item OBC gửi lệnh điều khiển đến EXP.
-%     \item EXP xác nhận đã nhận lệnh (ACK) hoặc báo lỗi khung (NACK).
-%     \item Sau khi thực thi lệnh, EXP gửi gói kết quả kèm mã trạng thái.
-%     \item OBC phản hồi xác nhận nhận dữ liệu thành công.
-% \end{itemize}
+HEATER là phần tử chuyển đổi điện năng thành nhiệt năng để nâng và duy trì nhiệt độ cho buồng thí nghiệm. Trong các hệ thống nhúng, HEATER thường có cấu tạo dạng điện trở công suất (resistive heater), gồm vật liệu điện trở và lớp cách điện/cách nhiệt phù hợp để truyền nhiệt hiệu quả nhưng vẫn bảo đảm an toàn điện.
 
-% Khi hết thời gian chờ (timeout) mà không nhận phản hồi, bên gửi sẽ thực hiện truyền lại theo số lần tối đa định trước.
+Nguyên lý vật lý của HEATER dựa trên hiệu ứng Joule: khi dòng điện đi qua phần tử điện trở, công suất nhiệt sinh ra được xác định gần đúng theo biểu thức $P = I^2R$ (hoặc $P = \frac{V^2}{R}$ với nguồn áp ổn định). Nhiệt lượng này được truyền từ bề mặt HEATER sang môi trường hoặc khối vật liệu cần gia nhiệt thông qua dẫn nhiệt, đối lưu và bức xạ.
 
-% \subsection{Chỉ tiêu đánh giá giao tiếp}
-% \label{subsec:chi_tieu_danh_gia}
+Từ đó, nguyên lý hoạt động của HEATER trong hệ thống điều khiển nhiệt là cấp công suất theo nhu cầu tải nhiệt: tăng công suất khi nhiệt độ đo được thấp hơn giá trị đặt và giảm/ngắt khi tiến gần ngưỡng yêu cầu. Trên thực tế, HEATER thường được điều khiển qua MOSFET bằng PWM hoặc điều khiển on-off theo phản hồi cảm biến nhiệt (ví dụ NTC), nhằm giữ nhiệt độ ổn định, giảm dao động và tối ưu tiêu thụ năng lượng.
 
-% Các chỉ tiêu đánh giá chất lượng truyền dữ liệu trong đề tài gồm tỉ lệ gói tin thành công, tỉ lệ lỗi CRC/checksum, độ trễ lệnh--phản hồi, số lần truyền lại trung bình và khả năng phục hồi sau lỗi.
+\subsection{Cấu tạo và nguyên lý hoạt động của SOLENOID}
 
-% \section{Cơ sở lý thuyết điều khiển quy trình thí nghiệm quang học}
-% \label{sec:dieu_khien_thi_nghiem_quang}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/components/SOLENOID.png}
+    \caption{Cơ cấu điện từ SOLENOID}
+    \label{fig:solenoid_module}
+\end{figure}
 
-% Hệ thống thí nghiệm được tổ chức theo chuỗi tác vụ: ổn định điều kiện môi trường trong buồng thí nghiệm, kích hoạt chiếu laser qua mẫu, thu nhận tín hiệu ánh sáng bằng bo photo, sau đó đóng gói và gửi dữ liệu về OBC. Vì khâu đo quang chi tiết đã được nghiên cứu ở công trình trước, trọng tâm của đề tài hiện tại là logic điều phối và truyền dữ liệu giữa các bo.
+SOLENOID là cơ cấu chấp hành điện từ dùng để tạo chuyển động tịnh tiến ngắn, thường phục vụ đóng/mở van, chốt cơ khí hoặc kích hoạt cơ cấu đẩy-kéo. Về cấu tạo, solenoid gồm cuộn dây dẫn quấn quanh lõi từ, vỏ dẫn từ, phần ứng (plunger) có thể di chuyển và lò xo hồi vị. Khi không cấp điện, lò xo giữ phần ứng ở vị trí ban đầu.
 
-% Để đảm bảo vận hành rõ ràng, quy trình được biểu diễn dưới dạng máy trạng thái (state machine) với các trạng thái cơ bản:
+Nguyên lý vật lý của solenoid dựa trên từ trường sinh ra bởi dòng điện chạy qua cuộn dây. Dòng điện tạo ra từ thông trong mạch từ, sinh lực điện từ hút phần ứng về phía lõi, từ đó biến đổi năng lượng điện thành chuyển động cơ. Khi ngắt điện, từ trường suy giảm, lực hút mất đi và lò xo đưa phần ứng trở về trạng thái nghỉ.
 
-% \begin{itemize}
-%     \item \textbf{IDLE:} Chờ lệnh từ OBC.
-%     \item \textbf{PREPARE:} Kiểm tra điều kiện hệ thống, đặc biệt là nhiệt độ.
-%     \item \textbf{MEASURE:} Điều khiển laser và thu dữ liệu photo.
-%     \item \textbf{PACKETIZE:} Chuẩn hóa dữ liệu thành khung truyền.
-%     \item \textbf{TRANSMIT:} Gửi dữ liệu về OBC.
-%     \item \textbf{SAFE:} Đưa hệ thống về trạng thái an toàn khi phát hiện lỗi.
-% \end{itemize}
+Từ đó, nguyên lý hoạt động của SOLENOID trong hệ thống là điều khiển trạng thái cơ cấu theo tín hiệu điện: cấp điện để tác động (hút/kéo hoặc đẩy tùy cấu hình) và ngắt điện để hồi vị. Trong thực tế, solenoid thường được điều khiển qua mạch công suất MOSFET kèm diode dập xung ngược (flyback diode) để bảo vệ linh kiện chuyển mạch khỏi xung điện áp cảm ứng khi cuộn dây bị ngắt dòng.
 
 \newpage

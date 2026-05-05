@@ -495,6 +495,42 @@ LM1117 là IC ổn áp tuyến tính low-dropout có khả năng cung cấp dòn
 Các tụ lọc ngõ vào và ngõ ra lựa chọn giá trị 10 $\mu F$ và 47 $\mu F$, các giá trị tụ không bắt buộc các giá trị chính xác, chọn phù hợp với thiết kế và tận dụng các thiết kế có sẵn.
 
 Bên cạnh IC LM1117 còn dùng TPS74901. So với các LDO thông thường, TPS74901 có nhiều ưu điểm nổi bật. Thiết kế sử dụng NMOS pass transistor giúp đạt dropout rất thấp (chỉ khoảng 120 mV ở 3A), đồng thời hỗ trợ nguồn bias riêng (VBIAS) để duy trì đáp ứng nhanh ngay cả khi điện áp đầu vào thấp. Thiết bị còn có soft‑start lập trình được, giảm dòng xung khi khởi động và hỗ trợ sequencing nhiều rail nguồn nhờ ngõ ra power‑good. Ngoài ra, TPS74901 ổn định với mọi loại tụ ≥ 2.2 µF, có độ chính xác cao ±1$\%$, độ nhiễu thấp phù hợp cho mạch nhạy cảm, và được đóng gói trong kích thước nhỏ gọn. Những đặc điểm này khiến TPS74901 trở thành giải pháp LDO cao cấp, vượt trội hơn so với các LDO truyền thống vốn chỉ đáp ứng cơ bản về ổn áp.
+
+Bên cạnh khối PMIC, trong hệ sinh thái quản lý nguồn còn có thêm khối power measurement and distribution, khối này có đầu vào từ các điện trở shunt mắc nối tiếp tại các mức nguồn phát. Mục tiêu là đo được điện áp trên trở shunt từ đó theo dõi được dòng điện tiêu thụ trên mỗi nguồn áp. Trong thiết kế sử dụng 4 điện trở shunt với giá trị khá nhỏ là 0.01R để tránh rơi áp không cần thiết. Các dòng tiêu thụ được đo là các dòng từ VDDCORE (1V15 cho 1 số chân VDDCORE của MPU), VDDCPU (1V15 cho 1 số chân VDDCPU của MPU), VDD3V3 (nguồn cấp cho các chân IO của MPIU cũng như một số chân nguồn cần 3V3) và VDD\_1V35 (dùng cho mức điện áp giao tiếp với IC RAM DDR3).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
+    \caption{Schematic khối PMIC và giám sát dòng}
+    \label{fig:exp-sche-khoi-pmic}
+\end{figure}
+
+MCP16502 là một IC quản lý nguồn tích hợp (PMIC) của Microchip, được thiết kế để phối hợp tối ưu với các dòng vi xử lý SAM như SAMA5D2, SAM9X6/7 và SAMA7G5. Con chip này cho phép cung cấp nhiều rail nguồn trong một giải pháp duy nhất, giúp giảm số lượng linh kiện rời và đơn giản hóa thiết kế hệ thống. MCP16502 hỗ trợ đầu vào từ 2.7V đến 5.5V, tích hợp 4 bộ chuyển đổi DC-DC Buck (mỗi kênh đến 1A) và 2 LDO (mỗi kênh đến 300 mA), đảm bảo hiệu suất cao và độ chính xác điện áp ±1\% cho các rail quan trọng như CPU và DDR. Ngoài ra, nó còn hỗ trợ giao tiếp I²C để cấu hình và giám sát, có các chế độ năng lượng linh hoạt (Hibernate, Low-Power, High-Performance) cùng khả năng điều chỉnh điện áp động (DVS). Có các tính năng bảo vệ như chống quá nhiệt, giới hạn dòng và ESD. MCP16502 được thiết kế để dùng với hệ sinh thái SAM, khi nó cung cấp trực tiếp các rail điện áp cần thiết và đồng bộ tín hiệu điều khiển với MPU giúp cho khả năng thiết kế, sử dụng và bảo trì được thuận lợi hơn.
+
+Các mode hoạt động của IC MCP16502:
+
+\begin{itemize}
+    \item \textbf{High-Performance Mode:} cung cấp đầy đủ điện áp và dòng tải cho MPU khi chạy ở mức hiệu năng cao. Được điều khiển bởi tín hiệu HPM từ MCU
+
+    \item \textbf{Low-Power Mode:} giảm điện áp và tần số hoạt động để tiết kiệm năng lượng khi hệ thống không cần xử lý nặng. Được điều khiển bởi tín hiệu LPM của MCU
+    
+    \item \textbf{Hibernate Mode:} đưa hệ thống vào trạng thái ngủ sâu, tiêu thụ điện năng cực thấp, chỉ giữ các rail cần thiết để MPU có thể khởi động lại nhanh.
+
+    \item \textbf{Dynamic Voltage Scaling (DVS):} cho phép thay đổi điện áp động theo nhu cầu xử lý của MPU, giúp cân bằng giữa hiệu năng và tiết kiệm năng lượng.
+\end{itemize}
+
+Tại các kênh ngõ ra cổng buck, sử dụng cuộn cảm với giá trị 1.5 $\mu$H để dập các dòng vọt như thiết kế ở các mạch buck thông thường.
+
+Tại vị trí sau cuộn dây cũng có các tụ decoupling và bypass để làm ổn định tín hiệu ngõ ra.
+
+IC MCP16502 hỗ trợ giao thức I2C có thể đạt tốc độ 1MHz để giao tiếp với MPU bởi địa chỉ 0x5B. MPU giao tiếp với I2C để thực hiện một số thiết lập như cấu hình các thông số hoạt động của các kênh nguồn (ví dụ như điện áp đầu ra VSET, trạng thái bật tắt nguồn, chế độ hoạt động, tốc độ thay đổi điện áp DVS). MPU cũng có thể giám sát trạng thái vào ghi nhận lỗi gửi về từ MCP16502 như trạng thái lỗi: Kiểm tra các cờ báo lỗi như lỗi nhiệt (TSD), cảnh báo nhiệt (TWR), hoặc lỗi quá dòng trên từng kênh (FLT, HICCUP), trạng thái nguồn ổn định (POK), xử lý ngắt.
+
+\textbf{Tính toán từ schematic (khi có R shunt/điện áp đo):}
+\[
+    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\cdot I_{rail}
+\]
+\textit{Cách tính:} lấy \(R_{SHUNT}\) và điện áp rơi trên shunt đúng theo giá trị ghi trên hình, thay trực tiếp vào công thức để ra dòng và công suất từng rail.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
@@ -534,11 +570,22 @@ Các tín hiệu chính của DDR3 SDRAM bao gồm nhóm nguồn và clock (VDD,
     \label{fig:exp-sche-khoi-sam-pio}
 \end{figure}
 
-Các chân tín hiệu của SAMA7G54 kết nối đến các ngoại vi được thể hiện như trên hình. 
+Các chân tín hiệu I/O của SAMA7G54 kết nối đến các ngoại vi được thể hiện trong Hình \\ref{fig:exp-sche-khoi-sam-pio}.
 
-Giao thức SDMMC kết nối với eMMC, ở đây sử dụng SDMMC0 của MPI.
+Các tín hiệu ngoại vi chính của MPU gồm:
+\begin{itemize}
+    \item Giao thức SDMMC được sử dụng để kết nối với eMMC và thẻ nhớ SD Card, ở đây sử dụng SDMMC0 của MPU cho eMMC chi tiết ở bên dưới (hình \ref{fig:exp-sche-khoi-emmc}) và SDMMC1 cho thẻ SD Card chi tiết ở hình (hình \ref{fig:exp-sche-sdcard}) .
+    \item MPU giao tiếp với một IC PRAM (hình \ref{fig:exp-sche-pram}); IC này giao tiếp với MPU thông qua SPI. Khối PRAM sẽ được trình bày chi tiết ở phần tương ứng.
+    \item Bên cạnh PRAM, MPU còn giao tiếp với một IC MRAM (hình \ref{fig:exp-sche-mram-mpu}); MRAM giao tiếp với MPU bằng QSPI giúp tăng tốc độ đọc ghi dữ liệu. Chi tiết của MRAM sẽ được trình bày bên dưới (hình \ref{fig:exp-sche-mram-mpu}).
+    \item Một IC RAM khác cũng được dùng là FRAM, FRAM được thiết kế để giao tiếp bằng giao thức SPI, nhưng trong thiết kế này do giới hạn về số lượng ngoại vi nên sử dụng USART để giao tiếp với FRAM thay vì SPI sẵn có của IC. Chi tiết về FRAM được trình bày ở bên dưới hình (hình \ref{fig:exp-sche-fram}).
+    \item Giao thức I2C được dùng trong 2 mục đích chính là giao tiếp với các IC nội bộ trên board như IC theo dõi nguồn PAC1934 UQFN-16. Nối ra connector để giao tiếp với các board khác như connetor lên board camera, connector với board OBC.
+    \item Giao thức SPI bên cạnh việc dùng cho các IC có chức năng nhớ còn dùng để đưa ra connector với board photo.
+    \item Giao thức UART được dùng trong việc giao tiếp giữa core A (MPU) và core M (MCU), kéo ra connector RS422 được lái bởi IC transceiver UART-RS422, và một UART được kéo ra cho việc debug.
+    \item Tín hiệu CAN TX/RX thông qua IC CAN transceiver để chuyển đổi lớp vật lí kéo ra bus CAN H/L chung để giao tiếp với MCU trên board và với connector ra board OBC.
+    \item Các tín hiệu JTAG debug
+\end{itemize}
 
-MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SPI
+Bên cạnh đó còn một số tín hiệu IO khác ví dụ như các IO dùng cho chức năng enable IC, một số thì dùng làm các tín hiệu select cho các IC switch, một số là khiển các led status, một số khác là các tín hiệu ngắt để nhật các sự kiện ngắt từ IC.
 
 \begin{figure}[H]
     \centering
@@ -554,7 +601,6 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối FRAM}
     \label{fig:exp-sche-fram}
 \end{figure}
-\textbf{Chức năng:} FRAM là bộ nhớ không mất dữ liệu có tốc độ ghi cao, phù hợp lưu tham số vận hành thường xuyên thay đổi và dữ liệu cần độ bền ghi lớn.
 
 \begin{figure}[H]
     \centering
@@ -562,7 +608,6 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối MRAM kết nối MPU}
     \label{fig:exp-sche-mram-mpu}
 \end{figure}
-\textbf{Chức năng:} MRAM phía MPU lưu dữ liệu cấu hình/hệ thống cần bảo toàn trạng thái, hỗ trợ khởi động và phục hồi thông số nhanh.
 
 \begin{figure}[H]
     \centering
@@ -570,7 +615,6 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối MRAM kết nối MCU}
     \label{fig:exp-sche-mram-mcu}
 \end{figure}
-\textbf{Chức năng:} MRAM phía MCU phục vụ lưu trạng thái điều khiển cục bộ và các tham số hiệu chuẩn liên quan đến vòng điều khiển thời gian thực.
 
 \begin{figure}[H]
     \centering
@@ -578,7 +622,31 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối PRAM}
     \label{fig:exp-sche-pram}
 \end{figure}
-\textbf{Chức năng:} PRAM bổ sung vùng lưu trữ tham số/biến cấu hình phục vụ các nhánh xử lý cần truy cập nhanh và ổn định.
+
+Tổng quan chung về các IC RAM được dùng trong thiết kế, bên cạnh RAM DDR3 cho MPU, trên board EXP còn sử dụng thêm 3 IC RAM khác là MRAM, PRAM và FRAM. Bảng \ref{tab:so-sanh-ram} trình bày so sánh chi tiết các đặc tính của ba loại bộ nhớ này:
+
+\begin{table}[H]
+    \centering
+    \caption{So sánh đặc tính MRAM, PRAM và FRAM}
+    \label{tab:so-sanh-ram}
+    \begin{tabularx}{\textwidth}{|X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+    \hline
+    \textbf{} & \textbf{MRAM} & \textbf{PRAM} & \textbf{FRAM} \\
+    \hline
+    Nguyên lí hoạt động & Sử dụng hiệu ứng từ trở, lưu dữ liệu bằng hướng từ hóa của các lớp từ tính & Thay đổi pha vật liệu chalcogenide giữa trạng thái tinh thể và vô định hình, sử dụng nhiệt để chuyển pha & Sử dụng phân cực điện (polarization) của tinh thể ferroelectric để lưu trữ dữ liệu \\
+    \hline
+    Tốc độ ghi/đọc & Nhanh (sub-nanosecond), tương tự SRAM & Trung bình ($\sim 1$ µs), có thể chậm khi ghi & Cực nhanh (sub-nanosecond), nhanh nhất trong ba \\
+    \hline
+    Độ bền (chu kỳ ghi) & Rất cao ($\geq 10^{15}$ cycles) & Thấp hơn ($\sim 10^{6}$ - $10^{7}$ cycles) & Rất cao ($\geq 10^{15}$ cycles) \\
+    \hline
+    Tiêu thụ điện năng & Thấp, chỉ tiêu thụ khi đọc/ghi & Cao khi ghi (do cần nhiệt để thay đổi pha) & Cực thấp, không cần refresh như DRAM \\
+    \hline
+    Mật độ lưu trữ & Thấp hơn flash & Cao, lớn hơn MRAM/FRAM & Thấp nhất trong ba loại \\
+    \hline
+    Bay hơi khi mất điện & Không (non-volatile), dữ liệu được giữ nguyên & Không (non-volatile), dữ liệu được giữ nguyên & Không (non-volatile), dữ liệu được giữ nguyên \\
+    \hline
+    \end{tabularx}
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -586,7 +654,12 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối RTC}
     \label{fig:exp-sche-rtc}
 \end{figure}
-\textbf{Chức năng:} RTC duy trì thời gian thực cho hệ thống, hỗ trợ đóng dấu thời gian log, theo dõi phiên thí nghiệm và đồng bộ sự kiện.
+
+IC RTC sử dụng trong thiết kế là RV-3129-C3-32.768KHZ-OPTION-A-TB-QA của Micro Crystal, một module RTC siêu nhỏ (kích thước 3.2 x 1.5 x 0.8 mm) tích hợp sẵn crystal thạch anh 32.768 kHz với độ chính xác ±1 ppm ở nhiệt độ phòng. IC này giao tiếp qua bus I2C với tốc độ lên đến 400 kHz, hỗ trợ các tính năng như alarm programmable, timer countdown, event detection, và clock output. Ưu điểm chính bao gồm tiêu thụ cực thấp (chỉ 0.045 µA ở chế độ standby), dải nhiệt độ rộng (-40°C đến +85°C), độ tin cậy cao với tuổi thọ >10 năm, và không cần linh kiện ngoài như crystal rời, giúp đơn giản hóa thiết kế PCB.
+
+Các chân PIN của RV-3129 được tối ưu cho ứng dụng low-power: chân SDA và SCL là các chân I2C data và clock, hoạt động open-drain nên bắt buộc phải kéo lên nguồn (pull-up) để đạt mức logic cao; chân INT là chân ngắt output, cũng open-drain nên cần pull-up nếu sử dụng để phát tín hiệu ngắt cho MCU; chân CLKOUT là clock output CMOS push-pull, có thể thả nổi nếu không dùng; chân VBAT là nguồn backup (1.2-5.5V), cần nối pin lithium hoặc tụ để duy trì thời gian khi mất nguồn chính; chân VCC là nguồn hoạt động chính (1.2-5.5V), và GND là đất. Các chân khác như OSCI/OSCO không có vì crystal đã tích hợp.
+
+Trong sơ đồ thiết kế, SDA và SCL được kéo lên 3.3V qua điện trở 4.7 kΩ để đảm bảo tốc độ I2C ổn định và giảm nhiễu trên bus; VBAT nối trực tiếp đến pin backup 3V để bảo toàn thời gian; VCC nối từ nguồn 3.3V của hệ thống; chân INT được kéo lên 3.3V qua 4.7 kΩ để chuẩn bị tín hiệu ngắt nếu kích hoạt alarm; CLKOUT được thả nổi vì không sử dụng trong thiết kế này; GND nối đất chung. Giá trị pull-up 4.7 kΩ được chọn theo khuyến nghị của datasheet để cân bằng giữa tốc độ truyền và tiêu thụ dòng, đảm bảo bus I2C hoạt động ổn định ở 400 kHz mà không gây nhiễu.
 
 \begin{figure}[H]
     \centering
@@ -594,7 +667,12 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối eMMC}
     \label{fig:exp-sche-khoi-emmc}
 \end{figure}
-\textbf{Chức năng:} eMMC là bộ nhớ lưu trữ chính cho firmware/hệ điều hành và dữ liệu dài hạn của board EXP.
+
+IC eMMC sử dụng trong thiết kế là MTFC32GAZAQDW-AAT của Micron Technology, một module bộ nhớ embedded multimedia card (eMMC) dung lượng 32GB theo chuẩn JEDEC eMMC 5.1. IC này tích hợp NAND flash và MMC controller, hỗ trợ giao tiếp MMC protocol với tốc độ đọc lên đến 250 MB/s và ghi 90 MB/s, cùng chế độ boot trực tiếp từ eMMC. Chức năng chính của eMMC là phục vụ vai trò lưu trữ chính cho firmware, hệ điều hành và dữ liệu dài hạn trong hệ thống nhúng, cho phép boot trực tiếp và quản lý dữ liệu ổn định. Ưu điểm chính bao gồm dung lượng lớn với độ tin cậy cao (ECC tích hợp, wear leveling), tiêu thụ năng lượng thấp (chế độ sleep \textless 1mA), tương thích rộng với các host processor, và không cần driver phức tạp, giúp đơn giản hóa việc lưu trữ firmware và dữ liệu dài hạn trong hệ thống nhúng.
+
+Các chân của MTFC32GAZAQDW-AAT tuân theo chuẩn eMMC: CMD là đường lệnh và DAT0-DAT7 là các đường dữ liệu, cần điện trở kéo lên VCCQ theo khuyến nghị để bảo đảm mức logic ổn định (đặc biệt trong giai đoạn khởi tạo bus); CLK là xung clock từ host nên không cần pull-up; RST\_n là ngõ vào reset, thường kéo lên VCCQ để tránh reset ngoài ý muốn; VCC là nguồn lõi (2.7-3.6 V), VCCQ là nguồn I/O (1.65-3.6 V), và GND là mass; các chân NC (no connect) được để hở.
+
+Trong sơ đồ thiết kế, CMD và DAT0-DAT7 được kéo lên 3.3 V (VCCQ) qua điện trở 10 k$\Omega$ để bảo đảm mức logic ổn định cho bus eMMC; CLK nối trực tiếp từ MPU; RST\_n được kéo lên 3.3 V qua điện trở 10 k$\Omega$ để duy trì trạng thái không reset; VCC và VCCQ nối với nguồn 3.3 V của hệ thống. Chân VDDIM là một nút nguồn nội, nối với tụ kéo xuống đất theo đề xuất thiết kế của datasheet. Giá trị pull-up 10 k$\Omega$ được chọn theo khuyến nghị của datasheet để cân bằng giữa tốc độ bus (52 MHz) và tiêu thụ dòng, bảo đảm truyền tín hiệu ổn định.
 
 \begin{figure}[H]
     \centering
@@ -602,7 +680,8 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối SD Card}
     \label{fig:exp-sche-sdcard}
 \end{figure}
-\textbf{Chức năng:} Mạch SD Card cung cấp kênh lưu trữ tháo lắp linh hoạt, phục vụ cập nhật dữ liệu, log đo và kiểm thử.
+
+Bên cạnh eMMC là một thẻ nhớ nhúng dùng để boot, còn dùng thêm 1 thẻ SD Card khác để boot các phần mềm cần thiết cho core MPU, cũng sử dụng qua giao thức SDMMC (SDMMC1 với MPU).
 
 \begin{figure}[H]
     \centering
@@ -610,28 +689,8 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối Debug}
     \label{fig:exp-sche-khoi-debug}
 \end{figure}
-\textbf{Chức năng:} Khối debug đưa ra các giao diện kiểm tra và nạp chương trình, giúp quan sát trạng thái hệ thống trong quá trình phát triển và bảo trì.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
-    \caption{Schematic khối PMIC và giám sát dòng}
-    \label{fig:exp-sche-khoi-pmic}
-\end{figure}
-\textbf{Chức năng:} PMIC quản lý trình tự cấp nguồn, giám sát điện áp/dòng tiêu thụ và hỗ trợ cơ chế bảo vệ khi quá tải hoặc bất thường nguồn.
-\textbf{Tính toán từ schematic (khi có R shunt/điện áp đo):}
-\[
-    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\cdot I_{rail}
-\]
-\textit{Cách tính:} lấy \(R_{SHUNT}\) và điện áp rơi trên shunt đúng theo giá trị ghi trên hình, thay trực tiếp vào công thức để ra dòng và công suất từng rail.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{picture/exp/hole.png}
-    \caption{Schematic khối hole (cơ khí/tiếp địa)}
-    \label{fig:exp-sche-hole}
-\end{figure}
-\textbf{Chức năng:} Nhóm điểm hole phục vụ cố định cơ khí và/hoặc tiếp địa tham chiếu cho PCB, góp phần nâng độ bền và ổn định nhiễu EMC.
+Các connector debug console với giao thức UART để thực hiện quá trình debug trong lúc phát triển firmware.
 
 \begin{figure}[H]
     \centering
@@ -639,7 +698,8 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối CAN transceiver}
     \label{fig:exp-sche-can-transceiver}
 \end{figure}
-\textbf{Chức năng:} Mạch CAN transceiver chuyển đổi mức vật lý CAN H/L, tăng khả năng chống nhiễu và bảo đảm truyền thông tin cậy trên bus.
+
+Thiết kế sửa dụng IC CAN TRANSCEIVER SN65HVD230DR, để chuyển đổi tín hiệu CAN ở lớp giao thức vật lý, chuyển đổi từ tín hiệu single-end sang diffental pair và ngược lại. Đối với CAN TRANSCEIVER có vai trò là điểm ở cuối đường dây bus CAN, phải cần thêm một điện trở phối hợp trở kháng cuối đường dây thường là 120R đối với đường truyền CAN.
 
 \begin{figure}[H]
     \centering
@@ -647,24 +707,33 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối chuyển mạch USB}
     \label{fig:exp-sche-sw-usb}
 \end{figure}
-\textbf{Chức năng:} Mạch switch USB lựa chọn đường tín hiệu USB theo chế độ vận hành, cho phép chia sẻ cổng và tối ưu routing tín hiệu tốc độ cao.
+
+
+Trong thiết kế, MAX14662ETI+T (Maxim Integrated/Analog Devices) được sử dụng như một switch với nhiều ngõ vào và một ngõ ra, một ngõ ra được đọc về MCU và MCU sẽ chọn tín hiệu đọc về thông qua I2C. Do hạn chế về mặt số lượng chân ADC và các tín hiệu ADC sẽ được đọc tùy ý nên dùng switch sẽ đáp ứng được cho việc đọc được nhiều tín hiệu ADC và đáp ứng được việc không bắt buộc đọc cùng lúc.
+
+Các ưu điểm chính của MAX14662ETI+T gồm: dải nguồn đơn rộng từ 1.6~V đến 5.5~V; khả năng truyền tín hiệu analog đến $\pm 5.5$~V độc lập với mức nguồn nuôi (\textit{Beyond-the-Rails}); điện trở dẫn thấp (R\textsubscript{ON} điển hình khoảng 0.425~$\Omega$); độ méo thấp; hỗ trợ băng thông cao; và các chân tín hiệu A\_x/B\_x có mức bảo vệ ESD cao, phù hợp khi làm việc với các cổng giao tiếp ngoài.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/sw-usb-connector.png}
-    \caption{Schematic khối connector của mạch USB switch}
+    \includegraphics[width=1\textwidth]{picture/exp/usb_host_only.png}
+    \caption{Schematic khối USB host only}
     \label{fig:exp-sche-sw-usb-connector}
 \end{figure}
-\textbf{Chức năng:} Khối này là phần đầu nối của tuyến USB switch, đảm bảo ghép nối chuẩn cơ điện giữa board EXP và thiết bị bên ngoài.
 
+Do hạn chế về số lượng USB trên MPU, theo yêu cầu thiết kế cần 2 connector USB host only nên phải dùng 1 usb switch (IC FSUSB74MPX) có ngõ vào từ USB\_C (host only của MPU) và 2 ngõ ra cho 2 connector USB.
+
+Bên cạnh switch cho tín hiệu USB, dùng thêm một IC switch nguồn để tùy vào khi ta kết nối với connector nào thì ta có thể kiểm soát độc lập nguồn trên connector đó lẫn việc chọn tín hiệu USB. Trong thiết kế dùng IC MIC2026-1YM.
+
+Gần phía connector usb sử dụng 2 IC USBLC6-2SC6 để kẹp mức điện áp an toàn, bảo vệ linh kiện trên mạch khỏi hiện tượng ESD.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/connector-hd4.png}
-    \caption{Schematic connector HD4}
-    \label{fig:exp-sche-connector-hd4}
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-onboard.png}
+    \caption{Schematic cảm biến BMP390 onboard}
+    \label{fig:exp-sche-bmp390-onboard}
 \end{figure}
-\textbf{Chức năng:} Connector HD4 là đầu nối chuyên dụng cho nhánh driver HD4, bảo đảm truyền tín hiệu điều khiển và nguồn tới tải tương ứng.
+
+Thiết kế sử dụng BMP390 onboard và kết nối ra connector để đo đạc thông số nhiệt độ áp suất trên board và môi trường ngoài board. BMP390 là dòng cảm biến áp suất khí quyển kỹ thuật số hiệu suất cao của Bosch Sensortec, được tối ưu hóa cho các ứng dụng cần độ chính xác cực cao về cao độ. Linh kiện hoạt động trong dải áp suất từ $300$ đến $1250$ hPa với độ sai số tương là $\pm 0.03$ hPa (tương đương sai số độ cao chỉ 25 cm). Với kích thước nhỏ ($2.0 \times 2.0 \times 0.75$ mm³), mức tiêu thụ năng lượng thấp và tích hợp sẵn bộ đệm FIFO 73 khung dữ liệu, BMP390 cho phép giảm tải xử lý cho vi điều khiển trung tâm đồng thời kéo dài thời lượng pin. Cảm biến hỗ trợ hai giao tiếp I2C và SPI, tích hợp sẵn cảm biến nhiệt độ bên trong để bù sai số môi trường.
 
 \begin{figure}[H]
     \centering
@@ -672,7 +741,8 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối Heater}
     \label{fig:exp-sche-khoi-heater}
 \end{figure}
-\textbf{Chức năng:} Khối heater điều khiển phần tử gia nhiệt bằng PWM/driver công suất, phục vụ ổn định nhiệt độ theo kịch bản thí nghiệm.
+
+Khối heater bao gồm 8 heater được điều khiển bởi tín hiệu PWM thông qua N\_MOSFER và kết nối ra connector heater.
 
 \begin{figure}[H]
     \centering
@@ -680,9 +750,11 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối TEC}
     \label{fig:exp-sche-khoi-tec}
 \end{figure}
-\textbf{Chức năng:} Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
+Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
 
-\textit{Cách tính:} với mạch có điện trở cảm dòng thì lấy \(I_{TEC}\) theo \(V_{SHUNT}/R_{SHUNT}\); với mạch giới hạn dòng thì thay đúng giá trị điện trở đặt dòng ghi trên schematic để suy ra ngưỡng dòng cực đại.
+Trong thiết kế sử dụng IC LT8722 là bộ điều khiển full bridge DC/DC, chuyên dùng để lái bộ làm mát nhiệt điện (TEC) và các hệ thống quang học với công suất lên đến ±54W. Một phía tải được điều khiển bằng tầng PWM buck và phía còn lại bằng tầng tuyến tính, cho phép điều khiển dòng điện hai chiều chính xác mà chỉ cần một cuộn cảm. IC giao tiếp thông SPI 10MHz để cấu hình điện áp (DAC 25-bit) và giới hạn dòng điện, đồng thời xuất tín hiệu giám sát hệ thống (VIN, VOUT, nhiệt độ) qua chân AOUT. Trong thiết kế này, do giới hạn về số lượng ngoại vi nên SPI được dùng thay thế bởi USART.
+
+Trong thiết kế này, LT8722 đóng vai trò là bộ điều khiển dòng điện hai chiều cho module TEC dựa trên cấu trúc Full-bridge tích hợp. IC sử dụng cơ chế điều khiển dòng điện (Constant Current) thay vì điều khiển điện áp, giúp duy trì dòng định mức qua tải bất chấp sự biến đổi nội trở của vật liệu bán dẫn theo nhiệt độ. DAC 25-bit cho phép thiết lập điểm vận hành (setpoint) và điều chỉnh cường độ dòng điện với bước nhảy nhỏ, đảm bảo độ phân giải trong việc kiểm soát nhiệt độ. Tầng công suất kết hợp giữa PWM buck và tầng tuyến tính cho phép thay đổi chiều dòng điện liên tục giữa chế độ làm lạnh và chế độ sưởi ấm mà không bị gián đoạn tại điểm dòng bằng không. Ngoài ra, các tính năng giám sát hệ thống qua giao tiếp SPI và chân AOUT cung cấp dữ liệu về điện áp đầu vào, đầu ra và nhiệt độ thực tế của IC. Do hạn chế về số lượng chân ngoại vi trên vi điều khiển, SPI được sử dụng thay thế bởi USART.
 
 \begin{figure}[H]
     \centering
@@ -690,7 +762,9 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối MPD200A}
     \label{fig:exp-sche-mpd200a}
 \end{figure}
-\textbf{Chức năng:} MPD200A thực hiện nhánh điều khiển/giám sát liên quan nguồn HV hoặc tải đặc thù theo cấu hình hệ quang - đo.
+Theo schematic của bo EXP, khối MPD200A là phần đại diện cho module nguồn HV mà MCU tương tác thông qua các tín hiệu \texttt{DAC}, \texttt{EN} và \texttt{PWM}; trong đó \texttt{EN} dùng để cho phép/khóa hoạt động, còn \texttt{DAC}/\texttt{PWM} dùng để đặt mức hoặc điều chế công suất theo yêu cầu điều khiển. Ngõ ra của khối là cặp cao áp \texttt{HV\_O+} và \texttt{HV\_O-} đưa ra connector tới tải.
+
+Đối chiếu với datasheet MPD-200, các chân điều khiển chuẩn của module chủ yếu ở mức hệ nguồn (remote on/off, power good, remote sense). Vì vậy, các tín hiệu \texttt{DAC}, \texttt{EN}, \texttt{PWM} trong schematic này được hiểu là giao diện điều khiển ở cấp hệ thống của bo mạch (hoặc qua mạch ghép trung gian), dùng để MCU điều khiển nhánh HV một cách chủ động và an toàn.
 
 \begin{figure}[H]
     \centering
@@ -698,17 +772,44 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
     \caption{Schematic khối driver HD4}
     \label{fig:exp-sche-driver-hd4}
 \end{figure}
-\textbf{Chức năng:} Driver HD4 khuếch đại và đệm tín hiệu điều khiển từ MCU để kích tải công suất ở mức dòng/áp phù hợp.
-\textbf{Tính toán từ schematic (nếu có tầng op-amp):}
-\textit{Cách tính:} lấy đúng cặp điện trở hồi tiếp \(R_f, R_g\) ghi trên hình để tính hệ số khuếch đại và biên độ đầu ra.
+Module này đóng vai trò là một bộ chuyển đổi DC-AC điện áp cao. Nó lấy nguồn điện một chiều (DC) thấp từ pin hoặc hệ thống và chuyển đổi thành tín hiệu xoay chiều (AC) có biên độ lớn để kích hoạt các màng loa áp điện (piezo membrane) bên trong máy bơm mp6. Đặc biệt, phiên bản mp-Highdriver4 có khả năng lái cùng lúc lên đến 4 máy bơm mp6 một cách độc lập. Giao tiếp I2C để tùy chỉnh tần số, biên độ điện áp, dạng sóng.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/connector-hd4.png}
+    \caption{Schematic connector HD4}
+    \label{fig:exp-sche-connector-hd4}
+\end{figure}
+
+Các tín hiệu được lái từ IC mp-Highdriver4 sẽ được kết nối ra connector kết nối với các máy bơm màng piezo.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
-    \caption{Schematic khối điều khiển solenoid (IC)}
+    \caption{Schematic khối điều khiển SOLENOID}
     \label{fig:exp-sche-solenoid-ic}
 \end{figure}
-\textbf{Chức năng:} Solenoid IC tạo tầng điều khiển logic/driver trung gian cho cuộn coil solenoid, bảo đảm chuyển mạch đúng ngưỡng.
+
+TB67H451AFNG là một vi mạch điều khiển động cơ DC chổi than (brushed motor driver) kiểu băm xung PWM, cho phép chịu được điện áp lên tới 50 V và dòng điện tối đa 3.5A. Khả năng lái dòng điện không đổi bằng PWM hoặc lái PWM trực tiếp. Tích hợp các chức năng phát hiện lỗi: Ngắt quá nhiệt (TSD), phát hiện quá dòng (ISD) và khóa dưới điện áp (UVLO). mạch sử dụng một cầu H (H-Bridge) tích hợp để điều khiển dòng điện đi qua tải. Tùy thuộc vào trạng thái của IN1 và IN2, vi mạch sẽ hoạt động theo 4 chế độ.
+
+Tín hiệu input là IN1 và IN2 dùng để làm tổ hợp lựa chọn chế độ hoạt động để tạo ngõ ra.
+
+VREF là chân để thiết lập giá trị dòng điện đầu ra cho động cơ.
+
+\begin{equation}
+I_{\mathrm{out(max)}} = V_{\mathrm{ref(gain)}} \times \frac{V_{\mathrm{ref}}}{R_{\mathrm{RS}}}
+\end{equation}
+
+Trong đó, hệ số suy giảm điện áp tham chiếu có giá trị điển hình:
+\[
+V_{\mathrm{ref(gain)}} = \frac{1}{10}\;(\mathrm{typ.})
+\]
+
+VM: Chân cấp nguồn cho động cơ (Dải hoạt động từ 4.5 V đến 44 V)
+
+OUT1, OUT2: Các chân đầu ra kết nối trực tiếp với tải (động cơ hoặc solenoid)
+
+RS: Chân cảm biến dòng điện đầu ra, thường nối với một điện trở cảm biến xuống đất
+
 
 \begin{figure}[H]
     \centering
@@ -734,13 +835,6 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
 \end{figure}
 \textbf{Chức năng:} Mạch flow sensor xử lý giao tiếp với cảm biến lưu lượng, đọc dữ liệu và chuyển về bus điều khiển nội bộ.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/bmp390-onboard.png}
-    \caption{Schematic cảm biến BMP390 onboard}
-    \label{fig:exp-sche-bmp390-onboard}
-\end{figure}
-\textbf{Chức năng:} BMP390 onboard đo áp suất/độ cao tại board, cung cấp dữ liệu môi trường phục vụ bù sai số và giám sát điều kiện làm việc.
 
 \begin{figure}[H]
     \centering
@@ -766,6 +860,17 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
 \end{figure}
 \textbf{Chức năng:} Watchdog giám sát nhịp hoạt động của bộ điều khiển; khi phát hiện treo hệ thống sẽ kích hoạt cơ chế phục hồi để tăng độ an toàn vận hành.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/exp/hole.png}
+    \caption{Schematic khối hole (cơ khí/tiếp địa)}
+    \label{fig:exp-sche-hole}
+\end{figure}
+\textbf{Chức năng:} Nhóm điểm hole phục vụ cố định cơ khí và/hoặc tiếp địa tham chiếu cho PCB, góp phần nâng độ bền và ổn định nhiễu EMC.
+
+
+
+
 % \subsection{Bo giao tiếp - IF}
 % \label{subsec:sche-bo-giao-tiep-if}
 
@@ -776,6 +881,11 @@ MPU giao tiếp với một IC PRAM, IC này giao tiếp với MPU thông qua SP
 % \label{subsec:sche-bo-thu-photo}
 
 \newpage
+
+
+
+
+
 
 
 
