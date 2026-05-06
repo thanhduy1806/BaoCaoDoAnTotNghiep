@@ -9,7 +9,7 @@
 
 Vệ tinh nhỏ, đặc biệt là CubeSat, là nền tảng nghiên cứu và trình diễn công nghệ được sử dụng phổ biến trong các trường đại học, viện nghiên cứu và doanh nghiệp không gian mới. So với vệ tinh truyền thống, CubeSat có ưu điểm nổi bật là chi phí phát triển thấp hơn, thời gian thiết kế ngắn hơn và quy trình tích hợp linh hoạt hơn. Tuy nhiên, các hệ thống trên CubeSat luôn bị ràng buộc đồng thời bởi giới hạn kích thước, khối lượng, công suất và môi trường vận hành khắc nghiệt.
 
-Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các bo mạch chức năng. Cụ thể, hệ thống bao gồm bo mạch OBC, bo mạch EXP, bo mạch IF, bo mạch LASER, bo mạch PHOTO. Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
+Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch OBC, board mạch EXP, board mạch IF, board mạch LASER, board mạch PHOTO. Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
 
 \subsection{Khái niệm CubeSat và phương thức triển khai quỹ đạo}
 \label{subsec:khai_niem_cubesat}
@@ -18,7 +18,7 @@ Trong phạm vi luận văn, thuật ngữ vệ tinh được hiểu là vệ ti
 
 Về triển khai quỹ đạo, CubeSat thường đi theo hai phương thức chính. Thứ nhất, CubeSat được đặt trong các cơ cấu chứa/phóng chuyên dụng (dispenser/deployer) gắn trên tên lửa, sau đó được tách ra quỹ đạo bằng cơ chế lò xo. Trong kịch bản này, CubeSat thường đóng vai trò tải phụ hoặc tham gia các chuyến phóng rideshare. Thứ hai, CubeSat được vận chuyển lên Trạm Vũ trụ Quốc tế (ISS), sau đó được nạp vào các hệ deployer của ISS và thả ra quỹ đạo hoạt động.
 
-Tương tự các vệ tinh lớn, hệ CubeSat được phân tách thành hai nhóm chức năng: \textit{satellite bus} và \textit{satellite payload}. \textit{Bus} là phần hạ tầng duy trì hoạt động của vệ tinh trong suốt nhiệm vụ, thường gồm các phân hệ: kết cấu (\textit{STRU}), truyền thông (\textit{COMM}), điều khiển tư thế và quỹ đạo (\textit{AOCS}), nguồn điện (\textit{EPS}), xử lý dữ liệu trên bo (\textit{OBDH}), telemetry--tracking--command (\textit{TT\&C}) và điều khiển nhiệt (\textit{TCS}). Ngược lại, \textit{payload} là cụm thiết bị trực tiếp cung cấp năng lực nhiệm vụ của vệ tinh, ví dụ cảm biến quang học đối với vệ tinh quan sát hoặc cụm anten/phát--thu đối với vệ tinh thông tin.
+Tương tự các vệ tinh lớn, hệ CubeSat được phân tách thành hai nhóm chức năng: \textit{satellite bus} và \textit{satellite payload}. \textit{Bus} là phần hạ tầng duy trì hoạt động của vệ tinh trong suốt nhiệm vụ, thường gồm các phân hệ: kết cấu (\textit{STRU}), truyền thông (\textit{COMM}), điều khiển tư thế và quỹ đạo (\textit{AOCS}), nguồn điện (\textit{EPS}), xử lý dữ liệu trên board (\textit{OBDH}), telemetry--tracking--command (\textit{TT\&C}) và điều khiển nhiệt (\textit{TCS}). Ngược lại, \textit{payload} là cụm thiết bị trực tiếp cung cấp năng lực nhiệm vụ của vệ tinh, ví dụ cảm biến quang học đối với vệ tinh quan sát hoặc cụm anten/phát--thu đối với vệ tinh thông tin.
 
 Với cách phân tách này, \textit{bus} không trực tiếp tạo dữ liệu nhiệm vụ nhưng quyết định độ ổn định vận hành của toàn hệ; còn \textit{payload} tạo ra dữ liệu đầu ra nhưng phụ thuộc vào \textit{bus} để được cấp nguồn, điều khiển, đồng bộ và truyền dữ liệu. Trong phạm vi đề tài, OBC và IF thuộc lớp hạ tầng điều khiển/giao tiếp, cụm LASER--PHOTO thuộc lớp tải thí nghiệm, còn EXP đóng vai trò điều phối cục bộ giữa hai lớp này. Cách ánh xạ này là cơ sở để tổ chức kiến trúc kỹ thuật và xác định luồng dữ liệu trong các mục tiếp theo.
 
@@ -57,45 +57,45 @@ Về cơ khí, CubeSat thường được thiết kế với các rail nhôm d�
 
 Các giá trị kích thước và khối lượng trong bảng là giới hạn điển hình theo chuẩn hình học CubeSat. Trên thực tế, giá trị cho phép cuối cùng phụ thuộc vào loại dispenser cụ thể của từng chiến dịch phóng; một số vùng có thể cho phép chi tiết nhô ra ngoài kích thước rail theo quy định kỹ thuật đi kèm.
 
-Đối với hệ thống đề tài, ràng buộc theo chuẩn U tác động trực tiếp đến bố trí phần cứng, chiều dài liên kết, khả năng tản nhiệt và phương án kết nối dữ liệu giữa các bo mạch. Việc hiểu rõ ràng buộc hình học này giúp quá trình thiết kế giao diện cơ--điện hợp lý ngay từ đầu.
+Đối với hệ thống đề tài, ràng buộc theo chuẩn U tác động trực tiếp đến bố trí phần cứng, chiều dài liên kết, khả năng tản nhiệt và phương án kết nối dữ liệu giữa các board mạch. Việc hiểu rõ ràng buộc hình học này giúp quá trình thiết kế giao diện cơ--điện hợp lý ngay từ đầu.
 
 \subsection{Chuẩn hóa nền tảng CubeSat và ý nghĩa thiết kế}
 \label{subsec:chuan_hoa_nen_tang_cubesat}
 
-Bên cạnh chuẩn kích thước U, hệ CubeSat còn được hưởng lợi từ nhiều mức chuẩn hóa nền tảng. Về chuẩn hóa cơ khí phóng, các cơ cấu deployer như P-POD giúp bảo đảm tương thích với nhiều phương án phóng và giảm độ phức tạp tích hợp. Về chuẩn hóa điện tử, dù chưa có một chuẩn bắt buộc duy nhất, dạng bo xếp chồng theo triết lý PC/104 được sử dụng rộng rãi trong avionics CubeSat nhờ tận dụng thể tích tốt và thuận lợi cho lắp ghép mô-đun.
+Bên cạnh chuẩn kích thước U, hệ CubeSat còn được hưởng lợi từ nhiều mức chuẩn hóa nền tảng. Về chuẩn hóa cơ khí phóng, các cơ cấu deployer như P-POD giúp bảo đảm tương thích với nhiều phương án phóng và giảm độ phức tạp tích hợp. Về chuẩn hóa điện tử, dù chưa có một chuẩn bắt buộc duy nhất, dạng board xếp chồng theo triết lý PC/104 được sử dụng rộng rãi trong avionics CubeSat nhờ tận dụng thể tích tốt và thuận lợi cho lắp ghép mô-đun.
 
 Ở khối nguồn, pin trụ 18650 dạng COTS thường được dùng để cấu hình bộ pin cho EPS theo hướng chi phí hợp lý và dễ thay thế linh kiện. Các mức chuẩn hóa nói trên cho thấy tư duy thiết kế CubeSat hiện đại ưu tiên tính mô-đun, tính tích hợp nhanh và khả năng kế thừa giữa các phiên bản hệ thống.
 
 \subsection{Chuẩn giao tiếp dữ liệu và nhu cầu mô đun thí nghiệm đa năng}
 \label{subsec:nhu_cau_module_da_nang}
 
-Trong khối truyền thông nội bộ, CubeSat thường sử dụng các giao thức chuẩn như SPI, CAN Bus, I2C, UART, SpaceWire và Ethernet để liên kết các phân hệ. Việc lựa chọn giao thức phụ thuộc vào băng thông yêu cầu, độ phức tạp triển khai, khả năng chống nhiễu và mức độ mở rộng hệ thống. Cách tiếp cận theo giao thức chuẩn giúp giảm rủi ro tích hợp, tăng khả năng tương thích giữa các bo mạch và thuận lợi cho quá trình kiểm thử.
+Trong khối truyền thông nội bộ, CubeSat thường sử dụng các giao thức chuẩn như SPI, CAN Bus, I2C, UART, SpaceWire và Ethernet để liên kết các phân hệ. Việc lựa chọn giao thức phụ thuộc vào băng thông yêu cầu, độ phức tạp triển khai, khả năng chống nhiễu và mức độ mở rộng hệ thống. Cách tiếp cận theo giao thức chuẩn giúp giảm rủi ro tích hợp, tăng khả năng tương thích giữa các board mạch và thuận lợi cho quá trình kiểm thử.
 
 Nhiều nhiệm vụ CubeSat hiện nay yêu cầu tải thí nghiệm có khả năng cấu hình linh hoạt để phục vụ nhiều kịch bản đo khác nhau. Điều này dẫn đến nhu cầu phát triển các mô đun đa năng theo hướng ``một kiến trúc, nhiều chế độ vận hành''. Với hướng tiếp cận này, hệ thống có thể tiết kiệm thời gian phát triển, giảm chi phí tạo mẫu và tăng khả năng kế thừa cho các phiên bản sau.
 
-Với đề tài hiện tại, mô đun đa năng được thể hiện ở khả năng phối hợp nhiều bo mạch: EXP điều khiển LASER/PHOTO và giao tiếp dữ liệu hai chiều với OBC thông qua hạ tầng kết nối mở rộng từ IF. Vì vậy, trọng tâm kỹ thuật của luận văn là thiết kế kiến trúc giao tiếp OBC--EXP--IF và cơ chế truyền dữ liệu hai chiều có độ tin cậy cao.
+Với đề tài hiện tại, mô đun đa năng được thể hiện ở khả năng phối hợp nhiều board mạch: EXP điều khiển LASER/PHOTO và giao tiếp dữ liệu hai chiều với OBC thông qua hạ tầng kết nối mở rộng từ IF. Vì vậy, trọng tâm kỹ thuật của luận văn là thiết kế kiến trúc giao tiếp OBC--EXP--IF và cơ chế truyền dữ liệu hai chiều có độ tin cậy cao.
 
 \section{Cơ sở lý thuyết kiến trúc hệ thống OBC--EXP--IF}
 \label{sec:kien_truc_obc_exp_if}
 
-Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. OBC là lớp điều khiển cấp cao, chịu trách nhiệm gửi lệnh tác vụ, nhận dữ liệu thí nghiệm và quản lý trạng thái toàn hệ thống. EXP là lớp điều khiển cục bộ cho thí nghiệm, trực tiếp phát lệnh đến bo LASER và thu dữ liệu từ bo PHOTO. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
+Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. OBC là lớp điều khiển cấp cao, chịu trách nhiệm gửi lệnh tác vụ, nhận dữ liệu thí nghiệm và quản lý trạng thái toàn hệ thống. EXP là lớp điều khiển cục bộ cho thí nghiệm, trực tiếp phát lệnh đến board LASER và thu dữ liệu từ board PHOTO. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
 
 Cách chia vai trò này giúp giảm tải cho OBC, đồng thời giữ cho luồng điều khiển thí nghiệm có tính thời gian thực ở phía EXP. Kiến trúc phân lớp cũng giúp cô lập lỗi tốt hơn và thuận lợi cho mở rộng hệ thống.
 
-\subsection{Vai trò bo OBC}
+\subsection{Vai trò board OBC}
 \label{subsec:vai_tro_obc}
 
-Bo OBC (On-Board Computer) là trung tâm xử lý ở mức hệ thống. Trong phạm vi đề tài, OBC thực hiện các chức năng chính gồm: phát lệnh khởi tạo/chạy/dừng thí nghiệm, tiếp nhận dữ liệu từ EXP, ghi nhận trạng thái hệ thống và quản lý quá trình trao đổi dữ liệu theo chu kỳ hoặc theo sự kiện.
+Board OBC (On-Board Computer) là trung tâm xử lý ở mức hệ thống. Trong phạm vi đề tài, OBC thực hiện các chức năng chính gồm: phát lệnh khởi tạo/chạy/dừng thí nghiệm, tiếp nhận dữ liệu từ EXP, ghi nhận trạng thái hệ thống và quản lý quá trình trao đổi dữ liệu theo chu kỳ hoặc theo sự kiện.
 
-\subsection{Vai trò bo EXP}
+\subsection{Vai trò board EXP}
 \label{subsec:vai_tro_exp}
 
-Bo EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó còn thu thập nhiệt độ từ cảm biến nhiệt NTC, và trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. EXP cũng là nơi tổng hợp dữ liệu cục bộ, đóng gói dữ liệu theo khung truyền và gửi lên OBC.
+Board EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó còn thu thập nhiệt độ từ cảm biến nhiệt NTC, và trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. EXP cũng là nơi tổng hợp dữ liệu cục bộ, đóng gói dữ liệu theo khung truyền và gửi lên OBC.
 
-\subsection{Vai trò bo IF}
+\subsection{Vai trò board IF}
 \label{subsec:vai_tro_if}
 
-Bo IF (Interface board) là lớp giao tiếp mở rộng giữa OBC và EXP, đồng thời có thể bổ sung các cổng kết nối tùy cấu hình hệ thống. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
+Board IF (Interface board) là lớp giao tiếp mở rộng giữa OBC và EXP, đồng thời có thể bổ sung các cổng kết nối tùy cấu hình hệ thống. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
 
 \section{Cơ sở lý thuyết các linh kiện}
 
@@ -118,7 +118,7 @@ Từ đó, nguyên lý hoạt động của TEC có thể hiểu là quá trình
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{picture/components/HEATER.jpg}
+    \includegraphics[width=0.5\textwidth]{picture/components/HEATER.jpg}
     \caption{Phần tử gia nhiệt HEATER}
     \label{fig:heater_module}
 \end{figure}
@@ -144,4 +144,39 @@ Nguyên lý vật lý của solenoid dựa trên từ trường sinh ra bởi d�
 
 Từ đó, nguyên lý hoạt động của SOLENOID trong hệ thống là điều khiển trạng thái cơ cấu theo tín hiệu điện: cấp điện để tác động (hút/kéo hoặc đẩy tùy cấu hình) và ngắt điện để hồi vị. Trong thực tế, solenoid thường được điều khiển qua mạch công suất MOSFET kèm diode dập xung ngược (flyback diode) để bảo vệ linh kiện chuyển mạch khỏi xung điện áp cảm ứng khi cuộn dây bị ngắt dòng.
 
+\subsection{Tổng quan linh kiện Laser Diode}
+\label{subsec:tong-quan-laser-diode}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/components/laser-diode.jpg}
+    \caption{Linh kiện laser diode}
+    \label{fig:component-laser-diode}
+\end{figure}
+
+Laser diode là nguồn phát quang bán dẫn hoạt động dựa trên hiện tượng phát xạ kích thích trong vùng tiếp giáp p-n. Khi phân cực thuận đủ lớn, hạt tải được bơm vào vùng hoạt tính và tạo nghịch đảo mật độ hạt. Photon sinh ra trong quá trình tái hợp sẽ kích thích các chuyển mức tiếp theo, từ đó tạo chùm sáng có tính định hướng cao, phổ hẹp và công suất quang ổn định hơn so với LED thông thường.
+
+Về nguyên lý hoạt động, dòng điều khiển tăng đến ngưỡng sẽ đưa linh kiện vào chế độ phát laser. Dưới ngưỡng, linh kiện chủ yếu phát xạ tự phát (ánh sáng yếu, độ kết hợp thấp); trên ngưỡng, phát xạ kích thích chiếm ưu thế và công suất quang tăng nhanh theo dòng lái. Trong thiết kế thực tế, laser diode thường được điều khiển bằng mạch nguồn dòng hằng để ổn định công suất phát và hạn chế trôi do nhiệt.
+
+Một số thông số kỹ thuật cơ bản cần quan tâm gồm: bước sóng danh định (nm), dòng ngưỡng, dải dòng làm việc, điện áp thuận, công suất quang đầu ra, góc phân kỳ chùm tia, hệ số trôi theo nhiệt độ và điều kiện tản nhiệt. Các tham số này quyết định khả năng ghép quang, mức tín hiệu thu và độ ổn định của hệ đo trong quá trình vận hành.
+
+\subsection{Tổng quan linh kiện Photo Diode}
+\label{subsec:tong-quan-photo-diode}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/components/photo-diode.jpg}
+    \caption{Linh kiện photo diode}
+    \label{fig:component-photo-diode}
+\end{figure}
+
+Photo diode là linh kiện quang bán dẫn dùng để biến đổi tín hiệu ánh sáng thành tín hiệu điện, dựa trên hiệu ứng quang điện trong tiếp giáp p-n (hoặc cấu trúc PIN). Khi photon có năng lượng phù hợp đi vào vùng nghèo, các cặp electron--lỗ trống được sinh ra và tạo dòng quang tỉ lệ với cường độ chiếu sáng.
+
+Trong nguyên lý làm việc, photo diode thường được phân cực ngược để mở rộng vùng nghèo, giảm điện dung tiếp giáp và tăng tốc độ đáp ứng. Ở chế độ này, dòng tối tồn tại khi không có ánh sáng; khi có ánh sáng chiếu vào, dòng quang tăng lên và được chuyển đổi thành điện áp qua điện trở tải hoặc mạch khuếch đại chuyển dòng-áp (TIA) để đưa vào kênh đo ADC.
+
+Các thông số kỹ thuật cơ bản cần xem xét gồm: dải bước sóng đáp ứng, độ nhạy (A/W), dòng tối, điện dung tiếp giáp, thời gian đáp ứng, diện tích vùng nhạy quang, điện áp phân cực ngược tối đa và độ tuyến tính theo công suất sáng. Việc chọn đúng các tham số này giúp cải thiện tỉ số tín hiệu trên nhiễu và độ chính xác của hệ đo quang.
+
+
+
 \newpage
+

@@ -10,16 +10,16 @@ Chương này trình bày định hướng thiết kế và triển khai phần 
 \section{Yêu cầu thiết kế}
 \label{sec:yeu_cau_thiet_ke}
 
-Từ các mục tiêu đã nêu ở Chương 1 và kiến trúc OBC--EXP--IF trình bày trong Chương 2, yêu cầu của phần cứng trong đề tài không chỉ dừng ở việc vận hành từng bo riêng lẻ mà phải bảo đảm toàn hệ hoạt động như một khối thống nhất, trong đó giao tiếp dữ liệu liên bo là mục tiêu trung tâm.
+Từ các mục tiêu đã nêu ở Chương 1 và kiến trúc OBC--EXP--IF trình bày trong Chương 2, yêu cầu của phần cứng trong đề tài không chỉ dừng ở việc vận hành từng board riêng lẻ mà phải bảo đảm toàn hệ hoạt động như một khối thống nhất, trong đó giao tiếp dữ liệu liên board là mục tiêu trung tâm.
 
 \begin{itemize}
     \item \textbf{Yêu cầu tích hợp hệ thống:}
-    Hệ thống phải được thiết kế để các bo OBC, EXP, IF, LASER và PHOTO kết nối thành một cấu trúc đồng bộ.
-    Việc bố trí phần cứng phải bảo đảm tín hiệu điều khiển và tín hiệu đo được truyền ổn định giữa các bo, giảm sai lệch do nhiễu và sai khác vị trí lắp đặt.
+    Hệ thống phải được thiết kế để các board OBC, EXP, IF, LASER và PHOTO kết nối thành một cấu trúc đồng bộ.
+    Việc bố trí phần cứng phải bảo đảm tín hiệu điều khiển và tín hiệu đo được truyền ổn định giữa các board, giảm sai lệch do nhiễu và sai khác vị trí lắp đặt.
 
-    \item \textbf{Yêu cầu về giao tiếp dữ liệu giữa các bo:}
+    \item \textbf{Yêu cầu về giao tiếp dữ liệu giữa các board:}
     Luồng dữ liệu phải được tổ chức rõ ràng theo chiều điều khiển và chiều phản hồi:
-    OBC gửi lệnh xuống EXP, EXP điều phối hoạt động thí nghiệm, điều khiển bo LASER và thu dữ liệu từ PHOTO. Bên cạnh đó còn đọc các điều kiện môi trường thí nghiệm như nhiệt độ, độ ẩm từ các cảm biến để điều khiển môi trường thí nghiệm. Từ dữ liệu thu thập được trên bo PHOTO, EXP gửi về lại OBC, sau khi phân tích đóng gói dữ liệu bo OBC gửi dữ liệu về cho người dùng, bên cạnh đó bo IF đóng vai trò là bo interface của hệ thống, dùng để giao tiếp với các module phần cứng bên ngoài khác và giao tiếp nội bộ với 2 bo điều khiển chính của hệ thống là OBC và EXP.
+    OBC gửi lệnh xuống EXP, EXP điều phối hoạt động thí nghiệm, điều khiển board LASER và thu dữ liệu từ PHOTO. Bên cạnh đó còn đọc các điều kiện môi trường thí nghiệm như nhiệt độ, độ ẩm từ các cảm biến để điều khiển môi trường thí nghiệm. Từ dữ liệu thu thập được trên board PHOTO, EXP gửi về lại OBC, sau khi phân tích đóng gói dữ liệu board OBC gửi dữ liệu về cho người dùng, bên cạnh đó board IF đóng vai trò là board interface của hệ thống, dùng để giao tiếp với các module phần cứng bên ngoài khác và giao tiếp nội bộ với 2 board điều khiển chính của hệ thống là OBC và EXP.
     Hệ thống đồng thời phải hỗ trợ lưu vết trạng thái hoạt động để phục vụ giám sát và phân tích sau thí nghiệm.
 
     \item \textbf{Yêu cầu lưu trữ và giám sát:}
@@ -52,24 +52,24 @@ Các yêu cầu trên là nền tảng cho các phần tiếp theo của chươn
 \section{Phân tích phương pháp thiết kế}
 \label{sec:phan_tich_phuong_phap}
 
-Từ yêu cầu ở Mục 3.1 có thể thấy bài toán trọng tâm của hệ thống là bảo đảm giao tiếp dữ liệu tin cậy giữa các bo trong khi vẫn duy trì tính mô đun, khả năng mở rộng và độ ổn định vận hành. Vì vậy, quá trình thiết kế được phân tích theo ba hướng chính: kiến trúc kết nối phần cứng, phương thức giao tiếp dữ liệu và cách tổ chức điều khiển hệ thống.
+Từ yêu cầu ở Mục 3.1 có thể thấy bài toán trọng tâm của hệ thống là bảo đảm giao tiếp dữ liệu tin cậy giữa các board trong khi vẫn duy trì tính mô đun, khả năng mở rộng và độ ổn định vận hành. Vì vậy, quá trình thiết kế được phân tích theo ba hướng chính: kiến trúc kết nối phần cứng, phương thức giao tiếp dữ liệu và cách tổ chức điều khiển hệ thống.
 
 \subsection{Phân tích theo kiến trúc kết nối phần cứng}
 \label{subsec:phan_tich_kien_truc_ket_noi}
 
-\textbf{Phương pháp 1: Tích hợp toàn bộ chức năng trên một bo mạch duy nhất}
+\textbf{Phương pháp 1: Tích hợp toàn bộ chức năng trên một board mạch duy nhất}
 \begin{itemize}
-    \item Ưu điểm: giảm số lượng đầu nối liên bo, giảm độ phức tạp dây nối, thuận lợi cho tối ưu kích thước.
+    \item Ưu điểm: giảm số lượng đầu nối liên board, giảm độ phức tạp dây nối, thuận lợi cho tối ưu kích thước.
     \item Khuyết điểm: khó mở rộng hoặc thay đổi từng khối chức năng; khi một khối lỗi có thể ảnh hưởng toàn hệ; khó kiểm thử độc lập từng phần LASER/PHOTO/giao tiếp.
 \end{itemize}
 
-\textbf{Phương pháp 2: Kiến trúc đa bo theo phân lớp chức năng (OBC--EXP--IF--LASER--PHOTO)}
+\textbf{Phương pháp 2: Kiến trúc đa board theo phân lớp chức năng (OBC--EXP--IF--LASER--PHOTO)}
 \begin{itemize}
-    \item Ưu điểm: tách biệt rõ vai trò từng bo, dễ kiểm thử và thay thế; thuận lợi mở rộng giao diện qua IF; giảm rủi ro tích hợp theo từng giai đoạn. Phù hợp với kích thước của tiêu chuẩn payload satellite.
-    \item Khuyết điểm: tăng số lượng liên kết liên bo, yêu cầu đồng bộ tín hiệu và chống nhiễu tốt hơn; thiết kế cơ khí và dây nối phức tạp hơn.
+    \item Ưu điểm: tách biệt rõ vai trò từng board, dễ kiểm thử và thay thế; thuận lợi mở rộng giao diện qua IF; giảm rủi ro tích hợp theo từng giai đoạn. Phù hợp với kích thước của tiêu chuẩn payload satellite.
+    \item Khuyết điểm: tăng số lượng liên kết liên board, yêu cầu đồng bộ tín hiệu và chống nhiễu tốt hơn; thiết kế cơ khí và dây nối phức tạp hơn.
 \end{itemize}
 
-Với mục tiêu nghiên cứu mô đun đa năng và nhấn mạnh luồng dữ liệu liên bo, phương pháp 2 phù hợp hơn do phản ánh đúng kiến trúc thực tế của đề tài và cho phép đánh giá riêng từng lớp chức năng.
+Với mục tiêu nghiên cứu mô đun đa năng và nhấn mạnh luồng dữ liệu liên board, phương pháp 2 phù hợp hơn do phản ánh đúng kiến trúc thực tế của đề tài và cho phép đánh giá riêng từng lớp chức năng.
 
 \subsection{Phân tích theo tổ chức điều khiển hệ thống}
 \label{subsec:phan_tich_to_chuc_dieu_khien}
@@ -86,12 +86,12 @@ Với mục tiêu nghiên cứu mô đun đa năng và nhấn mạnh luồng d�
     \item Khuyết điểm: cần định nghĩa rõ giao thức lệnh-trạng thái giữa OBC và EXP để tránh xung đột điều khiển.
 \end{itemize}
 
-Phương pháp 2 được lựa chọn vì phù hợp trực tiếp với kiến trúc lý thuyết đã xây dựng ở Chương 2 và hỗ trợ tốt mục tiêu chính của đề tài là kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu giữa các bo.
+Phương pháp 2 được lựa chọn vì phù hợp trực tiếp với kiến trúc lý thuyết đã xây dựng ở Chương 2 và hỗ trợ tốt mục tiêu chính của đề tài là kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu giữa các board.
 
 \subsection{Kết luận lựa chọn phương pháp}
 \label{subsec:ket_luan_lua_chon}
 
-Từ các phân tích trên, phương pháp thiết kế được chọn cho đề tài là: \textit{kiến trúc đa bo phân lớp chức năng, giao tiếp dữ liệu theo khung có kiểm lỗi, điều khiển phân cấp OBC--EXP}. Cách lựa chọn này cân bằng giữa tính khả thi triển khai, độ tin cậy truyền dữ liệu và mục tiêu nghiên cứu của luận văn.
+Từ các phân tích trên, phương pháp thiết kế được chọn cho đề tài là: \textit{kiến trúc đa board phân lớp chức năng, giao tiếp dữ liệu theo khung có kiểm lỗi, điều khiển phân cấp OBC--EXP}. Cách lựa chọn này cân bằng giữa tính khả thi triển khai, độ tin cậy truyền dữ liệu và mục tiêu nghiên cứu của luận văn.
 
 \section{Sơ đồ khối tổng quát}
 \label{sec:so_do_khoi_tong_quat}
@@ -103,47 +103,47 @@ Từ các phân tích trên, phương pháp thiết kế được chọn cho đ�
     \label{fig:so-do-tong-quat}
 \end{figure}
 
-\textbf{Bo điều khiển trung tâm (OBC):}
+\textbf{Board điều khiển trung tâm (OBC):}
 OBC là khối điều phối ở mức hệ thống, tiếp nhận lệnh từ phía người vận hành và phát lệnh tác vụ xuống khối thí nghiệm.
-Bo này đồng thời thu nhận dữ liệu phản hồi từ EXP, tổng hợp trạng thái toàn hệ và lưu các thông tin quan trọng của phiên thí nghiệm để phục vụ theo dõi và hậu kiểm.
+Board này đồng thời thu nhận dữ liệu phản hồi từ EXP, tổng hợp trạng thái toàn hệ và lưu các thông tin quan trọng của phiên thí nghiệm để phục vụ theo dõi và hậu kiểm.
 Trong cấu hình triển khai, OBC đóng vai trò \textit{master} của mạng điều khiển nội bộ.
 
-\textbf{Bo điều khiển thí nghiệm (EXP):}
+\textbf{Board điều khiển thí nghiệm (EXP):}
 EXP là bộ điều khiển cục bộ của tải thí nghiệm.
-Khi nhận lệnh từ OBC, EXP thực hiện chu trình thí nghiệm: điều khiển bo LASER, thu dữ liệu từ bo PHOTO, đọc dữ liệu cảm biến môi trường (như NTC) và điều phối phần tử chấp hành nhiệt (HEATER/TEC).
+Khi nhận lệnh từ OBC, EXP thực hiện chu trình thí nghiệm: điều khiển board LASER, thu dữ liệu từ board PHOTO, đọc dữ liệu cảm biến môi trường (như NTC) và điều phối phần tử chấp hành nhiệt (HEATER/TEC).
 Sau mỗi chu kỳ đo, EXP chuẩn hóa và đóng gói dữ liệu trước khi gửi ngược lên OBC.
 
-\textbf{Bo giao tiếp trung gian (IF):}
+\textbf{Board giao tiếp trung gian (IF):}
 IF là tầng \textit{interface}, có nhiệm vụ chuẩn hóa kết nối, tổ chức đường tín hiệu và hỗ trợ mở rộng ngoại vi.
 Khối này giúp tách lớp điều khiển chính khỏi các ràng buộc kết nối phần cứng, nhờ đó hệ thống dễ tích hợp thêm module mới, đồng thời giảm độ phức tạp khi thay đổi cấu hình thử nghiệm.
 
-\textbf{Bo phát quang (LASER):}
-Bo LASER tạo nguồn sáng kích thích cho quá trình đo mẫu.
+\textbf{Board phát quang (LASER):}
+Board LASER tạo nguồn sáng kích thích cho quá trình đo mẫu.
 Mạch được thiết kế theo cấu trúc nhiều kênh độc lập, cho phép lựa chọn từng kênh phát theo lệnh điều khiển từ EXP.
 Cường độ phát có thể hiệu chỉnh để phù hợp với từng điều kiện thí nghiệm và từng loại mẫu vật.
 
-\textbf{Bo thu quang (PHOTO):}
-Bo PHOTO tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu và biến đổi thành tín hiệu điện phục vụ đo lường.
+\textbf{Board thu quang (PHOTO):}
+Board PHOTO tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu và biến đổi thành tín hiệu điện phục vụ đo lường.
 Khối này tích hợp mạch khuếch đại, lọc nhiễu và chuyển đổi ADC để bảo đảm tín hiệu thu có chất lượng tốt trước khi truyền về EXP.
-Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên bo LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
+Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên board LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
 
 \section{Sơ đồ khối chi tiết}
-\subsection{Bo máy tính điều khiển trung tâm - OBC}
-\label{subsec:bo-dieu-khien-trung-tam-obc}
+\subsection{Board máy tính điều khiển trung tâm - OBC}
+\label{subsec:board-dieu-khien-trung-tam-obc}
 
-Bo OBC là trung tâm điều khiển và xử lý dữ liệu của hệ thống, đảm nhiệm vai trò giao tiếp với người vận hành, 
-quản lý các tác vụ điều khiển và lưu trữ dữ liệu thí nghiệm. Sơ đồ khối chi tiết của bo OBC được trình bày trong Hình \ref{fig:so-do-chi-tiet-obc}.
+Board OBC là trung tâm điều khiển và xử lý dữ liệu của hệ thống, đảm nhiệm vai trò giao tiếp với người vận hành, 
+quản lý các tác vụ điều khiển và lưu trữ dữ liệu thí nghiệm. Sơ đồ khối chi tiết của board OBC được trình bày trong Hình \ref{fig:so-do-chi-tiet-obc}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/OBC.png}
-    \caption{Sơ đồ khối chi tiết của bo điều khiển OBC}
+    \caption{Sơ đồ khối chi tiết của board điều khiển OBC}
     \label{fig:so-do-chi-tiet-obc}
 \end{figure}
 
 Dựa trên sơ đồ Hình~\ref{fig:so-do-chi-tiet-obc}, chức năng các khối chính của board OBC gồm:
 \begin{itemize}
-    \item \textbf{Khối MCU -- STM32H7:} là bộ xử lý trung tâm của OBC, thực hiện tiếp nhận lệnh điều khiển, điều phối dữ liệu giữa các bo mạch và quản lý luồng vận hành tổng thể.
+    \item \textbf{Khối MCU -- STM32H7:} là bộ xử lý trung tâm của OBC, thực hiện tiếp nhận lệnh điều khiển, điều phối dữ liệu giữa các board mạch và quản lý luồng vận hành tổng thể.
 
     \item \textbf{Khối Compute Module 4 (CM4):} đảm nhiệm các tác vụ tầng cao như giao tiếp mạng, quản lý cơ sở dữ liệu, truyền nhận lệnh và chạy các tiến trình giám sát hệ thống.
 
@@ -159,11 +159,12 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-chi-tiet-obc}, chức năng các kh�
 \end{itemize}
 
 
-\subsection{Bo điều khiển thí nghiệm - EXP}
-\label{subsec:bo-dieu-khien-thi-nghiem-exp}
 
-Bo điều khiển thí nghiệm (EXP) là trung tâm xử lý và điều phối hoạt động của thí nghiệm, đóng vai trò cầu nối giữa OBC và các khối chức năng như LASER, PHOTO, 
-cảm biến môi trường và phần tử chấp hành nhiệt. Sơ đồ khối chi tiết của bo EXP được trình bày trong Hình \ref{fig:so-do-khoi-exp}.
+\subsection{Board điều khiển thí nghiệm - EXP}
+\label{subsec:board-dieu-khien-thi-nghiem-exp}
+
+Board điều khiển thí nghiệm (EXP) là trung tâm xử lý và điều phối hoạt động của thí nghiệm, đóng vai trò cầu nối giữa OBC và các khối chức năng như LASER, PHOTO, 
+cảm biến môi trường và phần tử chấp hành nhiệt. Sơ đồ khối chi tiết của board EXP được trình bày trong Hình \ref{fig:so-do-khoi-exp}.
 
 \begin{figure}[H]
     \centering
@@ -257,8 +258,8 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối c
     \item \textbf{Khối connector BUMP:} kết nối nhánh bơm qua tín hiệu điều khiển/giám sát \textit{ADC}.
 \end{itemize}
 
-\subsection{Bo giao tiếp - IF}
-\label{subsec:bo-giao-tiep-if}
+\subsection{Board giao tiếp - IF}
+\label{subsec:board-giao-tiep-if}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/so-do-khoi-if.png}
@@ -272,7 +273,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối ch
 \begin{itemize}
     \item \textbf{Khối SAMA7D65:} là bộ xử lý trung tâm của IF, đảm nhiệm điều phối toàn bộ luồng giao tiếp, quản lý dữ liệu giữa các cổng kết nối và điều khiển các ngoại vi đi kèm.
 
-    \item \textbf{Khối CON\_EXP:} là cổng kết nối chính với board EXP, trao đổi các đường \textit{CAN}, \textit{SPI}, \textit{I2C} và \textit{USB} để đồng bộ lệnh và dữ liệu liên bo.
+    \item \textbf{Khối CON\_EXP:} là cổng kết nối chính với board EXP, trao đổi các đường \textit{CAN}, \textit{SPI}, \textit{I2C} và \textit{USB} để đồng bộ lệnh và dữ liệu liên board.
 
     \item \textbf{Khối USB micro -- USB\_SWITCH -- CON\_USB:} tạo tuyến giao tiếp USB linh hoạt, cho phép chuyển mạch đường USB giữa cổng vào và cổng ra theo cấu hình vận hành.
 
@@ -293,8 +294,8 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối ch
     \item \textbf{Khối RTC, UART\_DEBUG, JTAG và DS90LT012AQ-Q1/CON\_STX:} hỗ trợ đóng dấu thời gian, debug -- nạp chương trình và truyền/nhận tín hiệu chuyên dụng phục vụ kiểm thử, khai thác hệ thống.
 \end{itemize}
 
-\subsection{Bo phát năng lượng ánh sáng - LASER}
-\label{subsec:bo-phat-laser}
+\subsection{Board phát năng lượng ánh sáng - LASER}
+\label{subsec:board-phat-laser}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{picture/laser/so-do-khoi-laser.jpg}
@@ -302,7 +303,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối ch
     \label{fig:so-do-khoi-laser}
 \end{figure}
 
-Bo phát năng lượng ánh sáng (LASER) đảm nhiệm vai trò tạo tín hiệu kích thích quang theo kênh, cho phép lựa chọn vị trí phát và điều chỉnh mức kích tương ứng với từng cấu hình thí nghiệm.
+Board phát năng lượng ánh sáng (LASER) đảm nhiệm vai trò tạo tín hiệu kích thích quang theo kênh, cho phép lựa chọn vị trí phát và điều chỉnh mức kích tương ứng với từng cấu hình thí nghiệm.
 Sơ đồ khối chi tiết của board LASER được trình bày trong Hình \ref{fig:so-do-khoi-laser}.
 
 Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối chính của board LASER gồm:
@@ -319,8 +320,8 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối
 \end{itemize}
 
 
-\subsection{Bo thu năng lượng ánh sáng - PHOTO}
-\label{subsec:bo-thu-photo}
+\subsection{Board thu năng lượng ánh sáng - PHOTO}
+\label{subsec:board-thu-photo}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/photo/so-do-khoi-photo.jpg}
@@ -328,7 +329,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối
     \label{fig:so-do-khoi-photo}
 \end{figure}
 
-Bo thu năng lượng ánh sáng (PHOTO) đảm nhiệm vai trò thu tín hiệu quang sau tương tác với mẫu, khuếch đại - lọc tín hiệu và đưa về tín hiệu phù hợp để số hóa.
+Board thu năng lượng ánh sáng (PHOTO) đảm nhiệm vai trò thu tín hiệu quang sau tương tác với mẫu, khuếch đại - lọc tín hiệu và đưa về tín hiệu phù hợp để số hóa.
 Sơ đồ khối chi tiết của board PHOTO được trình bày trong Hình \ref{fig:so-do-khoi-photo}.
 
 Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối chính của board PHOTO gồm:
@@ -348,13 +349,28 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối
 
 \section{Sơ đồ nguyên lí chi tiết}
 
-\subsection{Bo máy tính điều khiển trung tâm - OBC}
-\label{subsec:sche-bo-dieu-khien-trung-tam-obc}
+\subsection{Board máy tính điều khiển trung tâm - OBC}
+\label{subsec:sche-board-dieu-khien-trung-tam-obc}
 
-\subsection{Bo điều khiển thí nghiệm - EXP}
-\label{subsec:sche-bo-dieu-khien-thi-nghiem-exp}
+\subsection{Board điều khiển thí nghiệm - EXP}
+\label{subsec:sche-board-dieu-khien-thi-nghiem-exp}
 
-Phần này trình bày chi tiết các sơ đồ nguyên lý của board EXP theo từng khối chức năng. Toàn bộ hình schematic được lấy từ thư mục \texttt{picture/exp}, ngoại trừ hình \texttt{so-do-khoi-exp.png} (đã trình bày ở phần sơ đồ khối).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/BEE_1012 PAY-EXP V100.png}
+    
+    Mặt trên
+    
+    \vspace{0.5em}
+    
+    \includegraphics[width=1\textwidth]{picture/exp/BEE_1012 PAY-EXP V100-bot.png}
+    
+    Mặt dưới
+    \caption{PCB board EXP}
+    \label{fig:exp-pcb-board}
+\end{figure}
+
+Phần này trình bày chi tiết các sơ đồ nguyên lý của board EXP theo từng khối chức năng. Toàn bộ hình schematic được lấy từ thư mục picture/exp, ngoại trừ hình so-do-khoi-exp.png (đã trình bày ở phần sơ đồ khối).
 
 \begin{figure}[H]
     \centering
@@ -459,7 +475,7 @@ Cuộn cảm ngõ ra được đặt để dập các gai dòng trên tụ đi�
 L_{MIN} = \frac{V_{OUT(MAX)} \times (V_{IN(MAX)} - V_{OUT})}{V_{IN(MAX)} \times K_{IND} \times I_{OUT} \times F_{SW}}
 \end{equation}
 
-Trong thiết kế gốc, datasheet khuyến nghị sử dụng cuộn cảm khoảng 15 µH với hệ số KIND = 0.2. Tuy nhiên, do bo mạch hiện có sẵn cuộn cảm 20 µH, giá trị này được lựa chọn để thuận tiện cho việc lắp ráp. Việc sử dụng cuộn cảm lớn hơn giúp giảm dòng gợn qua cuộn cảm, từ đó điện áp ripple đầu ra nhỏ hơn và mạch duy trì chế độ dẫn liên tục ở tải thấp. Nhược điểm là đáp ứng quá độ có thể chậm hơn so với giá trị 15 µH, nhưng vẫn đảm bảo nguyên lý hoạt động và độ tin cậy của hệ thống. Đây là sự đánh đổi hợp lý giữa điều kiện linh kiện thực tế và yêu cầu thiết kế.
+Trong thiết kế gốc, datasheet khuyến nghị sử dụng cuộn cảm khoảng 15 µH với hệ số KIND = 0.2. Tuy nhiên, do board mạch hiện có sẵn cuộn cảm 20 µH, giá trị này được lựa chọn để thuận tiện cho việc lắp ráp. Việc sử dụng cuộn cảm lớn hơn giúp giảm dòng gợn qua cuộn cảm, từ đó điện áp ripple đầu ra nhỏ hơn và mạch duy trì chế độ dẫn liên tục ở tải thấp. Nhược điểm là đáp ứng quá độ có thể chậm hơn so với giá trị 15 µH, nhưng vẫn đảm bảo nguyên lý hoạt động và độ tin cậy của hệ thống. Đây là sự đánh đổi hợp lý giữa điều kiện linh kiện thực tế và yêu cầu thiết kế.
 
 Tụ đầu ra cần được lựa chọn dựa trên ba thông số quan trọng: điện áp DC định mức, khả năng chịu dòng gợn và điện trở tương đương ESR. Điện áp và dòng gợn không được vượt quá giới hạn của tụ, trong khi ESR cùng với dòng gợn qua cuộn cảm quyết định biên độ điện áp ripple đầu ra. Giá trị điện dung không cần chính xác tuyệt đối, nhưng phải đảm bảo mối quan hệ giữa tần số cắt LC của bộ lọc và tần số crossover của vòng điều khiển. Do đặc tính bù bên trong IC, tần số crossover nên nằm trong khoảng 3 kHz đến 30 kHz để có đủ độ lợi pha, đồng thời phải nhỏ hơn tần số zero do ESR của tụ. Trong thiết kế này, tần số crossover được chọn nằm trong khoảng 2.59 kHz đến 24 kHz, thỏa mãn các điều kiện trên và đảm bảo hệ thống hoạt động ổn định. Trong thiết kế tận dụng tụ đầu vào để áp dụng cho đầu ra nhưng vẫn phải đảm bảo phù hợp với ba thông số vừa liệt kê. Công thức chính xác để tính giá trị tụ được mô tả bên dưới dựa vào datasheet.
 
@@ -733,7 +749,71 @@ Gần phía connector usb sử dụng 2 IC USBLC6-2SC6 để kẹp mức điện
     \label{fig:exp-sche-bmp390-onboard}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/bmp390-connector.png}
+    \caption{Schematic connector BMP390}
+    \label{fig:exp-sche-bmp390-connector}
+\end{figure}
+
 Thiết kế sử dụng BMP390 onboard và kết nối ra connector để đo đạc thông số nhiệt độ áp suất trên board và môi trường ngoài board. BMP390 là dòng cảm biến áp suất khí quyển kỹ thuật số hiệu suất cao của Bosch Sensortec, được tối ưu hóa cho các ứng dụng cần độ chính xác cực cao về cao độ. Linh kiện hoạt động trong dải áp suất từ $300$ đến $1250$ hPa với độ sai số tương là $\pm 0.03$ hPa (tương đương sai số độ cao chỉ 25 cm). Với kích thước nhỏ ($2.0 \times 2.0 \times 0.75$ mm³), mức tiêu thụ năng lượng thấp và tích hợp sẵn bộ đệm FIFO 73 khung dữ liệu, BMP390 cho phép giảm tải xử lý cho vi điều khiển trung tâm đồng thời kéo dài thời lượng pin. Cảm biến hỗ trợ hai giao tiếp I2C và SPI, tích hợp sẵn cảm biến nhiệt độ bên trong để bù sai số môi trường.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/cam-bien-gia-toc.png}
+    \caption{Schematic cảm biến gia tốc}
+    \label{fig:exp-sche-cam-bien-gia-toc}
+\end{figure}
+
+LSM6DSOX là cảm biến MEMS 6 trục (gia tốc và con quay hồi chuyển) kỹ thuật số. Thiết bị điều khiển qua giao tiếp I²C/SPI/I3C, xuất dữ liệu 16-bit, tín hiệu ngắt và hỗ trợ OIS chuyên dụng. Ưu điểm là tiêu thụ điện thấp (0.55 mA), tích hợp sẵn Lõi học máy (MLC) và 16 Máy trạng thái (FSM) giúp xử lý thông minh tại biên và giảm tải tối đa cho vi xử lý chính. 
+
+Trong thiết kế đang dùng I2C chung bus I2C dùng cho các IC nội bộ trên board (). IC LSM6DSOX nó sẽ có 2 địa chỉ slave được cấu hình bởi việc kéo lên hoặc kéo xuống ở chân SDO/SA0.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
+    \caption{Schematic khối watchdog}
+    \label{fig:exp-sche-watchdog}
+\end{figure}
+
+TPL5010-Q1 là bộ định thời hệ thống tiêu thụ năng lượng nano, tích hợp tính năng watchdog, dùng để đánh thức vi điều khiển ($\mu$C) định kỳ trong các ứng dụng chạy pin.
+
+Về nguyên lý hoạt động, IC phát xung WAKE theo chu kỳ xác định (từ 100~ms đến 7200~s), được lập trình thông qua giá trị điện trở ngoài $R_{EXT}$ nối vào chân DELAY/M\_RST. Sau khi nhận lệnh đánh thức, vi điều khiển phải phản hồi bằng tín hiệu DONE cho IC ít nhất 20~ms trước khi chu kỳ đánh thức tiếp theo bắt đầu; nếu IC không nhận được phản hồi này (ví dụ vi điều khiển bị treo hoặc lỗi), IC sẽ kích hoạt chân RSTn để reset hệ thống. Các tín hiệu chính gồm: WAKE (phát xung đánh thức), DONE (nhận phản hồi từ $\mu$C), RSTn (đầu ra reset cực máng hở, yêu cầu điện trở kéo lên), và DELAY/M\_RST (thiết lập thời gian bằng điện trở và hỗ trợ reset thủ công khi được kéo lên mức VDD).
+
+\noindent Để thiết lập khoảng thời gian, điện trở ngoài $R_{EXT}$ được chọn theo công thức sau:
+\begin{equation}
+R_{EXT}=100\left(\frac{-b+\sqrt{b^2-4a\left(c-100T\right)}}{2a}\right)
+\end{equation}
+
+\noindent Trong đó:
+\begin{itemize}
+    \item $T$ là khoảng thời gian mong muốn, đơn vị giây
+    \item $R_{EXT}$ là giá trị điện trở sử dụng, đơn vị $\Omega$
+    \item $a, b, c$ là các hệ số phụ thuộc vào dải khoảng thời gian
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \caption{Các hệ số cho công thức tính $R_{EXT}$}
+    \label{tab:rext-coefficients}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{SET} & \textbf{Dải thời gian $T$ (s)} & \textbf{a} & \textbf{b} & \textbf{c} \\
+        \hline
+        1 & $1 < T \leq 5$ & 0.2253 & -20.7654 & 570.5679 \\
+        \hline
+        2 & $5 < T \leq 10$ & -0.1284 & 46.9861 & -2651.8889 \\
+        \hline
+        3 & $10 < T \leq 100$ & 0.1972 & -19.3450 & 692.1201 \\
+        \hline
+        4 & $100 < T \leq 1000$ & 0.2617 & -56.2407 & 5957.7934 \\
+        \hline
+        5 & $T > 1000$ & 0.3177 & -136.2571 & 34522.4680 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Tùy thuộc vào thời gian thiết lập từ đó chọn các tham số a, b, c và tính lại giá trị $R_{EXT}$ cần cho thiết kế.
 
 \begin{figure}[H]
     \centering
@@ -762,9 +842,9 @@ Trong thiết kế này, LT8722 đóng vai trò là bộ điều khiển dòng �
     \caption{Schematic khối MPD200A}
     \label{fig:exp-sche-mpd200a}
 \end{figure}
-Theo schematic của bo EXP, khối MPD200A là phần đại diện cho module nguồn HV mà MCU tương tác thông qua các tín hiệu \texttt{DAC}, \texttt{EN} và \texttt{PWM}; trong đó \texttt{EN} dùng để cho phép/khóa hoạt động, còn \texttt{DAC}/\texttt{PWM} dùng để đặt mức hoặc điều chế công suất theo yêu cầu điều khiển. Ngõ ra của khối là cặp cao áp \texttt{HV\_O+} và \texttt{HV\_O-} đưa ra connector tới tải.
+Theo schematic của board EXP, khối MPD200A là phần đại diện cho module nguồn HV mà MCU tương tác thông qua các tín hiệu DAC, EN và PWM; trong đó EN dùng để cho phép/khóa hoạt động, còn DAC/PWM dùng để đặt mức hoặc điều chế công suất theo yêu cầu điều khiển. Ngõ ra của khối là cặp cao áp HV\_O+ và HV\_O- đưa ra connector tới tải.
 
-Đối chiếu với datasheet MPD-200, các chân điều khiển chuẩn của module chủ yếu ở mức hệ nguồn (remote on/off, power good, remote sense). Vì vậy, các tín hiệu \texttt{DAC}, \texttt{EN}, \texttt{PWM} trong schematic này được hiểu là giao diện điều khiển ở cấp hệ thống của bo mạch (hoặc qua mạch ghép trung gian), dùng để MCU điều khiển nhánh HV một cách chủ động và an toàn.
+Đối chiếu với datasheet MPD-200, các chân điều khiển chuẩn của module chủ yếu ở mức hệ nguồn (remote on/off, power good, remote sense). Vì vậy, các tín hiệu DAC, EN, PWM trong schematic này được hiểu là giao diện điều khiển ở cấp hệ thống của board mạch (hoặc qua mạch ghép trung gian), dùng để MCU điều khiển nhánh HV một cách chủ động và an toàn.
 
 \begin{figure}[H]
     \centering
@@ -775,7 +855,7 @@ Theo schematic của bo EXP, khối MPD200A là phần đại diện cho module 
 Module này đóng vai trò là một bộ chuyển đổi DC-AC điện áp cao. Nó lấy nguồn điện một chiều (DC) thấp từ pin hoặc hệ thống và chuyển đổi thành tín hiệu xoay chiều (AC) có biên độ lớn để kích hoạt các màng loa áp điện (piezo membrane) bên trong máy bơm mp6. Đặc biệt, phiên bản mp-Highdriver4 có khả năng lái cùng lúc lên đến 4 máy bơm mp6 một cách độc lập. Giao tiếp I2C để tùy chỉnh tần số, biên độ điện áp, dạng sóng.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/connector-hd4.png}
+    \includegraphics[width=0.7\textwidth]{picture/exp/connector-hd4.png}
     \caption{Schematic connector HD4}
     \label{fig:exp-sche-connector-hd4}
 \end{figure}
@@ -784,8 +864,17 @@ Các tín hiệu được lái từ IC mp-Highdriver4 sẽ được kết nối 
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
+    \caption{Schematic khối giao tiếp flow sensor}
+    \label{fig:exp-sche-flow-ic}
+\end{figure}
+
+Cảm biến lưu lượng (flow sensor) là thiết bị dùng để đo tốc độ hoặc khối lượng của chất lỏng hoặc khí chảy qua một ống dẫn. IC được kéo ra connector và được khiển bởi tín hiệu I2C. IC flow kết hợp với IC bump để tạo ra một hệ phản hồi kín, một thành phần đóng vai trò điều khiển công suất bơm lưu và một thành phần đóng vai trò theo dõi lưu lượng bơm để trả về dữ liệu cho MCU xử lí và cân chỉnh IC bump cũng như lưu trữ thông tin bơm. 
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
-    \caption{Schematic khối điều khiển SOLENOID}
+    \caption{Schematic khối điều khiển solenoid thứ nhất}
     \label{fig:exp-sche-solenoid-ic}
 \end{figure}
 
@@ -814,73 +903,346 @@ RS: Chân cảm biến dòng điện đầu ra, thường nối với một đi�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
-    \caption{Schematic khối công suất solenoid (FET)}
+    \caption{Schematic khối điều khiển solenoid thứ 2}
     \label{fig:exp-sche-solenoid-fet}
 \end{figure}
-\textbf{Chức năng:} Solenoid FET là tầng công suất đóng/cắt dòng tải cuộn từ, thường đi kèm phần dập xung để bảo vệ linh kiện.
+
+Sử dụng IC TCA6416A để mở rộng các pin I/O. TCA6416A là IC mở rộng 16-bit ngõ vào/ra (I/O) song song qua giao diện I2C hoặc SMBus. Thiết bị hoạt động dựa trên việc sử dụng các thanh ghi nội (cấu hình, ngõ vào, ngõ ra, đảo cực) để xác định hướng dữ liệu và trạng thái của 16 chân I/O. IC giao tiếp qua I2C, và các tín hiệu I/O. Tín hiệu ra gồm 16 cổng P-port (P00-P17) và một ngõ báo ngắt INT khi có sự thay đổi trạng thái ở ngõ vào. Ưu điểm của IC này là khả năng dịch mức điện áp hai chiều trong dải 1.65V đến 5.5V, dòng tiêu thụ ở chế độ chờ là 3 μA, các cổng I/O chịu được điện áp 5V và có khả năng tiêu tán dòng 25 mA.
+
+
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.png}
+    \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.jpg}
     \caption{Schematic khối NTC}
     \label{fig:exp-sche-khoi-ntc}
 \end{figure}
-\textbf{Chức năng:} Khối NTC tiếp nhận tín hiệu cảm biến nhiệt điện trở, chuyển đổi thành mức ADC để MCU giám sát nhiệt độ tức thời.
+
+Các cảm biến nhiệt được mắc lên buồng thí nghiệm ở các vị trí theo yêu cầu, tín hiệu được đọc về thông qua connector for NTC, các tín hiệu áp trên NTC sẽ đi qua một mạch đệm opamp và vào chân ADC của MCU. Các tín hiệu ADC sẽ được cân chỉnh và tính toán bằng phần mềm. 
+
+Trong kênh đo nhiệt độ, mỗi NTC loại 10~k$\Omega$ tại 25$^\circ$C được ghép với một điện trở chuẩn 10~k$\Omega$ theo cấu hình cầu phân áp kéo xuống. Điện áp tại nút đo được xác định bởi:
+\begin{equation}
+V_{NTC-}=3V3\_MCU\times\frac{R_{pull-down}}{R_{NTC}+R_{pull-down}}=3.3\times\frac{10000}{R_{NTC}+10000}
+\end{equation}
+
+Với đặc tính NTC, khi nhiệt độ tăng thì $R_{NTC}$ giảm nên $V_{NTC-}$ tăng; ngược lại, khi nhiệt độ giảm thì $R_{NTC}$ tăng và $V_{NTC-}$ giảm. Nhờ đó, hệ thống thu được tín hiệu analog biến thiên liên tục để MCU đưa vào bộ ADC.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
-    \caption{Schematic khối giao tiếp flow sensor}
-    \label{fig:exp-sche-flow-ic}
-\end{figure}
-\textbf{Chức năng:} Mạch flow sensor xử lý giao tiếp với cảm biến lưu lượng, đọc dữ liệu và chuyển về bus điều khiển nội bộ.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/bmp390-connector.png}
-    \caption{Schematic connector BMP390}
-    \label{fig:exp-sche-bmp390-connector}
-\end{figure}
-\textbf{Chức năng:} Mạch connector BMP390 cho phép kết nối cảm biến BMP390 ngoài, mở rộng linh hoạt vị trí đo thực nghiệm.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/cam-bien-gia-toc.png}
-    \caption{Schematic cảm biến gia tốc}
-    \label{fig:exp-sche-cam-bien-gia-toc}
-\end{figure}
-\textbf{Chức năng:} Khối cảm biến gia tốc (IMU) theo dõi rung/chuyển động, hỗ trợ đánh giá điều kiện cơ học ảnh hưởng đến phép đo.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
-    \caption{Schematic khối watchdog}
-    \label{fig:exp-sche-watchdog}
-\end{figure}
-\textbf{Chức năng:} Watchdog giám sát nhịp hoạt động của bộ điều khiển; khi phát hiện treo hệ thống sẽ kích hoạt cơ chế phục hồi để tăng độ an toàn vận hành.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{picture/exp/hole.png}
+    \includegraphics[width=0.5\textwidth]{picture/exp/hole.png}
     \caption{Schematic khối hole (cơ khí/tiếp địa)}
     \label{fig:exp-sche-hole}
 \end{figure}
-\textbf{Chức năng:} Nhóm điểm hole phục vụ cố định cơ khí và/hoặc tiếp địa tham chiếu cho PCB, góp phần nâng độ bền và ổn định nhiễu EMC.
+
+Các mounting hole phục vụ cố định cơ khí và/hoặc tiếp địa tham chiếu cho PCB, góp phần nâng độ bền và ổn định nhiễu EMC.
 
 
 
+\subsection{Board giao tiếp - IF}
+\label{subsec:sche-board-giao-tiep-if}
 
-% \subsection{Bo giao tiếp - IF}
-% \label{subsec:sche-bo-giao-tiep-if}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{picture/if/BEE-1012 PAY-IF V1.1.0.png}
+        
+        Mặt trên
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{picture/if/BEE-1012 PAY-IF V1.1.0-bot.png}
+        
+        Mặt dưới
+    \end{minipage}
+    \caption{PCB board IF}
+    \label{fig:if-pcb-board}
+\end{figure}
 
-% \subsection{Bo phát năng lượng ánh sáng - LASER}
-% \label{subsec:sche-bo-phat-laser}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/connector-exp.png}
+    \caption{Schematic khối connector-exp}
+    \label{fig:if-connector-exp}
+\end{figure}
 
-% \subsection{Bo thu năng lượng ánh sáng - PHOTO}
-% \label{subsec:sche-bo-thu-photo}
+Các tín hiệu giao tiếp với board EXP bao gồm CAN, RS422, I2C, USB, và một tín hiệu enable efuse 12V trên board IF. Ở trạng thái bình thường, mặc định board IF sẽ tắt, khi nhận được tín hiệu enable của board EXP điều khiển nó mới bật efuse 12V trên IF, từ thời điểm đó board IF mới bắt đầu có nguồn.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{\detokenize{picture/if/efuse-12v-mpu .png}}
+    \caption{eFuse 12V cho MPU}
+    \label{fig:if-efuse-12v-mpu}
+\end{figure}
+
+Khối efuse trên board IF được thiết kế như một công tắc nguồn cho cả board và phải được enable bởi tín hiệu TURN\_ON\_IF ở chân EN của IC. Thông thường board IF sẽ ở trạng thái tắt hoàn toàn do dòng điện chỉ đến được đầu vào của efuse. Khi có tính hiệu enable kéo lên mức cao được lái bởi tín hiệu trong bus connector với board EXP, từ VBUS khi người dùng cắm tín hiệu USB debug và một jumper kéo lên nguồn thủ công. Các thông số thiết kế ngưỡng dòng áp đều được giữ nguyên giống như cách thiết kế trên board EXP.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/if/buck-12v-5v.png}
+    \caption{Mạch buck từ 12V sang 5V}
+    \label{fig:if-buck-12v-5v}
+\end{figure}
+
+Tương tự như cách thiết kế mạch nguồn buck từ 12V sang 5V trên board EXP. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/if/ldo-3v3-emmc.png}
+
+    \includegraphics[width=0.7\textwidth]{picture/if/ldo-3v3-driver.png}
+    \caption{LDO 3V3 cho các IC trên board}
+    \label{fig:if-ldo-3v3-ics}
+\end{figure}
+
+eMMC có LDO riêng do thông thường eMMC sẽ kéo dòng khá lớn trong quá trình đọc ghi, có thể làm dòng và áp không ổn định ảnh hưởng lên các ngoại vi khác nên dùng riêng LDO từ 5V xuống 3V3\_eMMC cho eMMC ở khối LDO 3V3 FOR EMMC. Còn các IC driver, transceiver hay các giao tiếp khác cần nguồn cấp 3V3 sẽ dùng từ 3V3\_COM ở LDO 3V3 FOR DRIVER \& TRANSCEIVER.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{picture/if/pmic.png}
+        \captionof{figure}{Khối quản lý nguồn PMIC}
+        \label{fig:if-pmic}
+    \end{minipage}\hspace{0.01\textwidth}%
+    \begin{minipage}[t]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{picture/if/power-measurement-mpu.png}
+        \captionof{figure}{Khối đo nguồn}
+        \label{fig:if-power-measurement-mpu}
+    \end{minipage}
+\end{figure}
+
+Tương tự như trên bo EXP, bo IF dùng chung thiết kế MPU nên khối quản lý nguồn và khối đo nguồn cũng được dùng tương tự. Những thiết kế như thế được đề xuất thiết kế trong datasheet của con chip SAMA7G54 để đảm bảo hệ thống hoạt động ổn định, tận dụng thiết kế phần cứng và phần mềm sẵn có.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/mpu-core.png}
+    \caption{Khối MPU core}
+    \label{fig:if-mpu-core}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/mpu-ddr.png}
+    \caption{MPU giao tiếp với DRAM (DDR3)}
+    \label{fig:if-mpu-ddr}
+\end{figure}
+
+IC DRAM dùng cùng part number là IS43TR16512BL-125KBLI tương tự như trên board EXP để tối ưu sử dụng firmware. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/mpu-pio.png}
+    \caption{Tín hiệu PIO trên MPU}
+    \label{fig:if-fpga-pio}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/if/emmc.png}
+    \caption{eMMC}
+    \label{if-emmc}
+\end{figure}
+
+eMMC thường đóng vai trò bộ nhớ không mất dữ liệu chính của hệ MPU, dùng để lưu bootloader, kernel/device tree, root filesystem và dữ liệu ứng dụng. Theo mô hình SD/MMC phổ biến, eMMC có các vùng boot partition riêng, vùng user area và có thể có thêm RPMB cho dữ liệu bảo mật, nên phù hợp làm bộ nhớ hệ thống ổn định trong vận hành lâu dài.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/if/sdcard.png}
+    \caption{SDCard cho MPU}
+    \label{if-sdcard}
+\end{figure}
+
+SD Card được bổ sung cho MPU nhằm tăng tính linh hoạt trong phát triển và bảo trì hệ thống: có thể boot tạm thời khi eMMC chưa nạp image, phục hồi khi hệ thống trên eMMC lỗi, và triển khai/cập nhật phần mềm nhanh bằng cách thay thẻ nhớ mà không cần can thiệp sâu vào bộ nhớ hàn trên bo. Vì vậy trong thực tế, eMMC thường là bộ nhớ vận hành chính, còn SD Card phù hợp cho giai đoạn bring-up, debug và cứu hộ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/mram.png}
+    \caption{Khối MRAM}
+    \label{fig:if-mram}
+\end{figure}
+
+MRAM vẫn sử dụng part number AS3004204-0108X0PSAY như trên thiết kế board EXP, nhưng trong thiết kế IF, IC này chưa được sử dụng nên đang thiết kế DNP.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-in.png}
+    \caption{Khối USB switch input}
+    \label{fig:if-usb-sw-in}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-out.png}
+    \caption{Khối USB switch output}
+    \label{fig:if-usb-sw-out}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/uart-mux.png}
+    \caption{Khối UART MUX}
+    \label{fig:if-uart-mux}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/spi-sw-lvds-tx.png}
+    \caption{Khối SPI switch LVDS TX}
+    \label{fig:if-spi-sw-lvds-tx}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/spi-sw-lvds-rx.png}
+    \caption{Khối SPI switch LVDS RX}
+    \label{fig:if-spi-sw-lvds-rx}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/spi-lvds-tx.png}
+    \caption{Khối SPI LVDS TX}
+    \label{fig:if-spi-lvds-tx}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/spi-lvds-rx.png}
+    \caption{Khối SPI LVDS RX}
+    \label{fig:if-spi-lvds-rx}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/if-rtc.png}
+    \caption{Khối RTC}
+    \label{fig:if-rtc}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/if-watchdog.png}
+    \caption{Khối watchdog}
+    \label{fig:if-watchdog}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/if-can.png}
+    \caption{Khối CAN}
+    \label{fig:if-can}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/imu.png}
+    \caption{Schematic khối IMU}
+    \label{fig:if-imu}
+\end{figure}
+
+BNO08X (BNO085/BNO086) là cảm biến quán tính dạng SiP tích hợp gia tốc kế 3 trục, con quay hồi chuyển 3 trục, từ kế và vi điều khiển Cortex-M0+ chạy firmware SH-2/MotionEngine để xử lý hợp nhất cảm biến ngay trên chip. Nhờ đó, linh kiện có thể xuất trực tiếp các đại lượng như gia tốc đã hiệu chuẩn, vận tốc góc, vector quay (quaternion), gravity và các đầu ra phân loại chuyển động mà không cần host xử lý hợp nhất dữ liệu mức thấp. Về giao tiếp, BNO08X hỗ trợ nhiều chuẩn kết nối host gồm I2C, SPI, UART-SHTP và UART-RVC, thuận tiện cho tích hợp với cả MCU và SoC. Datasheet cũng nêu khả năng xuất dữ liệu theo tốc độ lấy mẫu cấu hình được, có dấu thời gian cho report và chế độ gyro rotation vector độ trễ thấp đến 1~kHz cho các ứng dụng AR/VR hoặc điều khiển thời gian thực.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/efuse-5v.png}
+    \caption{eFuse 5V cho nguồn FPGA}
+    \label{fig:tin-hieu-fpga}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/3v3-vccio01.png}
+    \caption{Nguồn 3V3 cho IO0/1 của FPGA}
+    \label{fig:fpga-3v3-io01}
+\end{figure}
+
+Các bank IO0/1 của FPGA sử dụng nguồn cấp 3V3, ở đây ta lọc tín hiệu 3V3 bằng 1 cuộn ferrite và tụ lọc.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/if/ldo-1v8-vccaux.png}
+    \includegraphics[width=0.6\textwidth]{picture/if/ldo-1v8-vccio345.png}
+    \caption{LDO 1V8}
+    \label{fig:fpga-ldo-1v8}
+\end{figure}
+
+Một số IO trên FPGA cần được cấp nguồn 1V8, ví dụ như các IO của bank 3, 4, 5 và nguồn AUX.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/if/50mhz-fpga.png}
+
+    \includegraphics[width=0.7\textwidth]{picture/if/24mhz-fpga.png}
+    \caption{Khối tạo dao động cho FPGA}
+    \label{fig:clock-fpga}
+\end{figure}
+
+FPGA sử dụng một nguồn LVDS tốc độ cao với tần số xung clock 50MHz và một bộ dao động cấp tần số 24MHz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/fpga.png}
+    \caption{Tín hiệu trên chân FPGA}
+    \label{fig:tin-hieu-fpga}
+\end{figure}
+
+Các nhóm tín hiệu chính sử dụng trên FPGA bao gồm: tín hiệu UART giao tiếp trực tiếp giữa FPGA và core MPU, tín hiệu SPI/QSPI để FPGA giao tiếp với IC FLASH trên board, các tín hiệu ra connector LVDS chính và phụ.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/fpga-spi-flash.png}
+    \caption{IC FLASH SPI FPGA - MPU}
+    \label{fig:if-fpga-spi-flash}
+\end{figure}
+
+Khối SPI Flash sử dụng dòng S25FL-L (S25FL128L/S25FL256L), là bộ nhớ NOR Flash không bay hơi (non-volatile) dùng công nghệ floating-gate, phù hợp cho lưu firmware, cấu hình và dữ liệu cần giữ sau khi mất nguồn. Dung lượng điển hình của họ này là 128 Mb (16 MB) hoặc 256 Mb (32 MB). Về giao tiếp, linh kiện hỗ trợ SPI đa I/O gồm chế độ SPI chuẩn (SIO), Dual I/O, Quad I/O, QPI và tùy chọn đọc DDR, cho phép mở rộng băng thông khi làm việc với FPGA/MCU. Theo bảng hiệu năng của datasheet, tốc độ đọc tối đa đạt khoảng 66 MB/s ở chế độ DDR Quad Read (xung 66 MHz), trong khi tốc độ lập trình trang điển hình khoảng 854 KB/s; kiến trúc ghi theo trang 256 byte và xóa theo sector/block (4 KB, 32 KB, 64 KB hoặc xóa toàn chip) đáp ứng linh hoạt cho cả cập nhật mã và lưu dữ liệu hệ thống.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/powrer-measurement-12V-5VFPGA.png}
+    \caption{Schematic khối powrer-measurement-12V-5VFPGA}
+    \label{fig:if-powrer-measurement-12V-5VFPGA}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/rs422.png}
+    \caption{Schematic khối rs422}
+    \label{fig:if-rs422}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/spi-sw.png}
+    \caption{Schematic khối spi-sw}
+    \label{fig:if-spi-sw}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/if/temp.png}
+    \caption{Schematic khối temp}
+    \label{fig:if-temp}
+\end{figure}
+
+
+% \subsection{Board phát năng lượng ánh sáng - LASER}
+% \label{subsec:sche-board-phat-laser}
+
+% \subsection{Board thu năng lượng ánh sáng - PHOTO}
+% \label{subsec:sche-board-thu-photo}
 
 \newpage
+
+
+
 
 
 
