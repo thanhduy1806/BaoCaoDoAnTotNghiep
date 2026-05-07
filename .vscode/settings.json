@@ -14,16 +14,15 @@
                                        {
                                            "name":  "latexmk_xelatex",
                                            "command":  "C:\\Users\\NTDUY\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\latexmk.exe",
-                                           "args":  [
-                                                        "-xelatex",
-                                                        "-synctex=1",
-                                                        "-interaction=nonstopmode",
-                                                        "-file-line-error",
-                                                        "-outdir=%OUTDIR%",
-                                                        "%DOC%"
-                                                    ]
-                                       }
-                                   ],
+                                       "args":  [
+                                                    "-xelatex",
+                                                    "-synctex=1",
+                                                    "-interaction=nonstopmode",
+                                                    "-file-line-error",
+                                                    "%DOC%"
+                                                ]
+                                   }
+                               ],
     "latex-workshop.latex.recipes":  [
                                          {
                                              "name":  "latexmk (XeLaTeX)",
