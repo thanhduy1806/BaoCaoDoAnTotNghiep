@@ -1244,7 +1244,7 @@ Khối SPI Flash sử dụng dòng S25FL-L (S25FL128L/S25FL256L), là bộ nhớ
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/spi-sw.png}
-    \\caption{Sơ đồ nguyên lí khối SPI SWITCH giữa MPU và FPGA}
+    \caption{Sơ đồ nguyên lí khối SPI SWITCH giữa MPU và FPGA}
     \label{fig:if-spi-sw}
 \end{figure}
 
@@ -1286,6 +1286,18 @@ Sử dụng phần mềm TINA-TI để mô phỏng nguồn dòng trong thiết k
     \caption{Sơ đồ mô phỏng nguồn dòng cho internal laser}
     \label{fig:laser-simulate-current-int}
 \end{figure}
+
+Mạch mô phỏng bao gồm 2 tầng opamp. Tầng đầu tiên là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào và bảo đảm tách rời khỏi tầng opamp thứ hai. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
+
+Dựa vào công thức tính nguồn dòng:
+$
+I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
+$
+
+Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 12\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $\R_{shunt} = 280\,\Omega&.
+
+Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2.2V, với dòng thiết kế 12\,mA nên giả sử trong mạch mô phỏng thay OPV302 bằng điện trở có giá trị nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser OPV312 khi có dòng chạy qua.
+
 
 \begin{figure}[H]
     \centering
@@ -1362,6 +1374,21 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
     \caption{Mạch tạo nguồn dòng cho laser diode}
     \label{fig:laser-current}
 \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-int.png}
+    \caption{Mạch tải cực đại cho nhánh internal laser}
+    \label{fig:laser-max-load-int}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-ext.png}
+    \caption{Mạch tải cực đại cho nhánh external laser}
+    \label{fig:laser-max-load-ext}
+\end{figure}
+
 
 \begin{figure}[H]
     \centering
