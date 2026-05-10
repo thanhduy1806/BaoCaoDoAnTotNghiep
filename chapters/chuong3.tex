@@ -183,7 +183,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối c
 
     \item \textbf{Khối MRAM:} bộ nhớ không mất dữ liệu dùng lưu tham số/cấu hình cần giữ lại sau khi mất nguồn.
 
-    \item \textbf{Khối x2 eMMC:} bộ nhớ lưu trữ dung lượng lớn cho chương trình, dữ liệu hệ thống và nhật ký vận hành.
+    \item \textbf{Khối 2 eMMC:} bộ nhớ lưu trữ dung lượng lớn cho chương trình, dữ liệu hệ thống và nhật ký vận hành.
 
     \item \textbf{Khối PMIC \& current monitors:} cấp nguồn cho các rail điện áp và giám sát dòng tiêu thụ của board.
 
@@ -283,7 +283,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối ch
 
     \item \textbf{Khối SDCARD:} cung cấp lưu trữ rời qua giao tiếp \textit{SDMMC}, phục vụ ghi log, lưu cấu hình và trích xuất dữ liệu hệ thống.
 
-    \item \textbf{Khối DDR3L và eMMCx2:} cung cấp bộ nhớ làm việc tốc độ cao và bộ nhớ lưu trữ không mất dữ liệu cho tác vụ xử lý và vận hành của IF.
+    \item \textbf{Khối DDR3L và 2 eMMC:} cung cấp bộ nhớ làm việc tốc độ cao và bộ nhớ lưu trữ không mất dữ liệu cho tác vụ xử lý và vận hành của IF.
 
     \item \textbf{Khối EEPROM:} lưu các tham số cấu hình và thông tin hiệu chỉnh cần giữ bền vững trong quá trình vận hành.
 
@@ -314,9 +314,9 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối
 
     \item \textbf{Khối CURRENT SOURCE:} tạo dòng kích ổn định cho nhánh phát quang theo mức tham chiếu từ DAC, giúp duy trì cường độ phát theo giá trị đặt.
 
-    \item \textbf{Khối SWITCHING 6x6:} thực hiện ma trận chọn kênh phát, định tuyến dòng kích từ mạch nguồn dòng đến từng phần tử laser theo lệnh điều khiển.
+    \item \textbf{Khối SWITCHING $6 \times 6$:} thực hiện ma trận chọn kênh phát, định tuyến dòng kích từ mạch nguồn dòng đến từng phần tử laser theo lệnh điều khiển.
 
-    \item \textbf{Khối LASER 6x6:} là ma trận phần tử phát quang đầu ra, phát ánh sáng theo kênh đã được chọn để kích thích mẫu trong buồng đo.
+    \item \textbf{Khối LASER $6 \times 6$:} là ma trận phần tử phát quang đầu ra, phát ánh sáng theo kênh đã được chọn để kích thích mẫu trong buồng đo.
 \end{itemize}
 
 
@@ -336,9 +336,9 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối
 \begin{itemize}
     \item \textbf{Khối CONNECTOR:} là giao diện kết nối với board điều khiển, trao đổi tín hiệu điều khiển/thu thập dữ liệu qua bus \textit{SPI}.
 
-    \item \textbf{Khối PHOTO 6x6:} là ma trận phần tử thu quang, tiếp nhận tín hiệu ánh sáng từ hệ quang và tạo tín hiệu dòng tương ứng cường độ thu được.
+    \item \textbf{Khối PHOTO $6 \times 6$:} là ma trận phần tử thu quang, tiếp nhận tín hiệu ánh sáng từ hệ quang và tạo tín hiệu dòng tương ứng cường độ thu được.
 
-    \item \textbf{Khối SWITCHING 6x6:} thực hiện chọn kênh thu trong ma trận PHOTO, định tuyến tín hiệu từ phần tử thu được chọn sang chuỗi xử lý tương tự.
+    \item \textbf{Khối SWITCHING $6 \times 6$:} thực hiện chọn kênh thu trong ma trận PHOTO, định tuyến tín hiệu từ phần tử thu được chọn sang chuỗi xử lý tương tự.
 
     \item \textbf{Khối TRANSIMPEDANCE AMPLIFIER:} chuyển đổi dòng quang điện sang điện áp và khuếch đại tín hiệu mức nhỏ từ cảm biến quang.
 
@@ -400,7 +400,7 @@ Connector này kết nối với board IF thông qua các tín hiệu CAN, SPI, 
     \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vlp.png}\\[0.8em]
 
     \makebox[\textwidth][c]{\includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vheater.png}}
-    \\caption{Sơ đồ nguyên lí khối efuse}
+    \caption{Sơ đồ nguyên lí khối efuse}
     \label{fig:exp-efuse}
 \end{figure}
 \textbf{Chức năng:} Các eFuse (cầu chì điện tử) sử dụng IC TPS259470ARPWR có chức năng bảo vệ quá áp, thiếu áp và quá dòng. Ngưỡng bảo vệ có thể thiết lập bằng điện trở ngoài, đồng thời IC hỗ trợ xuất tín hiệu giám sát để MCU theo dõi trạng thái dòng/áp.
@@ -437,7 +437,7 @@ Ngoài những chức năng chính của efuse là bảo vệ quá dòng, quá �
 t_{TIMER}(ms) = \frac{\Delta V_{ITIMER}(V) \times C_{TIMER}(nF)}{I_{TIMER}(\mu A)}
 \end{equation}
 
-Tương ứng với việc có thể ngắt dòng tùy theo thời gian thiết lập, IC cũng hỗ trợ khả năng làm mềm quá trình khởi động. Điều này liên quan đến 2 đại lượng ta phải quan tâm tại thời điểm mở nguồn đó là Inrush Current (dòng xung khi bật nguồn) và Slew Rate (dV/dt tốc độ tăng điện áp đầu ra khi IC bật). Thông thường những mạch có nhiều tải sẽ đi kèm với những tụ lọc nguồn ví dụ như ở các con MCU hay MPU, số lượn tụ lọc nguồn là rất nhiều, bên cạnh đó còn có các IC nhớ hay IC driver khác trong mạch. Với số lượng tụ lớn sẽ dễ tạo ra inrush current lớn ngay thời điểm bật nguồn, vì tại thời điểm khi có nguồn dòng nạp rất lớn sẽ chảy vào các tụ trong thời gian ngắn, dòng lớn này có thể gây sụt áp nguồn hay reset hệ thống. Bên cạnh đó khi điện áp đầu ra IC tại thời điểm bật tăng quá nhanh sẽ kéo dòng nạp tụ lớn hơn nữa (I = C × dV/dt), do đó IC cho phép khả năng điều chỉnh tốc độ tăng điện áp ngõ ra ở chân DVDT (pin 7) bằng việc đặt một tụ kéo xuống đất. Với công thức bên dưới.
+Tương ứng với việc có thể ngắt dòng tùy theo thời gian thiết lập, IC cũng hỗ trợ khả năng làm mềm quá trình khởi động. Điều này liên quan đến 2 đại lượng ta phải quan tâm tại thời điểm mở nguồn đó là Inrush Current (dòng xung khi bật nguồn) và Slew Rate (dV/dt tốc độ tăng điện áp đầu ra khi IC bật). Thông thường những mạch có nhiều tải sẽ đi kèm với những tụ lọc nguồn ví dụ như ở các con MCU hay MPU, số lượn tụ lọc nguồn là rất nhiều, bên cạnh đó còn có các IC nhớ hay IC driver khác trong mạch. Với số lượng tụ lớn sẽ dễ tạo ra inrush current lớn ngay thời điểm bật nguồn, vì tại thời điểm khi có nguồn dòng nạp rất lớn sẽ chảy vào các tụ trong thời gian ngắn, dòng lớn này có thể gây sụt áp nguồn hay reset hệ thống. Bên cạnh đó khi điện áp đầu ra IC tại thời điểm bật tăng quá nhanh sẽ kéo dòng nạp tụ lớn hơn nữa ($I = C \times dV/dt$), do đó IC cho phép khả năng điều chỉnh tốc độ tăng điện áp ngõ ra ở chân DVDT (pin 7) bằng việc đặt một tụ kéo xuống đất. Với công thức bên dưới.
 
 \begin{equation}
 SR(V/ms) = \frac{I_{INRUSH}(mA)}{C_{out}(\mu F)}
@@ -451,7 +451,7 @@ C_{dvdt}(pF) = \frac{2000}{SR(V/ms)}
     \centering
     \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vmcu.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vperi.png}
-    \\caption{Sơ đồ nguyên lí khối BUCK}
+    \caption{Sơ đồ nguyên lí khối BUCK}
     \label{fig:exp-buck}
 \end{figure}
 Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. 
@@ -479,7 +479,7 @@ Trong thiết kế gốc, datasheet khuyến nghị sử dụng cuộn cảm kho
 Tụ đầu ra cần được lựa chọn dựa trên ba thông số quan trọng: điện áp DC định mức, khả năng chịu dòng gợn và điện trở tương đương ESR. Điện áp và dòng gợn không được vượt quá giới hạn của tụ, trong khi ESR cùng với dòng gợn qua cuộn cảm quyết định biên độ điện áp ripple đầu ra. Giá trị điện dung không cần chính xác tuyệt đối, nhưng phải đảm bảo mối quan hệ giữa tần số cắt LC của bộ lọc và tần số crossover của vòng điều khiển. Do đặc tính bù bên trong IC, tần số crossover nên nằm trong khoảng 3 kHz đến 30 kHz để có đủ độ lợi pha, đồng thời phải nhỏ hơn tần số zero do ESR của tụ. Trong thiết kế này, tần số crossover được chọn nằm trong khoảng 2.59 kHz đến 24 kHz, thỏa mãn các điều kiện trên và đảm bảo hệ thống hoạt động ổn định. Trong thiết kế tận dụng tụ đầu vào để áp dụng cho đầu ra nhưng vẫn phải đảm bảo phù hợp với ba thông số vừa liệt kê. Công thức chính xác để tính giá trị tụ được mô tả bên dưới dựa vào datasheet.
 
 \begin{equation}
-f_{CO} = \frac{f_{LC}^2}{85 \, V_{OUT}}
+f_{CO} = \frac{f_{LC}^2}{85 \times V_{OUT}}
 \end{equation}
 
 \begin{equation}
@@ -499,7 +499,7 @@ Bên cạnh việc thiết kết chủ động từ việc dùng các giá trị
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vmcu-3v3muc.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vsam-3v3sam.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-3vsol.png}
-    \\caption{Sơ đồ nguyên lí khối LDO}
+    \caption{Sơ đồ nguyên lí khối LDO}
     \label{fig:exp-ldo}
 \end{figure}
 
@@ -516,7 +516,7 @@ Bên cạnh khối PMIC, trong hệ sinh thái quản lý nguồn còn có thêm
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
-    \\caption{Sơ đồ nguyên lí khối PMIC và giám sát dòng}
+    \caption{Sơ đồ nguyên lí khối PMIC và giám sát dòng}
     \label{fig:exp-sche-khoi-pmic}
 \end{figure}
 
@@ -542,14 +542,14 @@ IC MCP16502 hỗ trợ giao thức I2C có thể đạt tốc độ 1MHz để g
 
 \textbf{Tính toán từ schematic (khi có R shunt/điện áp đo):}
 \[
-    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\cdot I_{rail}
+    I_{rail}=\frac{V_{SHUNT}}{R_{SHUNT}}, \qquad P_{load}=V_{rail}\times I_{rail}
 \]
 \textit{Cách tính:} lấy \(R_{SHUNT}\) và điện áp rơi trên shunt đúng theo giá trị ghi trên hình, thay trực tiếp vào công thức để ra dòng và công suất từng rail.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
-    \\caption{Sơ đồ nguyên lí khối nguồn và tín hiệu tốc độ cao SAMA7G54 (MPU)}
+    \caption{Sơ đồ nguyên lí khối nguồn và tín hiệu tốc độ cao SAMA7G54 (MPU)}
     \label{fig:exp-sche-khoi-nguon-tin-hieu-sam-mpu}
 \end{figure}
 
@@ -564,7 +564,7 @@ Khối U29H là các chân nối lên nguồn và nối đất, các chân nối
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-ddr3.png}
-    \\caption{Sơ đồ nguyên lí khối DDR3 cho SAMA7G54}
+    \caption{Sơ đồ nguyên lí khối DDR3 cho SAMA7G54}
     \label{fig:exp-sche-khoi-sam-ddr3}
 \end{figure}
 
@@ -581,7 +581,7 @@ Các tín hiệu chính của DDR3 SDRAM bao gồm nhóm nguồn và clock (VDD,
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-pio.png}
-    \\caption{Sơ đồ nguyên lí khối chân PIO của SAMA7G54}
+    \caption{Sơ đồ nguyên lí khối chân PIO của SAMA7G54}
     \label{fig:exp-sche-khoi-sam-pio}
 \end{figure}
 
@@ -605,7 +605,7 @@ Bên cạnh đó còn một số tín hiệu IO khác ví dụ như các IO dùn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-mcu.png}
-    \\caption{Sơ đồ nguyên lí khối MCU SAMV71Q21B}
+    \caption{Sơ đồ nguyên lí khối MCU SAMV71Q21B}
     \label{fig:exp-sche-khoi-mcu}
 \end{figure}
 \textbf{Chức năng:} MCU SAMV71Q21B xử lý các tác vụ thời gian thực, đọc cảm biến và điều khiển tải chấp hành với độ trễ thấp, đồng thời trao đổi dữ liệu với MPU.
@@ -613,28 +613,28 @@ Bên cạnh đó còn một số tín hiệu IO khác ví dụ như các IO dùn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/fram.png}
-    \\caption{Sơ đồ nguyên lí khối FRAM}
+    \caption{Sơ đồ nguyên lí khối FRAM}
     \label{fig:exp-sche-fram}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mram-mpu.png}
-    \\caption{Sơ đồ nguyên lí khối MRAM kết nối MPU}
+    \caption{Sơ đồ nguyên lí khối MRAM kết nối MPU}
     \label{fig:exp-sche-mram-mpu}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mram-mcu.png}
-    \\caption{Sơ đồ nguyên lí khối MRAM kết nối MCU}
+    \caption{Sơ đồ nguyên lí khối MRAM kết nối MCU}
     \label{fig:exp-sche-mram-mcu}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/pram.png}
-    \\caption{Sơ đồ nguyên lí khối PRAM}
+    \caption{Sơ đồ nguyên lí khối PRAM}
     \label{fig:exp-sche-pram}
 \end{figure}
 
@@ -666,11 +666,11 @@ Tổng quan chung về các IC RAM được dùng trong thiết kế, bên cạn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/rtc.png}
-    \\caption{Sơ đồ nguyên lí khối RTC}
+    \caption{Sơ đồ nguyên lí khối RTC}
     \label{fig:exp-sche-rtc}
 \end{figure}
 
-IC RTC sử dụng trong thiết kế là RV-3129-C3-32.768KHZ-OPTION-A-TB-QA của Micro Crystal, một module RTC siêu nhỏ (kích thước 3.2 x 1.5 x 0.8 mm) tích hợp sẵn crystal thạch anh 32.768 kHz với độ chính xác ±1 ppm ở nhiệt độ phòng. IC này giao tiếp qua bus I2C với tốc độ lên đến 400 kHz, hỗ trợ các tính năng như alarm programmable, timer countdown, event detection, và clock output. Ưu điểm chính bao gồm tiêu thụ cực thấp (chỉ 0.045 µA ở chế độ standby), dải nhiệt độ rộng (-40°C đến +85°C), độ tin cậy cao với tuổi thọ >10 năm, và không cần linh kiện ngoài như crystal rời, giúp đơn giản hóa thiết kế PCB.
+IC RTC sử dụng trong thiết kế là RV-3129-C3-32.768KHZ-OPTION-A-TB-QA của Micro Crystal, một module RTC siêu nhỏ (kích thước $3.2 \times 1.5 \times 0.8\,mm$) tích hợp sẵn crystal thạch anh 32.768 kHz với độ chính xác ±1 ppm ở nhiệt độ phòng. IC này giao tiếp qua bus I2C với tốc độ lên đến 400 kHz, hỗ trợ các tính năng như alarm programmable, timer countdown, event detection, và clock output. Ưu điểm chính bao gồm tiêu thụ cực thấp (chỉ 0.045 µA ở chế độ standby), dải nhiệt độ rộng (-40°C đến +85°C), độ tin cậy cao với tuổi thọ >10 năm, và không cần linh kiện ngoài như crystal rời, giúp đơn giản hóa thiết kế PCB.
 
 Các chân PIN của RV-3129 được tối ưu cho ứng dụng low-power: chân SDA và SCL là các chân I2C data và clock, hoạt động open-drain nên bắt buộc phải kéo lên nguồn (pull-up) để đạt mức logic cao; chân INT là chân ngắt output, cũng open-drain nên cần pull-up nếu sử dụng để phát tín hiệu ngắt cho MCU; chân CLKOUT là clock output CMOS push-pull, có thể thả nổi nếu không dùng; chân VBAT là nguồn backup (1.2-5.5V), cần nối pin lithium hoặc tụ để duy trì thời gian khi mất nguồn chính; chân VCC là nguồn hoạt động chính (1.2-5.5V), và GND là đất. Các chân khác như OSCI/OSCO không có vì crystal đã tích hợp.
 
@@ -679,7 +679,7 @@ Trong sơ đồ thiết kế, SDA và SCL được kéo lên 3.3V qua điện tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-emmc.png}
-    \\caption{Sơ đồ nguyên lí khối eMMC}
+    \caption{Sơ đồ nguyên lí khối eMMC}
     \label{fig:exp-sche-khoi-emmc}
 \end{figure}
 
@@ -692,7 +692,7 @@ Trong sơ đồ thiết kế, CMD và DAT0-DAT7 được kéo lên 3.3 V (VCCQ) 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/sdcard.png}
-    \\caption{Sơ đồ nguyên lí khối SD Card}
+    \caption{Sơ đồ nguyên lí khối SD Card}
     \label{fig:exp-sche-sdcard}
 \end{figure}
 
@@ -701,7 +701,7 @@ Bên cạnh eMMC là một thẻ nhớ nhúng dùng để boot, còn dùng thêm
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-debug.png}
-    \\caption{Sơ đồ nguyên lí khối Debug}
+    \caption{Sơ đồ nguyên lí khối Debug}
     \label{fig:exp-sche-khoi-debug}
 \end{figure}
 
@@ -710,7 +710,7 @@ Các connector debug console với giao thức UART để thực hiện quá tr�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/CAN-transceiver.png}
-    \\caption{Sơ đồ nguyên lí khối CAN transceiver}
+    \caption{Sơ đồ nguyên lí khối CAN transceiver}
     \label{fig:exp-sche-can-transceiver}
 \end{figure}
 
@@ -719,7 +719,7 @@ Thiết kế sửa dụng IC CAN TRANSCEIVER SN65HVD230DR, để chuyển đổi
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/sw-usb.png}
-    \\caption{Sơ đồ nguyên lí khối chuyển mạch USB}
+    \caption{Sơ đồ nguyên lí khối chuyển mạch USB}
     \label{fig:exp-sche-sw-usb}
 \end{figure}
 
@@ -731,7 +731,7 @@ Các ưu điểm chính của MAX14662ETI+T gồm: dải nguồn đơn rộng t�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/usb_host_only.png}
-    \\caption{Sơ đồ nguyên lí khối USB host only}
+    \caption{Sơ đồ nguyên lí khối USB host only}
     \label{fig:exp-sche-sw-usb-connector}
 \end{figure}
 
@@ -771,7 +771,7 @@ Trong thiết kế đang dùng I2C chung bus I2C dùng cho các IC nội bộ tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
-    \\caption{Sơ đồ nguyên lí khối watchdog}
+    \caption{Sơ đồ nguyên lí khối watchdog}
     \label{fig:exp-sche-watchdog}
 \end{figure}
 
@@ -781,7 +781,7 @@ Về nguyên lý hoạt động, IC phát xung WAKE theo chu kỳ xác định (
 
 \noindent Để thiết lập khoảng thời gian, điện trở ngoài $R_{EXT}$ được chọn theo công thức sau:
 \begin{equation}
-R_{EXT}=100\left(\frac{-b+\sqrt{b^2-4a\left(c-100T\right)}}{2a}\right)
+R_{EXT}=100\times\left(\frac{-b+\sqrt{b^2-4\times a\times\left(c-100\times T\right)}}{2\times a}\right)
 \end{equation}
 
 \noindent Trong đó:
@@ -817,7 +817,7 @@ Tùy thuộc vào thời gian thiết lập từ đó chọn các tham số a, b
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-heater.png}
-    \\caption{Sơ đồ nguyên lí khối Heater}
+    \caption{Sơ đồ nguyên lí khối Heater}
     \label{fig:exp-sche-khoi-heater}
 \end{figure}
 
@@ -826,7 +826,7 @@ Khối heater bao gồm 8 heater được điều khiển bởi tín hiệu PWM 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-tec.png}
-    \\caption{Sơ đồ nguyên lí khối TEC}
+    \caption{Sơ đồ nguyên lí khối TEC}
     \label{fig:exp-sche-khoi-tec}
 \end{figure}
 Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
@@ -838,7 +838,7 @@ Trong thiết kế này, LT8722 đóng vai trò là bộ điều khiển dòng �
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mpd200a.png}
-    \\caption{Sơ đồ nguyên lí khối MPD200A}
+    \caption{Sơ đồ nguyên lí khối MPD200A}
     \label{fig:exp-sche-mpd200a}
 \end{figure}
 Theo schematic của board EXP, khối MPD200A là phần đại diện cho module nguồn HV mà MCU tương tác thông qua các tín hiệu DAC, EN và PWM; trong đó EN dùng để cho phép/khóa hoạt động, còn DAC/PWM dùng để đặt mức hoặc điều chế công suất theo yêu cầu điều khiển. Ngõ ra của khối là cặp cao áp HV\_O+ và HV\_O- đưa ra connector tới tải.
@@ -848,7 +848,7 @@ Theo schematic của board EXP, khối MPD200A là phần đại diện cho modu
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/driver-hd4.png}
-    \\caption{Sơ đồ nguyên lí khối driver HD4}
+    \caption{Sơ đồ nguyên lí khối driver HD4}
     \label{fig:exp-sche-driver-hd4}
 \end{figure}
 Module này đóng vai trò là một bộ chuyển đổi DC-AC điện áp cao. Nó lấy nguồn điện một chiều (DC) thấp từ pin hoặc hệ thống và chuyển đổi thành tín hiệu xoay chiều (AC) có biên độ lớn để kích hoạt các màng loa áp điện (piezo membrane) bên trong máy bơm mp6. Đặc biệt, phiên bản mp-Highdriver4 có khả năng lái cùng lúc lên đến 4 máy bơm mp6 một cách độc lập. Giao tiếp I2C để tùy chỉnh tần số, biên độ điện áp, dạng sóng.
@@ -864,7 +864,7 @@ Các tín hiệu được lái từ IC mp-Highdriver4 sẽ được kết nối 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
-    \\caption{Sơ đồ nguyên lí khối giao tiếp flow sensor}
+    \caption{Sơ đồ nguyên lí khối giao tiếp flow sensor}
     \label{fig:exp-sche-flow-ic}
 \end{figure}
 
@@ -873,7 +873,7 @@ Cảm biến lưu lượng (flow sensor) là thiết bị dùng để đo tốc 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
-    \\caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ nhất}
+    \caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ nhất}
     \label{fig:exp-sche-solenoid-ic}
 \end{figure}
 
@@ -902,7 +902,7 @@ RS: Chân cảm biến dòng điện đầu ra, thường nối với một đi�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
-    \\caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ 2}
+    \caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ 2}
     \label{fig:exp-sche-solenoid-fet}
 \end{figure}
 
@@ -913,7 +913,7 @@ Sử dụng IC TCA6416A để mở rộng các pin I/O. TCA6416A là IC mở r�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.jpg}
-    \\caption{Sơ đồ nguyên lí khối NTC}
+    \caption{Sơ đồ nguyên lí khối NTC}
     \label{fig:exp-sche-khoi-ntc}
 \end{figure}
 
@@ -929,7 +929,7 @@ Với đặc tính NTC, khi nhiệt độ tăng thì $R_{NTC}$ giảm nên $V_{N
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{picture/exp/hole.png}
-    \\caption{Sơ đồ nguyên lí khối hole (cơ khí/tiếp địa)}
+    \caption{Sơ đồ nguyên lí khối hole (cơ khí/tiếp địa)}
     \label{fig:exp-sche-hole}
 \end{figure}
 
@@ -962,7 +962,7 @@ Các mounting hole phục vụ cố định cơ khí và/hoặc tiếp địa th
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/connector-exp.png}
-    \\caption{Sơ đồ nguyên lí khối connector-exp}
+    \caption{Sơ đồ nguyên lí khối connector-exp}
     \label{fig:if-connector-exp}
 \end{figure}
 
@@ -1018,7 +1018,7 @@ Tương tự như trên bo EXP, bo IF dùng chung thiết kế MPU nên khối q
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/powrer-measurement-12V-5VFPGA.png}
-    \\caption{Sơ đồ nguyên lí khối đo nguồn 12V và 5V\_FPGA}
+    \caption{Sơ đồ nguyên lí khối đo nguồn 12V và 5V\_FPGA}
     \label{fig:if-powrer-measurement-12V-5VFPGA}
 \end{figure}
 
@@ -1027,7 +1027,7 @@ Bên cạnh dùng PAC1934 để đo dòng tải trên các nguồn MPU tiêu th�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/mpu-core.png}
-    \\caption{Sơ đồ nguyên lí khối MPU core}
+    \caption{Sơ đồ nguyên lí khối MPU core}
     \label{fig:if-mpu-core}
 \end{figure}
 
@@ -1080,7 +1080,7 @@ SD Card được bổ sung cho MPU nhằm tăng tính linh hoạt trong phát tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{picture/if/mram.png}
-    \\caption{Sơ đồ nguyên lí khối MRAM}
+    \caption{Sơ đồ nguyên lí khối MRAM}
     \label{fig:if-mram}
 \end{figure}
 
@@ -1090,7 +1090,7 @@ MRAM vẫn sử dụng part number AS3004204-0108X0PSAY như trên thiết kế 
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-in.png}
     \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-out.png}
-    \\caption{Sơ đồ nguyên lí khối USB switch}
+    \caption{Sơ đồ nguyên lí khối USB switch}
     \label{fig:if-usb-sw}
 \end{figure}
 
@@ -1099,7 +1099,7 @@ FSUSB42 là bộ chuyển mạch DPDT hai chiều, công suất thấp, được
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/uart-mux.png}
-    \\caption{Sơ đồ nguyên lí khối UART MUX}
+    \caption{Sơ đồ nguyên lí khối UART MUX}
     \label{fig:if-uart-mux}
 \end{figure}
 
@@ -1109,7 +1109,7 @@ Thiết bị SN74LV4052A là một bộ ghép kênh và tách kênh tương tự
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/spi-sw-lvds-tx.png}
     \includegraphics[width=0.9\textwidth]{picture/if/spi-sw-lvds-rx.png}
-    \\caption{Sơ đồ nguyên lí khối SPI switch LVDS TX}
+    \caption{Sơ đồ nguyên lí khối SPI switch LVDS TX}
     \label{fig:if-spi-sw-lvds}
 \end{figure}
 
@@ -1117,7 +1117,7 @@ Thiết bị SN74LV4052A là một bộ ghép kênh và tách kênh tương tự
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/spi-lvds-tx.png}
     \includegraphics[width=0.9\textwidth]{picture/if/spi-lvds-rx.png}
-    \\caption{Sơ đồ nguyên lí khối SPI LVDS}
+    \caption{Sơ đồ nguyên lí khối SPI LVDS}
     \label{fig:if-spi-lvds}
 \end{figure}
 
@@ -1132,7 +1132,7 @@ Trong thiết kế, IC dùng cho việc chuyển đổi dữ liệu phát từ t
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-rtc.png}
-    \\caption{Sơ đồ nguyên lí khối RTC}
+    \caption{Sơ đồ nguyên lí khối RTC}
     \label{fig:if-rtc}
 \end{figure}
 
@@ -1142,7 +1142,7 @@ Thiết kế của RTC cũng tương tự như trên board EXP, tín hiệu giao
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-watchdog.png}
-    \\caption{Sơ đồ nguyên lí khối watchdog}
+    \caption{Sơ đồ nguyên lí khối watchdog}
     \label{fig:if-watchdog}
 \end{figure}
 
@@ -1151,7 +1151,7 @@ Khối watchdog dùng TPL5010DDCR và cấu hình thời gian tương tự trên
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-can.png}
-    \\caption{Sơ đồ nguyên lí khối CAN}
+    \caption{Sơ đồ nguyên lí khối CAN}
     \label{fig:if-can}
 \end{figure}
 
@@ -1160,7 +1160,7 @@ Thiết kế dùng 2 kênh CANTX/RX 0/1 từ MPU sang IC CAN transceiver SN65HVD
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/rs422.png}
-    \\caption{Sơ đồ nguyên lí khối RS422}
+    \caption{Sơ đồ nguyên lí khối RS422}
     \label{fig:if-rs422}
 \end{figure}
 
@@ -1169,7 +1169,7 @@ LTC2865HMSE\#TRPBF là bộ thu phát RS485/RS422 công suất thấp, có khả
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/imu.png}
-    \\caption{Sơ đồ nguyên lí khối IMU}
+    \caption{Sơ đồ nguyên lí khối IMU}
     \label{fig:if-imu}
 \end{figure}
 
@@ -1178,7 +1178,7 @@ BNO08X (BNO085/BNO086) là cảm biến quán tính dạng SiP tích hợp gia t
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/temp.png}
-    \\caption{Sơ đồ nguyên lí khối temp}
+    \caption{Sơ đồ nguyên lí khối temp}
     \label{fig:if-temp}
 \end{figure}
 
@@ -1215,7 +1215,7 @@ Một số IO trên FPGA cần được cấp nguồn 1V8, ví dụ như các IO
     \includegraphics[width=0.6\textwidth]{picture/if/50mhz-fpga.png}
 
     \includegraphics[width=0.6\textwidth]{picture/if/24mhz-fpga.png}
-    \\caption{Sơ đồ nguyên lí khối tạo dao động cho FPGA}
+    \caption{Sơ đồ nguyên lí khối tạo dao động cho FPGA}
     \label{fig:clock-fpga}
 \end{figure}
 
@@ -1275,6 +1275,121 @@ SPI switch đóng vai trò quản lí tài nguyên dùng chung giữa MPU và FP
 \subsubsection{Tính toán lý thuyết thiết kế mạch nguồn dòng}
 \label{subsec:tinh-toan-nguon-dong}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/laser/ref.jpg}
+    \caption{Sơ đồ mạch nguồn áp chuyển sang dòng}
+    \label{fig:laser-ref}
+\end{figure}
+
+Các linh kiện laser diode là các linh kiện bán dẫn được điều khiển dựa trên cường độ dòng điện cố định, trong hệ thống phần lớn các linh kiện điện tử điều cố định điện áp còn dòng điện thì tùy tải tiêu thụ. Yêu cầu đặt ra là phải có một nguồn dòng ổn định và có thể tùy ý điều chỉnh ngõ ra theo ngõ vào, từ kiến thức của các môn học và tìm hiểu từ các thiết kế mạch nguồn dòng ( V - I converter) nhóm quyết định chọn thiết kế như hình~\ref{fig:laser-ref}.
+
+\begin{itemize}
+    \item Tùy chỉnh các giá trị tùy ý theo thiết kế: thông qua việc thay đổi các giá trị điện trở trong mạng phản hồi và điện trở lấy mẫu ($R_{sense}$), người thiết kế có thể thiết lập tỷ lệ giữa điện áp điều khiển ($V_{IN}$) và dòng điện ngõ ra ($I_{OUT}$). Điều này cho phép mạch tương thích với nhiều dải tín hiệu từ các bộ DAC khác nhau của vi điều khiển. Bên cạnh đó có thể tùy chỉnh cặp điện trở trên đường feedback và ngõ vào để chọn mức điện áp bật ngõ ra mong muốn.
+    \item Khả năng thích ứng với tải: các giá trị điện trở và tụ điện trong mạch bù có thể được tính toán lại để tối ưu hóa thời gian xác lập (settling time) và độ quá chỉnh (overshoot), tùy thuộc vào đặc tính điện cảm hoặc điện dung của tải thực tế trên board mạch.
+    \item Cấu trúc high-side với MOSFET kênh P: so với các cấu trúc nguồn dòng kiểu low-side hoặc nguồn dòng dùng transistor lưỡng cực (BJT), thiết kế này sở hữu các ưu điểm kỹ thuật nổi bật. Tối ưu hóa quản lý ground, việc đặt MOSFET ở phía nguồn (high-side) cho phép tải được nối trực tiếp xuống ground. Đây là yếu tố quan trọng trong thiết kế hệ thống vệ tinh, giúp giảm nhiễu điện từ (EMI), đơn giản hóa việc đi dây (routing) và hỗ trợ tản nhiệt trực tiếp cho linh kiện tải qua mặt phẳng ground của PCB. Điều khiển bằng điện áp với trở kháng cao, MOSFET là linh kiện điều khiển bằng điện áp, do đó dòng điện tiêu thụ tại cực G là rất nhỏ. Điều này giúp Op-amp hoạt động ổn định hơn, không bị quá tải dòng điện ngõ ra và giảm thiểu sai số do dòng phân cực gây ra so với khi dùng BJT.
+    \item Đáp ứng tần số và độ ổn định của hệ thống: Sơ đồ tham khảo sử dụng mạng bù RC tại ngõ ra của opamp giúp soát pha phản hồi của tín hiệu ngõ ra với ngõ vào. Cách thiết kế này cho phép người thiết kế tùy chỉnh các giá trị tụ điện và điện trở phản hồi để điều chỉnh lề dự trữ pha (Phase Margin), giúp triệt tiêu hiện tượng tự dao động và ổn định dòng tải.
+\end{itemize}
+
+Tính toán công thức ngưỡng $V_{IN}$ bật FET
+\begin{itemize}
+    \item Điều kiện tại ngưỡng bật (op-amp lý tưởng):
+    \begin{equation*}
+    V_- = V_+
+    \end{equation*}
+
+    \item Điện áp chân không đảo (cầu chia áp $1\,k\Omega$ -- $1\,k\Omega$):
+    \begin{equation*}
+    V_+ = \frac{V^+}{2}
+    \end{equation*}
+
+    \item Điện áp chân đảo theo nguyên lý chồng chập:
+    \begin{equation*}
+    V_-=\frac{V_{IN}\times R_2+V_S\times R_1}{R_1+R_2}
+    \end{equation*}
+    Tại ngưỡng bắt đầu dẫn lấy xấp xỉ:
+    \begin{equation*}
+    V_S \approx V^+
+    \Rightarrow
+    V_-=\frac{V_{IN}\times R_2+V^+\times R_1}{R_1+R_2}
+    \end{equation*}
+
+    \item Áp dụng điều kiện ngưỡng $V_-=V_+=\dfrac{V^+}{2}$:
+    \begin{equation*}
+    \frac{V_{IN}\times R_2+V^+\times R_1}{R_1+R_2}=\frac{V^+}{2}
+    \end{equation*}
+    \begin{equation*}
+    2\times\left(V_{IN}\times R_2+V^+\times R_1\right)=V^+\times(R_1+R_2)
+    \end{equation*}
+    \begin{equation*}
+    2\times V_{IN}\times R_2=V^+\times(R_2-R_1)
+    \end{equation*}
+    \begin{equation}
+    \boxed{V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)}
+    \end{equation}
+\end{itemize}
+
+Từ đó có thể chọn giá trị $R_1$ và $R_2$ để đạt ngưỡng bật FET mong muốn.
+
+Vai trò của điện áp tham chiếu $V_{REF}$ trong hệ thống: Điện áp tham chiếu $V_{REF}$ tại chân không đảo của opamp đóng vai trò là điểm xác lập cân bằng cho toàn mạch. Với cơ chế phản hồi âm, opamp điều khiển điện áp ngõ ra để duy trì điều kiện $V_+ = V_-$. Vì vậy, giá trị $V_{REF}$ không chỉ đặt điểm làm việc tĩnh mà còn quyết định cách mạch chuyển đổi từ điện áp điều khiển sang dòng điện qua laser diode.
+
+\begin{itemize}
+    \item Dịch mức tín hiệu: $V_{REF}$ giúp liên kết dải điều khiển điện áp thấp từ vi điều khiển, thường trong khoảng $0$ đến $3.3\,V$, với dải điện áp phản hồi cao tại chân source của P-MOSFET, thường nằm gần nguồn $11$ đến $12\,V$.
+    \item Xác lập vùng tuyến tính: giá trị tham chiếu phù hợp giúp điện áp đầu vào của opamp nằm trong dải common-mode cho phép, hạn chế hiện tượng ngõ ra bị bão hòa tại hai mức nguồn.
+    \item Định hình đặc tuyến điều khiển: $V_{REF}$ quyết định mối quan hệ giữa điện áp điều khiển $V_{IN}$ và dòng điện ngõ ra $I_{OUT}$, từ đó ảnh hưởng trực tiếp đến độ tuyến tính và độ phân giải điều chỉnh dòng.
+\end{itemize}
+
+Để mạch hoạt động trong vùng tuyến tính trên toàn dải điều khiển, điện áp tham chiếu cần thỏa mãn phương trình cân bằng tại chân đảo:
+
+\begin{equation}
+V_{REF} = \frac{V_{IN}\times R_2 + V_S\times R_1}{R_1 + R_2}
+\end{equation}
+
+Trong đó, điện áp tại chân source của P-MOSFET được xác định theo:
+
+\begin{equation}
+V_S = V_{CC} - I_{OUT}\times R_{shunt}
+\end{equation}
+
+Các điều kiện biên của mạch được xét theo hai trạng thái làm việc chính:
+
+\begin{itemize}
+    \item Trạng thái khóa: khi $V_{IN} = 0\,V$, dòng ngõ ra xấp xỉ $I_{OUT} = 0\,A$ nên $V_S \approx V_{CC}$. Khi đó $V_{REF}$ phải đủ cao để opamp có thể kéo ngõ ra về mức làm P-MOSFET khóa hoàn toàn.
+    \item Trạng thái dòng cực đại: khi $V_{IN} = 3.3\,V$, dòng ngõ ra đạt giá trị thiết kế $I_{max}$ và $V_S$ giảm xuống mức thấp nhất trong dải làm việc. Khi đó $V_{REF}$ phải đủ thấp để opamp vẫn còn khả năng điều khiển, không rơi vào bão hòa dương.
+\end{itemize}
+
+Nếu chọn tỉ số điện trở tại nút phản hồi là $R_1 = R_2$, giá trị tham chiếu có thể được xác lập gần trung điểm của dải biến thiên tổng hợp:
+
+\begin{equation}
+V_{REF} = \frac{V_{IN(max)} + V_{S(min)}}{2}
+\end{equation}
+
+\begin{itemize}
+    \item $V_{REF}$ quá cao: opamp dễ rơi vào trạng thái bão hòa dương, điện áp ngõ ra tiến gần về mức nguồn cao, P-MOSFET bị khóa và hệ thống không còn khả năng cấp dòng cho tải.
+    \item $V_{REF}$ quá thấp: opamp dễ rơi vào trạng thái bão hòa âm, điện áp ngõ ra tiến gần về $0\,V$, P-MOSFET mở mạnh làm dòng điện tăng cao ngoài kiểm soát, gây nguy cơ hỏng laser diode hoặc linh kiện công suất.
+\end{itemize}
+
+Vai trò của tụ điện hồi tiếp ở ngõ ra: Tụ điện phản hồi $C$ đặt song song với trở phản hồi tạo nên một vòng lặp phụ hoạt động dựa trên sự phân tách tần số tín hiệu:
+
+\begin{itemize}
+    \item Tách biệt đáp ứng AC và DC: Ở tần số thấp (DC), tụ điện có trở kháng vô cùng lớn, vòng phản hồi được quyết định bởi mạng điện trở. Ở tần số cao (nhiễu, vọt lố), trở kháng tụ giảm mạnh, tạo thành một đường tắt (Low-impedance path) dẫn trực tiếp biến động từ ngõ ra về chân đảo (-).
+    \item Triệt tiêu tức thời: Cơ chế này cho phép Op-amp nhận diện các xung nhọn (Spikes) tại ngõ ra ngay lập tức mà không phải đợi thông tin truyền qua các linh kiện có quán tính lớn như MOSFET. Phản ứng bù trừ của Op-amp diễn ra đồng thời với sự phát sinh nhiễu, giúp triệt tiêu dao động từ giai đoạn khởi tạo.
+    \item Quá trình nạp xả năng lượng của tụ điện ngăn cản sự thay đổi đột ngột điện áp tại ngõ ra Op-amp. Chính nhờ việc nhận tin nhanh, Op-amp có thể chủ động thực hiện điều chỉnh mượt mà. Hệ quả là đáp ứng bước (Step response) của hệ thống chuyển từ trạng thái vọt lố, dao động (Underdamped) sang trạng thái ổn định, không vọt lố (Overdamped/Critically damped).
+    \item Các dao động tự kích thực chất là tổng hợp của các thành phần sóng sin tần số cao. Việc thiết lập tần số cắt $f_c = 1 / (2\pi RC)$ tạo ra một bộ lọc thông thấp (Low-pass filter) tích cực. Bằng cách chọn giá trị $C$ sao cho $f_c$ thấp hơn tần số dao động ký sinh của mạch, các thành phần Fourier gây nhiễu bị suy giảm biên độ mạnh trước khi quay lại ngõ vào đảo. Điều này đảm bảo Op-amp chỉ xử lý các lệnh điều khiển hữu dụng và bỏ qua các thành phần nhiễu cao tần.
+    \item Tụ điện được tính toán để ép độ lợi vòng lặp (Loop Gain) xuống dưới mức đơn vị ($0\text{dB}$) trước khi độ trễ pha chạm ngưỡng $180^\circ$. Khi độ lợi nhỏ hơn 1 tại tần số nhạy cảm, mọi dao động không thể tự duy trì và bị triệt tiêu, đảm bảo hệ thống luôn hội tụ về giá trị xác lập DC.
+
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/laser/no-cap-out.jpg}
+    \caption{Mô phỏng khi không có tụ ngõ ra}
+    \label{fig:laser-no-cap-out}
+\end{figure}
+
+Trong hình thể hiện sự dao động ngõ ra khi không có tụ hồi tiếp, cho thấy dòng ngay tại thời điểm bật sẽ chưa ổn định và dao động trong vài chu kỳ do ngõ ra opamp dao động. Trong thiết kế do tần số mạch hoạt động thấp và độ lợi hồi tiếp nhỏ nên giúp tín hiệu dao động tắt dần trong vài chu kỳ. Trong trường hợp xấu nhất thì tín hiệu này có thể không tắt mà còn gây ra dao động và tự biến thành một nguồn dao động.
+
 \subsubsection{Mô phỏng nguyên lí mạch nguồn dòng}
 \label{subsec:simulate-current-source}
 
@@ -1290,14 +1405,23 @@ Sử dụng phần mềm TINA-TI để mô phỏng nguồn dòng trong thiết k
 Mạch mô phỏng bao gồm 2 tầng opamp. Tầng đầu tiên là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào và bảo đảm tách rời khỏi tầng opamp thứ hai. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
 
 Dựa vào công thức tính nguồn dòng:
-$
-I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
-$
 
-Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 12\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $\R_{shunt} = 280\,\Omega&.
+\begin{equation}
+I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
+\end{equation}
+
+Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 12\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $R_{shunt} = 280\,\Omega$.
 
 Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2.2V, với dòng thiết kế 12\,mA nên giả sử trong mạch mô phỏng thay OPV302 bằng điện trở có giá trị nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser OPV312 khi có dòng chạy qua.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-int.png}
+    \caption{Khảo sát tải tối đa cho mạch nguồn dòng internal}
+    \label{fig:laser-max-load-int}
+\end{figure}
+
+Giá trị tải tối đa để nguồn dòng internal có thể hoạt động ổn định và không phụ thuộc vào giá trị tải khoảng 648\,Omega.
 
 \begin{figure}[H]
     \centering
@@ -1306,6 +1430,8 @@ Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2
     \label{fig:laser-current-int-dc-table}
 \end{figure}
 
+Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại các điểm quan tâm và giá trị dòng thiết kế. Từ những thông số chi tiết có thể đánh giá hiệu năng của mạch thiết kế. 
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/int-sweep.png}
@@ -1313,7 +1439,7 @@ Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2
     \label{fig:laser-int-v-i}
 \end{figure}
 
-Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại các điểm quan tâm và giá trị dòng thiết kế. So với giá trị dòng điện mong đợi là 12mA, dòng mô phỏng được ở ngõ ra thiết kế là 
+Đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Trong hình thấy được tại ngưỡng ngõ vào khoảng 0.3V thì ngõ ra mới bắt đầu có dòng. Theo công thức (3.14) ở phần tính toán lý thuyết $V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)$, với $R_1=95k\Omega , R_2= 100k\Omega, V_{IN,ngưỡng}= 0.3$ xấp xỉ với mô phỏng. Và sau 0.3 dòng điện sẽ tăng tuyến tính theo điện áp.
 
 \begin{figure}[H]
     \centering
@@ -1322,12 +1448,35 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
     \label{fig:laser-current-int-transient}
 \end{figure}
 
+Sử dụng chức năng transient để mô phỏng thời gian quá độ của mạch, có thể thấy trong khoảng thời gian khoảng $1\,\mu\text{s}$ đầu, ngõ ra có một khoảng vọt lên, nhưng giá trị đỉnh vọt vẫn nằm trong mức cho phép, chỉ vọt một đơn vị dòng rất nhỏ khoảng vài $\text{nA}$. Sau đó thì dòng bắt đầu giảm mượt mà và ổn định, đều đó thể hiện vai trò của tụ điện mắc giữa ngõ ra opamp và tín hiệu feedback. Nếu như không có tụ điện, dòng điện sẽ dao động liên tục như ở Hình \ref{fig:laser-no-cap-out}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/simulate-current-ext.JPG}
     \caption{Sơ đồ mô phỏng nguồn dòng cho external laser}
     \label{fig:laser-simulate-current-ext}
 \end{figure}
+
+Tương tụ như cách Mạch mô phỏng ở sơ đồ mạch laser internal, mạch laser external cũng bao gồm 2 tầng opamp. Tầng đầu tiên vẫn là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
+
+Dựa vào công thức tính nguồn dòng:
+
+\begin{equation}
+I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
+\end{equation}
+
+Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 38\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $R_{shunt} = 85.8\,\Omega$.
+
+Do sụt áp trên laser external RLD65NZX1 trong quá trình hoạt động theo datasheet là tối đa khoảng $2.8\,V$, với dòng thiết kế $38\,mA$ nên trong mạch mô phỏng thay RLD65NZX1 bằng điện trở có giá trị khoảng $70\,\Omega$, nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser RLD65NZX1 khi có dòng chạy qua.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-ext.png}
+    \caption{Khảo sát tải tối đa cho mạch nguồn dòng external}
+    \label{fig:laser-max-load-ext}
+\end{figure}
+
+Giá trị tải tối đa để nguồn dòng internal có thể hoạt động ổn định và không phụ thuộc vào giá trị tải khoảng 196\,Omega.
 
 \begin{figure}[H]
     \centering
@@ -1336,12 +1485,16 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
     \label{fig:laser-current-ext-dc-table}
 \end{figure}
 
+Tương tự như trên mạch nguồn dòng internal, mạch nguồn dòng external cũng có thể được đánh giá bằng các thông số đo đạt được ở chế độ DC table.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/ext-sweep.png}
     \caption{Mô phỏng đặc tuyến V-I trên nguồn external}
     \label{fig:laser-ext-v-i}
 \end{figure}
+
+Tương tự như ở nguồn internal, nguồn external cũng mô phỏng đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Các giá trị điện trở để tìm $V_{IN,ngưỡng}$ cũng tương tự như trên thiết kế internal nên giá trị tính toán và mô phỏng cũng khoảng 0.3V.
 
 \begin{figure}[H]
     \centering
@@ -1362,7 +1515,7 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/ldo-5-3v3.png}
+    \includegraphics[width=0.6\textwidth]{picture/laser/ldo-5-3v3.png}
     \caption{Mạch nguồn LDO 5V - 3V3}
     \label{fig:laser-ldo}
 \end{figure}
@@ -1377,28 +1530,13 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-int.png}
-    \caption{Mạch tải cực đại cho nhánh internal laser}
-    \label{fig:laser-max-load-int}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/max-load-ext.png}
-    \caption{Mạch tải cực đại cho nhánh external laser}
-    \label{fig:laser-max-load-ext}
-\end{figure}
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{picture/laser/dac-int.png}
-    \includegraphics[width=0.8\textwidth]{picture/laser/dac-ext.png}
+    \includegraphics[width=0.7\textwidth]{picture/laser/dac-int.png}
+    \includegraphics[width=0.7\textwidth]{picture/laser/dac-ext.png}
     \caption{Mạch DAC tạo mức điện áp}
     \label{fig:laser-dac}
 \end{figure}
 
-Dòng IC MCP4902/4912/4922 là các bộ chuyển đổi kỹ thuật số sang tương tự (DAC) ngõ ra điện áp kép với độ phân giải lần lượt là 8, 10 và 12-bit, hoạt động từ nguồn đơn 2.7V đến 5.5V. Thiết bị sử dụng kiến trúc chuỗi điện trở (resistive string) kết hợp với các thanh ghi đệm kép để chuyển đổi mã nhị phân thành điện áp tương tự dựa trên điện áp tham chiếu ngoài và hệ số khuếch đại 1x hoặc 2x. Quá trình giao tiếp được thực hiện qua chuẩn SPI (tối đa 20 MHz) với các tín hiệu chính gồm CS (chọn chip), SCK (xung nhịp), SDI (dữ liệu vào), cùng các chân điều khiển LDAC để cập nhật ngõ ra đồng bộ và SHDN để tắt phần cứng. Ưu điểm nổi bật của dòng IC này là thời gian xác lập nhanh (4.5 µs), độ chính xác cao với sai số DNL thấp, hỗ trợ chế độ nhân (Multiplier Mode) và khả năng tiết kiệm điện năng tối ưu thông qua các chế độ tắt linh hoạt trong dải nhiệt độ mở rộng từ -40°C đến +125°C.
+Dòng IC MCP4902/4912/4922 là các bộ chuyển đổi kỹ thuật số sang tương tự (DAC) ngõ ra điện áp kép với độ phân giải lần lượt là 8, 10 và 12-bit, hoạt động từ nguồn đơn 2.7V đến 5.5V. Thiết bị sử dụng kiến trúc chuỗi điện trở (resistive string) kết hợp với các thanh ghi đệm kép để chuyển đổi mã nhị phân thành điện áp tương tự dựa trên điện áp tham chiếu ngoài và hệ số khuếch đại $1 \times$ hoặc $2 \times$. Quá trình giao tiếp được thực hiện qua chuẩn SPI (tối đa 20 MHz) với các tín hiệu chính gồm CS (chọn chip), SCK (xung nhịp), SDI (dữ liệu vào), cùng các chân điều khiển LDAC để cập nhật ngõ ra đồng bộ và SHDN để tắt phần cứng. Ưu điểm nổi bật của dòng IC này là thời gian xác lập nhanh (4.5 µs), độ chính xác cao với sai số DNL thấp, hỗ trợ chế độ nhân (Multiplier Mode) và khả năng tiết kiệm điện năng tối ưu thông qua các chế độ tắt linh hoạt trong dải nhiệt độ mở rộng từ -40°C đến +125°C.
 
 \begin{figure}[H]
     \centering
@@ -1414,13 +1552,124 @@ Dòng IC MCP4902/4912/4922 là các bộ chuyển đổi kỹ thuật số sang 
     \label{fig:laser-sw-ext}
 \end{figure}
 
-ADG1414 là IC tích hợp 8 công tắc SPST điều khiển độc lập. Thiết bị hoạt động bằng cách dịch dữ liệu 8-bit vào thanh ghi nội bộ thông qua giao diện nối tiếp, trong đó mỗi bit tương ứng với trạng thái đóng hoặc ngắt của một kênh công tắc. IC này hỗ trợ khả năng mắc nối tiếp (daisy-chain) nhiều thiết bị với nhau thông qua chân SDO (Serial Data Output). Trong cấu hình này, chân SDO của thiết bị phía trước được kết nối với chân DIN của thiết bị tiếp theo. Khi nạp nhiều hơn 8 bit dữ liệu vào chuỗi, các bit dữ liệu sẽ lần lượt được đẩy ra khỏi thanh ghi dịch qua chân SDO để truyền sang thiết bị kế tiếp. Tổng số xung nhịp cần thiết để cấu hình toàn bộ chuỗi là 8 × N (với N là số lượng IC trong chuỗi). Chân SDO là dạng cực máng hở (open-drain), vì vậy cần sử dụng một điện trở kéo lên nguồn VL khi kết nối. Các tín hiệu giao tiếp chính bao gồm SYNC (đồng bộ khung), SCLK (xung nhịp tối đa 50 MHz) và DIN (dữ liệu vào), tương thích với các chuẩn SPI, QSPI và MICROWIRE. Ưu điểm của IC bao gồm điện trở dẫn (RON) là 9.5 Ω, độ phẳng điện trở là 1.6 Ω và khả năng dẫn tín hiệu rail-to-rail trên dải nguồn cấp rộng như ±15 V, +12 V hoặc ±5 V.
+ADG1414 là IC tích hợp 8 công tắc SPST điều khiển độc lập. Thiết bị hoạt động bằng cách dịch dữ liệu 8-bit vào thanh ghi nội bộ thông qua giao diện nối tiếp, trong đó mỗi bit tương ứng với trạng thái đóng hoặc ngắt của một kênh công tắc. IC này hỗ trợ khả năng mắc nối tiếp (daisy-chain) nhiều thiết bị với nhau thông qua chân SDO (Serial Data Output). Trong cấu hình này, chân SDO của thiết bị phía trước được kết nối với chân DIN của thiết bị tiếp theo. Khi nạp nhiều hơn 8 bit dữ liệu vào chuỗi, các bit dữ liệu sẽ lần lượt được đẩy ra khỏi thanh ghi dịch qua chân SDO để truyền sang thiết bị kế tiếp. Tổng số xung nhịp cần thiết để cấu hình toàn bộ chuỗi là $8 \times N$ (với N là số lượng IC trong chuỗi). Chân SDO là dạng cực máng hở (open-drain), vì vậy cần sử dụng một điện trở kéo lên nguồn VL khi kết nối. Các tín hiệu giao tiếp chính bao gồm SYNC (đồng bộ khung), SCLK (xung nhịp tối đa 50 MHz) và DIN (dữ liệu vào), tương thích với các chuẩn SPI, QSPI và MICROWIRE. Ưu điểm của IC bao gồm điện trở dẫn (RON) là 9.5 Ω, độ phẳng điện trở là 1.6 Ω và khả năng dẫn tín hiệu rail-to-rail trên dải nguồn cấp rộng như ±15 V, +12 V hoặc ±5 V.
 
 
+\subsection{Board thu năng lượng ánh sáng - PHOTO}
+\label{subsec:sche-board-thu-photo}
+
+\subsubsection{Sơ đồ nguyên lí các khối chính của board PHOTO}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-cam.png}
+    \caption{Sơ đồ nguyên lí khối cảm biến ảnh của board PHOTO}
+    \label{fig:photo-cam}
+\end{figure}
+
+AR2020 là cảm biến ảnh CMOS số độ phân giải 20 MP của onsemi, dùng để thu nhận ảnh quang học và chuyển trực tiếp thành luồng dữ liệu số tốc độ cao cho khối xử lí phía sau. Theo datasheet, cảm biến này dùng ma trận điểm ảnh BSI 1.4 $\mu$m, mạch đọc rolling shutter và các khối nội tích hợp như khuếch đại, lấy mẫu, số hóa và đóng gói dữ liệu ảnh; việc cấu hình các thanh ghi được thực hiện qua giao tiếp I2C Fast-mode Plus, còn ngõ ra dữ liệu là MIPI D-PHY 2$\times$4 lane cùng cặp clock vi sai. Ưu điểm của AR2020 so với nhiều cảm biến cùng lớp là độ phân giải cao ở mức công suất thấp, hỗ trợ LI-HDR/eDR, đáp ứng NIR tốt tại 850 nm và 940 nm, đồng thời có các tính năng SmartROI, Wake-on-Motion và context switching rất phù hợp cho hệ thống quang điện đa chế độ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-mipi.png}
+    \caption{Sơ đồ nguyên lí khối chuyển mạch MIPI của board PHOTO}
+    \label{fig:photo-mipi}
+\end{figure}
+
+PI3WVR626 là mạch chuyển mạch analog tốc độ cao chuyên cho tín hiệu MIPI, dùng để chọn một trong hai nguồn camera đưa về bus CSI/DSI chung. IC hoạt động như cụm công tắc SPDT cho các cặp vi sai clock và data; chân điều khiển số \texttt{SEL} quyết định nhánh nào được nối qua, còn chân \texttt{*OE} dùng để cho phép hoặc cô lập đường truyền. Ngõ vào và ngõ ra đều là các cặp tín hiệu MIPI D-PHY/C-PHY mức thấp, không phải giao thức điều khiển thanh ghi. Ưu điểm của PI3WVR626 là điện trở dẫn thấp, độ lệch kênh nhỏ, băng thông cao và tối ưu riêng cho MIPI nên suy hao, méo mắt tín hiệu và xuyên nhiễu thường tốt hơn cách ghép bằng công tắc analog thông dụng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-i2c-switching.png}
+    \caption{Sơ đồ nguyên lí khối chuyển mạch I2C của board PHOTO}
+    \label{fig:photo-i2c-switching}
+\end{figure}
+
+PCA9544A là bộ ghép kênh I2C 1-trong-4 có logic ngắt, dùng để tách một bus I2C chính ra bốn nhánh cảm biến độc lập nhằm tránh xung đột địa chỉ và cho phép chọn riêng từng camera. IC nhận lệnh điều khiển qua bus I2C/SMBus ở cặp \texttt{SDA}, \texttt{SCL}; thanh ghi điều khiển nội sẽ đóng một cặp pass-gate tương ứng để nối bus chính tới kênh \texttt{SDx/SCx} mong muốn, đồng thời gom các ngắt \texttt{INT0...INT3} thành một ngắt tổng \texttt{INT}. Ngõ vào điều khiển là I2C, còn ngõ ra cũng vẫn là các đường I2C đã được chọn kênh. Ưu điểm của PCA9544A là hỗ trợ dịch mức điện áp giữa nhiều miền nguồn, có ngõ ngắt riêng cho từng nhánh và cấu hình đơn giản hơn giải pháp dùng nhiều FET/discrete switch rời.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-i2c-io.png}
+    \caption{Sơ đồ nguyên lí khối mở rộng I/O điều khiển camera}
+    \label{fig:photo-i2c-io}
+\end{figure}
+
+TCA6416A là bộ mở rộng 16 GPIO điều khiển qua I2C/SMBus, được dùng để tạo thêm các chân điều khiển như \texttt{GPIO0}, \texttt{nOFF}, \texttt{SEN\_SEL} hay \texttt{CLK\_nENA} cho nhiều camera từ một bus nối tiếp hai dây. Bên trong IC là các thanh ghi input, output, polarity inversion và configuration; vi điều khiển ghi/đọc các thanh ghi này qua \texttt{SDA}, \texttt{SCL}, từ đó biến các chân \texttt{P00...P17} thành ngõ vào hoặc ngõ ra số tùy nhu cầu. Vì vậy ngõ vào điều khiển là I2C/SMBus, còn ngõ ra là các tín hiệu số mức CMOS/TTL theo miền nguồn \texttt{VCCP}. Ưu điểm của TCA6416A là vừa mở rộng I/O vừa hỗ trợ dịch mức giữa \texttt{VCCI} và \texttt{VCCP}, có chân \texttt{INT}, \texttt{RESET}, dòng chờ thấp và gọn hơn đáng kể so với dùng vi điều khiển phụ chỉ để tạo GPIO.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-osc.png}
+    \caption{Sơ đồ nguyên lí khối dao động và logic điều phối xung clock}
+    \label{fig:photo-osc}
+\end{figure}
+
+DSC1001DL5-027.0000T là dao động MEMS CMOS tần số 27 MHz, dùng làm nguồn clock chuẩn cho hệ camera. IC tích hợp phần tử cộng hưởng MEMS, mạch PLL bù và tầng đệm đầu ra trong cùng một gói; khi cấp \texttt{VDD}, chân \texttt{OUT} phát ra xung clock CMOS còn \texttt{STANDBY\#} cho phép đưa linh kiện về chế độ tiết kiệm điện. Ngõ vào là nguồn nuôi và tín hiệu enable mức số, ngõ ra là xung clock CMOS đơn cực. Ưu điểm của DSC1001 là chịu sốc rung tốt hơn tinh thể thạch anh, khởi động nhanh, ổn định tần số tốt và dễ thay thế trực tiếp cho nhiều footprint oscillator chuẩn.
+
+NL7SZ97DT2G-Q là cổng logic đa chức năng cấu hình được, ở đây được dùng như khối gating/phân phối clock cho từng nhánh cảm biến thông qua tín hiệu \texttt{CLK\_nENA}. IC nhận các tín hiệu số tại các chân \texttt{A}, \texttt{B}, \texttt{C} và tạo ra đầu ra \texttt{Y} theo hàm logic được cấu hình bằng cách nối mức các chân điều khiển; trong sơ đồ này đầu vào và đầu ra đều là tín hiệu số CMOS mức 1.8 V. Ưu điểm của NL7SZ97 là một IC nhỏ có thể thay cho nhiều loại cổng đơn như AND, OR, NAND, NOR, buffer hay inverter, giúp giảm số lượng mã linh kiện và tối ưu diện tích mạch so với dùng từng cổng cố định riêng lẻ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-ldos.png}
+    \caption{Sơ đồ nguyên lí khối LDO cấp nguồn cho board PHOTO}
+    \label{fig:photo-ldos}
+\end{figure}
+
+TLV75733PDYDR là LDO 3.3 V dòng tối đa 1 A, dùng để hạ áp từ \texttt{+5V\_CAM} xuống \texttt{+3.3V} cho các khối số và tham chiếu. IC làm việc theo nguyên lý điều khiển phần tử pass nội với vòng hồi tiếp giữ ổn định điện áp ra; ngõ vào là \texttt{VIN}, tín hiệu số \texttt{EN}, còn ngõ ra là \texttt{VOUT} analog DC. Ưu điểm của TLV75733 là dòng cấp lớn, sai số thấp và dòng tĩnh nhỏ, phù hợp hơn các LDO phổ thông khi cần vừa gọn vừa đủ dòng cho nhiều tải số.
+
+TPS7A2024PDBVR là LDO 2.4 V nhiễu thấp, được dùng để tạo rail \texttt{+2.4V} cho phần giao tiếp ảnh. Ngõ vào là nguồn DC \texttt{VIN} và chân \texttt{EN}, ngõ ra là nguồn DC ổn áp \texttt{VOUT}; IC dùng transistor pass và bộ khuếch đại lỗi nội để duy trì điện áp ổn định với PSRR cao. So với nhiều LDO cùng mức áp, dòng tĩnh và nhiễu đầu ra của họ TPS7A20 thường thấp hơn, thích hợp cho tải nhạy nhiễu như cảm biến ảnh và giao tiếp tốc độ cao.
+
+TLV75528PDBVR là LDO 2.8 V cho rail analog/pixel của cảm biến. Cũng như các LDO khác, IC nhận nguồn DC tại \texttt{VIN}, chân bật/tắt \texttt{EN} và xuất điện áp DC đã ổn áp tại \texttt{VOUT}. Điểm mạnh của TLV75528 là PSRR khá tốt, khởi động mềm và yêu cầu tụ ngoài nhỏ, nên dễ tích hợp cho các rail analog gần cảm biến.
+
+TLV75518PDBVR là LDO 1.8 V cấp cho logic I/O, clock hoặc các khối MIPI phụ trợ. Ngõ vào/ra là nguồn DC cùng chân enable số; nguyên lý vẫn là ổn áp tuyến tính với phần tử pass nội và mạch bảo vệ dòng/nhiệt. Ưu điểm của mã này là tiêu thụ tĩnh thấp, kích thước nhỏ và đáp ứng tốt cho các miền 1.8 V rất phổ biến trong camera module.
+
+NCP139AFCT105T2G là VLDO 1.05 V dòng cao có chân \texttt{VBIAS} riêng, dùng để tạo rail lõi số điện áp thấp cho cảm biến. IC nhận \texttt{VIN}, \texttt{VBIAS}, \texttt{EN} và phản hồi \texttt{SNS/FB}, sau đó điều khiển NMOS pass để tạo \texttt{VOUT} sụt áp rất thấp; vì có chân bias riêng nên mạch điều khiển nội không phải lấy toàn bộ năng lượng từ đường công suất chính. Ưu điểm của NCP139 so với LDO lõi thông thường là dropout rất thấp ở dòng tải lớn, độ chính xác tốt và đặc biệt phù hợp cho rail core điện áp thấp của cảm biến/SoC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-vref.png}
+    \caption{Sơ đồ nguyên lí khối tạo điện áp tham chiếu của board PHOTO}
+    \label{fig:photo-vref}
+\end{figure}
+
+REF1930 là IC tham chiếu điện áp kép, tạo đồng thời \texttt{V\_Ref} và \texttt{V\_Bias} từ một nguồn dương duy nhất để phục vụ thiên áp cho photodiode và mức chuẩn cho ADC. Theo datasheet, bên trong IC là nguồn bandgap chính xác cao kết hợp bộ đệm ngõ ra; khi cấp \texttt{VDD} và kích hoạt \texttt{EN}, IC xuất một ngõ $V_{Ref}=3.0\,\mathrm{V}$ và một ngõ $V_{Bias}=V_{Ref}/2=1.5\,\mathrm{V}$. Ngõ vào là nguồn DC và tín hiệu enable mức logic, còn ngõ ra là hai điện áp tham chiếu analog chính xác. Ưu điểm của REF1930 là hai ngõ ra tracking nhiệt tốt, độ trôi thấp, dòng tĩnh nhỏ và giảm linh kiện hơn so với cách ghép riêng một reference 3 V và một mạch chia áp/buffer rời.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/photo-sw.png}
+    \caption{Sơ đồ nguyên lí khối chuyển mạch chọn photodiode}
+    \label{fig:photo-sw}
+\end{figure}
+
+ADG1414BRUZ là mạch chuyển mạch analog 8 kênh SPST điều khiển nối tiếp, dùng để chọn photodiode nào được đưa vào chuỗi khuếch đại dòng-quang phía sau. IC nhận dữ liệu cấu hình qua giao tiếp SPI tương thích \texttt{SCLK}, \texttt{DIN}, \texttt{SYNC/CS}; sau khi ghi thanh ghi 8 bit, từng công tắc \texttt{S1...S8} sẽ đóng hoặc ngắt để nối các nút photodiode tương ứng sang các chân \texttt{D1...D8}. Như vậy ngõ vào điều khiển là giao tiếp nối tiếp kiểu SPI, còn đường tín hiệu qua công tắc là tín hiệu analog hai chiều. Ưu điểm của ADG1414 là điện trở dẫn thấp, độ phẳng $R_{ON}$ tốt, chịu dải tín hiệu rộng tới rail nguồn và hỗ trợ daisy-chain, nên phù hợp hơn các analog switch đời cũ khi cần đa kênh, độ méo thấp và điều khiển gọn.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/photo/transimpedance-antialias.png}
+    \caption{Sơ đồ nguyên lí khối khuếch đại chuyển dòng sang áp và lọc khử chồng phổ}
+    \label{fig:photo-tia-antialias}
+\end{figure}
+
+OPA4340 là op-amp CMOS 4 kênh rail-to-rail, được dùng trong mạch này để thực hiện ba chức năng: khuếch đại chuyển dòng-quang thành điện áp (TIA), đệm tín hiệu và tạo bộ lọc anti-alias trước ADC. Op-amp hoạt động theo nguyên lý khuếch đại sai biệt điện áp giữa hai đầu vào \texttt{+/-}; với mạng hồi tiếp điện trở-tụ, tầng đầu chuyển dòng photodiode thành điện áp, các tầng sau tạo đáp ứng lọc và đệm tải cho \texttt{ADC\_IN}. Ngõ vào/ra hoàn toàn là tín hiệu analog, không có giao tiếp số. Ưu điểm của OPA4340 là làm việc nguồn đơn 2.7 V đến 5.5 V, rail-to-rail input/output, dòng bias rất nhỏ và công suất thấp, nên thích hợp cho front-end quang điện hơn nhiều op-amp đa kênh cũ vốn cần nguồn đối xứng hoặc có biên độ common-mode hẹp.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{picture/photo/photo-adc.png}
+    \caption{Sơ đồ nguyên lí khối ADC của board PHOTO}
+    \label{fig:photo-adc}
+\end{figure}
+
+ADS8329 là bộ chuyển đổi tương tự-số SAR 16 bit tốc độ đến 1 MSPS, dùng để số hóa tín hiệu analog sau khối lọc anti-alias. IC lấy mẫu tín hiệu tại cặp \texttt{IN+}, \texttt{IN-}, so sánh tuần tự với điện áp tham chiếu ngoài \texttt{REF+}, \texttt{REF-} bằng lõi SAR và xuất mã số nối tiếp sau mỗi lần kích \texttt{CONVST}. Ngõ vào gồm tín hiệu analog và điện áp tham chiếu; ngõ giao tiếp số là SPI tương thích với các chân \texttt{SCLK}, \texttt{SDI}, \texttt{SDO}, \texttt{FS/CS}, \texttt{EOC/INT}, còn dữ liệu ra là chuỗi bit số trên \texttt{SDO}. Ưu điểm của ADS8329 là độ phân giải 16 bit, tốc độ lấy mẫu 1 MSPS, công suất thấp, hỗ trợ daisy-chain và giao tiếp số rộng dải điện áp, nên rất phù hợp cho hệ đo quang cần độ chính xác cao nhưng vẫn giữ kiến trúc điều khiển đơn giản.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{picture/photo/photo-neg-pwr.png}
+    \caption{Sơ đồ nguyên lí khối tạo nguồn âm của board PHOTO}
+    \label{fig:photo-neg-pwr}
+\end{figure}
+
+ICL7660 là bộ chuyển đổi điện áp kiểu charge-pump, được dùng để tạo rail $-5\,\mathrm{V}$ từ nguồn dương $+5\,\mathrm{V}$ nhằm phục vụ thiên áp hoặc mở rộng biên độ làm việc của khối analog. IC dùng dao động nội và bốn công tắc MOS đóng cắt các tụ ngoài tại các chân \texttt{CAP+}, \texttt{CAP-} để đảo cực điện áp; sau đó điện áp âm được lấy ra tại \texttt{VOUT}. Ngõ vào là nguồn DC \texttt{V+} cùng các tụ bơm điện tích, ngõ ra là điện áp DC âm; nếu cần có thể điều khiển tần số qua chân \texttt{OSC}. Ưu điểm của ICL7660 là mạch ngoài rất ít linh kiện, không cần cuộn cảm, hiệu suất hở tải cao và gọn hơn rõ rệt so với bộ nguồn đảo áp kiểu switching dùng cuộn cảm trong các tải dòng nhỏ.
 
 
-% \subsection{Board thu năng lượng ánh sáng - PHOTO}
-% \label{subsec:sche-board-thu-photo}
 
 \newpage
 

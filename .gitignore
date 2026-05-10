@@ -12,6 +12,7 @@
 *.xdv
 *.pdf
 *.lot
+.vscode/settings.json
 
 # OS files
 .DS_Store
