@@ -91,7 +91,7 @@ Phương pháp 2 được lựa chọn vì phù hợp trực tiếp với kiến
 \subsection{Kết luận lựa chọn phương pháp}
 \label{subsec:ket_luan_lua_chon}
 
-Từ các phân tích trên, phương pháp thiết kế được chọn cho đề tài là: \textit{kiến trúc đa board phân lớp chức năng, giao tiếp dữ liệu theo khung có kiểm lỗi, điều khiển phân cấp OBC--EXP}. Cách lựa chọn này cân bằng giữa tính khả thi triển khai, độ tin cậy truyền dữ liệu và mục tiêu nghiên cứu của luận văn.
+Từ các phân tích trên, phương pháp thiết kế được chọn cho đề tài là: kiến trúc đa board phân lớp chức năng, giao tiếp dữ liệu theo khung có kiểm lỗi, điều khiển phân cấp OBC--EXP. Cách lựa chọn này cân bằng giữa tính khả thi triển khai, độ tin cậy truyền dữ liệu và mục tiêu nghiên cứu của luận văn.
 
 \section{Sơ đồ khối tổng quát}
 \label{sec:so_do_khoi_tong_quat}
@@ -898,7 +898,6 @@ OUT1, OUT2: Các chân đầu ra kết nối trực tiếp với tải (động 
 
 RS: Chân cảm biến dòng điện đầu ra, thường nối với một điện trở cảm biến xuống đất
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
@@ -1503,6 +1502,8 @@ Tương tự như ở nguồn internal, nguồn external cũng mô phỏng đặ
     \label{fig:laser-current-ext-transient}
 \end{figure}
 
+Tương tự như cách mô phỏng trên mạch internal, mạch external sau khi bật nguồn cũng có một khoảng vọt lố nhỏ và tín hiệu nhanh chóng ổn định.
+
 \subsubsection{Sơ đồ nguyên lí board LASER DIODE}
 \label{so-do-nguyen-li-laser}
 
@@ -1649,7 +1650,45 @@ ADG1414BRUZ là mạch chuyển mạch analog 8 kênh SPST điều khiển nối
     \label{fig:photo-tia-antialias}
 \end{figure}
 
-OPA4340 là op-amp CMOS 4 kênh rail-to-rail, được dùng trong mạch này để thực hiện ba chức năng: khuếch đại chuyển dòng-quang thành điện áp (TIA), đệm tín hiệu và tạo bộ lọc anti-alias trước ADC. Op-amp hoạt động theo nguyên lý khuếch đại sai biệt điện áp giữa hai đầu vào \texttt{+/-}; với mạng hồi tiếp điện trở-tụ, tầng đầu chuyển dòng photodiode thành điện áp, các tầng sau tạo đáp ứng lọc và đệm tải cho \texttt{ADC\_IN}. Ngõ vào/ra hoàn toàn là tín hiệu analog, không có giao tiếp số. Ưu điểm của OPA4340 là làm việc nguồn đơn 2.7 V đến 5.5 V, rail-to-rail input/output, dòng bias rất nhỏ và công suất thấp, nên thích hợp cho front-end quang điện hơn nhiều op-amp đa kênh cũ vốn cần nguồn đối xứng hoặc có biên độ common-mode hẹp.
+OPA4340 là op-amp CMOS 4 kênh rail-to-rail, được dùng trong mạch này để thực hiện ba chức năng: khuếch đại chuyển dòng-quang thành điện áp (TIA), đệm tín hiệu và tạo bộ lọc anti-alias trước ADC. 
+
+Tầng thứ nhất U20A là một bộ biến đổi dòng điện thành điện áp với công thức:
+\begin{equation}
+V_{out} = V_{ref} - (I_{in} \times R_f)
+\end{equation}
+
+Trong mạch thiết kế, R1 = $330k\Omega$ đóng vai trò là điện trở phản hồi, quyết định độ lợi của mạch. Tụ C1 = $470\,\mathrm{pF}$ được mắc song song với R1 để ổn định mạch và giới hạn băng thông. Băng thông tạo ra bởi R1 và C1 được xác định xấp xỉ theo:
+\begin{equation}
+f_{\mathrm{TIA}} \approx \frac{1}{2\pi \times R1 \times C1} = \frac{1}{2\pi \times 330000 \times 470 \times 10^{-12}} \approx 1.03\,\mathrm{kHz}
+\end{equation}
+
+Tầng thứ hai sử dụng dụng bộ lọc thông thấp RC để lọc các tín hiệu nhiễu tần số cao, đảm bảo tín hiệu đọc về ADC trong ngưỡng quy định. Sau khi qua bộ lọc RC tín hiệu qua một tầng opamp buffer để điều tiết quá trình chuyển mạch và cách ly trở kháng hai phía của mạch.
+
+Tầng thứ ba sử dụng bộ lọc Sallen-Key. Bộ lọc Sallen-key là một trong những cấu trúc phổ biến nhất để thiết kế bộ lọc tích cực bậc hai. Trong mạch thiết kế, tầng Sallen-Key được sử dụng ở giai đoạn cuối cùng trước khi đưa tín hiệu vào ADC nhằm thực hiện chức năng Anti-aliasing (chống chồng lấn phổ). Ưu điểm của Sallen-Key là bộ lọc bậc 2, cung cấp độ dốc lên tới $40\text{ dB/decade}$ so với bộ lọc RC đơn giản chỉ có độ dốc $20\text{ dB/decade}$. Nó giúp triệt tiêu các nhiễu tần số cao (nhiễu nguồn, nhiễu EMI trên vệ tinh) nhanh hơn và mạnh hơn, đảm bảo vùng Nyquist của ADC hoàn toàn sạch nhiễu. Theo như thiết kế trên board PHOTO, tần số lấy mẫu $f_s$ = 500KHz nên $f_{Nyquist}$ = 250KHz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/photo/sallen-key.png}
+\caption{Tham khảo thiết kế mạch Sallen-Key}
+\label{fig:sallen-key}
+\end{figure}
+
+Theo công thức của bộ lọc Sallen-Key
+
+\begin{equation}
+\omega_0 = 2\pi f_0 = \frac{1}{\sqrt{R_1R_2C_1C_2}}
+\end{equation}
+
+Ứng với công thức trên, thay $R_1 = R52 = 10k\Omega$, $R_2 = R53 = 10k\Omega$ và $C_1 = C89 = 10\,\mathrm{nF}$, $C_2 = C92 = 10\,\mathrm{nF}$, ta có:
+
+Tần số cắt của bộ lọc là:
+\begin{equation}
+f_0 = \frac{\omega_0}{2\pi} = \frac{10000}{2\pi} \approx 1.59\,\mathrm{kHz}
+\end{equation}
+
+Giá trị này nhỏ hơn rất nhiều so với $f_{Nyquist} = 250\,\mathrm{kHz}$ của ADC, do đó về mặt chống chồng lấn phổ thì thiết kế này là an toàn và hợp lí. Tuy nhiên, điều đó cũng cho thấy băng thông tín hiệu hữu ích bị giới hạn chỉ quanh mức vài kHz.
+
+
 
 \begin{figure}[H]
     \centering
