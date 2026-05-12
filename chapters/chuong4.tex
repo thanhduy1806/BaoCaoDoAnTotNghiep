@@ -1,0 +1,911 @@
+% ==========================================================
+% CHƯƠNG 4: THIẾT KẾ VÀ THỰC HIỆN PHẦN MỀM
+% ==========================================================
+
+\chapter{Thiết kế và thực hiện phần mềm}
+\label{ch:thiet_ke_phan_mem}
+
+
+\section{Thiết kế và thực hiện Bootloader}
+\label{sec:thiet_ke_va_thuc_hien_Bootloader}
+
+\subsection{Yêu cầu thiết kế phần mềm}
+\label{sec:yeu_cau_thiet_ke_phan_mem}
+
+Firmware Bootloader được xây dựng nhằm hỗ trợ cập nhật firmware từ xa một cách tin cậy, an toàn và dễ mở rộng. Các yêu cầu thiết kế chính bao gồm:
+
+\textbf{Tổ chức phân lớp rõ ràng:} 
+Bootloader được thiết kế theo mô hình phân lớp, bao gồm các thành phần như: Hardware, Driver Flash, Transport (xTP), Command Interface (xCLI) và Bootloader Application Control (xBLD). Cấu trúc này giúp tách biệt phần cứng và logic xử lý, tăng khả năng bảo trì. 
+
+\textbf{Đảm bảo tính tin cậy trong truyền dữ liệu:}
+Hệ thống cần đảm bảo dữ liệu firmware được truyền chính xác, không lỗi thông qua cơ chế kiểm tra CRC và cơ chế truyền lại (ARQ). 
+
+\textbf{Hỗ trợ cập nhật firmware linh hoạt:}
+Bootloader cần hỗ trợ ghi firmware theo từng khối nhỏ (chunk), cho phép cập nhật từng phần và kiểm tra từng bước để giảm rủi ro lỗi toàn bộ hệ thống. 
+
+\textbf{Quản lý bộ nhớ Flash an toàn:}
+Việc ghi/xóa Flash cần đảm bảo không làm ảnh hưởng đến vùng Bootloader, đồng thời kiểm soát kích thước và địa chỉ của firmware ứng dụng. 
+
+\textbf{Khả năng mở rộng giao thức:}
+Giao thức truyền thông cần có khả năng mở rộng như hỗ trợ phân mảnh (segmentation), xác thực (HMAC), hoặc multi-node trong tương lai. 
+
+\textbf{Tự động khởi động ứng dụng (Autoboot):}
+Sau một khoảng thời gian chờ, Bootloader cần tự động chuyển sang chạy firmware ứng dụng nếu không có yêu cầu cập nhật. 
+
+\subsubsection{Phân tích yêu cầu và phương pháp thực hiện:}
+    
+    Hệ thống được chia thành hai vùng thực thi riêng biệt:
+
+\textbf{Bootloader:} Thành phần quản lý khởi động, đóng vai trò cấp nhật firmware cho User application cho hệ thông chính.
+
+\textbf{User Application:} Chương trình ứng dụng chính của người dùng, bắt đầu bằng một vùng Header chứa các thông tin định danh (Metadata) để Bootloader kiểm tra tính hợp lệ trước khi thực thi.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.25\textwidth]{picture/firmware/Bootloader/flash.png}
+    \caption{Tổ chức bộ nhớ Flash}
+    \label{fig:to-chuc-bo-nho-flash}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Quản lý bộ nhớ Flash:}
+    \begin{itemize}
+        \item Bootloader được đặt ở vùng Flash từ 0x00400000 đến 0x0040BFFF (48kB).
+        \item User Application bắt đầu từ 0x0040C000, với Header 512 bytes tại 0x0040C000 và firmware ứng dụng bắt đầu từ 0x0040C200. Kích thước tối đa của Application khoảng 1.95MB.
+        \item Bootloader sẽ kiểm tra Header của User Application để xác định tính hợp lệ trước khi thực thi.
+    \end{itemize}
+
+\end{itemize}
+
+Dựa trên các yêu cầu đã đề ra, phương pháp thiết kế Bootloader được tổ chức phân lớp rõ ràng dễ mở rộng và có thể tái sử dụng giao thức xTP cho các ứng dụng khác. Bootloader được chia thành các lớp chính:
+
+\begin{itemize}
+
+    \item \textbf{Driver}: điều khiển phần cứng như Flash, UART. 
+
+    \item \textbf{Transport Layer (xTP)}:
+    Cung cấp giao thức truyền dữ liệu dạng frame với các cơ chế: 
+    \begin{itemize}
+        \item CRC kiểm tra lỗi 
+        \item ECC sửa lỗi 1 byte 
+        \item ARQ (Automatic Repeat Request) để truyền lại khi lỗi 
+    \end{itemize}
+    \item \textbf{Middleware (xCLI)}:
+    Cung cấp giao diện lệnh (command-based), giúp gửi và nhận các yêu cầu từ PC. 
+    \item \textbf{Application Layer (xBLD)}:
+    Xử lý logic Bootloader như ghi firmware, verify, jump sang application. 
+    
+\end{itemize}
+
+Để đảm bảo tính tin cậy trong truyền dữ liệu, cấu trúc khung truyền xTP được thiết kế như sau:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/firmware/Bootloader/xTP_frame.png}
+    \caption{Cấu trúc khung truyền xTP}
+    \label{fig:xTP-frame}
+\end{figure}
+
+Giao thức xTP được thiết kế với các cơ chế bảo vệ dữ liệu:
+
+•	CRC-16 để phát hiện lỗi dữ liệu 
+
+•	ECC (Error Correction Code) để sửa lỗi 1 byte 
+
+•	ARQ (Stop-and-Wait) để truyền lại khi không nhận được ACK 
+
+Nhờ đó, quá trình truyền firmware đảm bảo độ tin cậy cao ngay cả khi đường truyền không ổn định.
+
+•	Địa chỉ ghi (4 bytes) 
+
+•	Dữ liệu (tối đa 251 bytes) 
+Thông qua lệnh WRITE, Bootloader sẽ:
+1.	Nhận dữ liệu từ host 
+2.	Ghi vào Flash theo từng chunk 
+3.	Trả về ACK hoặc ERROR 
+Cách tiếp cận này giúp retry từng phần khi lỗi.
+Ngoài ra:
+•	Sử dụng cơ chế verify firmware (checksum / magic) trước khi jump 
+•	Có thể bật IRQ barrier khi ghi Flash để tránh lỗi runtime 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/firmware/Bootloader/cmd_bootloader.png}
+    \caption{Các lệnh điều khiển Bootloader}
+    \label{fig:cmd-bootloader}
+\end{figure}
+
+\subsubsection{Phân tích kịch bản vận hành hệ thống:}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/firmware/Bootloader/kich_ban_he_thong.png}
+    \caption{Kịch bản vận hành hệ thống}
+    \label{fig:kich-ban-he-thong}
+\end{figure}
+
+
+Sơ đồ mô tả các kịch bản tương tác giữa người dùng với vi điều khiển trong giai đoạn Bootloader. Việc chia tách thành 3 tiến trình giúp tối ưu hóa khả năng đáp ứng của hệ thống trong mọi tình huống thực tế:
+
+\textbf{Kịch bản 1: Trạng thái chờ}
+
+Mô tả: Đây là kịch bản mặc định khi thiết bị khởi động mà không có sự can thiệp từ con người.
+Mục tiêu: Đảm bảo tính tự động hóa. Nếu sau một khoảng thời gian "Idle" không có dữ liệu truyền đến, hệ thống sẽ tự động thực thi ứng dụng chính User Application để đảm bảo thiết bị luôn hoạt động đúng chức năng, ngay cả khi đặt ở vị trí khó tiếp cận.
+
+\textbf{Kịch bản 2: Tương tác trực tiếp với Terminal}
+
+Mô tả: Kịch bản này xảy ra khi kỹ sư vận hành sử dụng Terminal (UART) để giao tiếp trực tiếp với vi điều khiển.
+
+Mục tiêu: Cung cấp các lệnh điều khiển nhanh như kiểm tra trạng thái (ping), xem thời gian hệ thống hoặc buộc nhảy đến vùng nhớ User Application ngay lập tức. Điều này giúp tăng tốc quá trình gỡ lỗi (debug) và can thiệp thủ công khi cần thiết.
+
+\textbf{Kịch bản 3: Cập nhật phần mềm hệ thống}
+
+Trong kịch bản này, vi điều khiển không tiếp nhận dữ liệu trực tiếp từ người dùng cuối mà thông qua một bộ vi xử lý trung gian (MPU).
+Mô tả luồng dữ liệu:
+
+\begin{itemize}
+
+\item Dữ liệu đầu vào: Người dùng truyền file Firmware thông qua các giao thức truyền thông xa tới bộ vi xử lý MPU qua UART.
+\item Xử lý trung gian: MPU đóng vai trò là "Gateway", thực hiện nhận dữ liệu, quản lý tệp tin và bắt đầu chuyển tiếp dữ liệu xuống MCU thông qua giao tiếp UART nội bộ sử dụng giao thức xTP.
+\item Xử lý tại MCU (xTP Process): đây là giai đoạn thực thi chính của Bootloader trên vi điều khiển ATSAMV71 để cập nhật chính nó.
+\item Mục tiêu kỹ thuật:
+    \begin{itemize}
+        \item Truyền tải tin cậy (Reliable Transport): Sử dụng giao thức xTP để giải quyết các vấn đề về nhiễu trên đường truyền nội bộ hoặc mất mát dữ liệu. Có cơ chế chia nhỏ file Firmware lớn thành các đoạn dữ liệu có kích thước tối ưu cho bộ nhớ đệm của MCU.
+        \item Kiểm soát toàn vẹn (Integrity Control): ECC (Error Correction Code): Tự động phát hiện và sửa lỗi ở cấp độ bit, tăng cường khả năng chịu lỗi cho hệ thống.
+        \item CRC (Cyclic Redundancy Check): Kiểm tra tổng thể khung tin sau khi nhận. Dữ liệu chỉ được nạp vào bộ nhớ Flash khi đã vượt qua tất cả các lớp kiểm chứng phần mềm.
+    \end{itemize}
+\end{itemize}
+
+
+
+\subsection{Thực hiện phần mềm Bootloader}
+\label{sec:thuc_hien_phan_mem_Bootloader}
+
+\begin{itemize}
+    \item \textbf{Lưu đồ giải thuật tổng quát:}
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{picture/firmware/Bootloader/Luu_do_tong_quat.png}
+        \caption{Lưu đồ giải thuật tổng quát của Bootloader}
+        \label{fig:lưu-đồ-giải-thuật-tổng-quát-của-Bootloader}
+    \end{figure}
+
+   Sau khi hệ thống được cấp nguồn hoặc reset, bootloader sẽ chuyển sang trạng thái khởi tạo hệ thống cần thiết như UART, giao thức truyền thông xTP, giao diện dòng lệnh CLI để chuẩn bị cho quá trình giao tiếp và cập nhật firmware.
+
+   Sau khi khởi tạo hoàn tất, vi điều khiển sẽ duy trì hoạt động của giao thức truyền thông và chờ các thao tác từ người dùng thông qua UART. Tại đây bootloader liên tục kiểm tra dữ liệu nhận được từ UART để xử lý các command điều khiển, command kiểm tra hệ thống hoặc yêu cầu cập nhật firmware.
+
+   Khi phát hiện dữ liệu đầu vào, hệ thống chuyển sang trạng thái xử lý lệnh (CMD PROCESS). Tùy theo nội dung command nhận được, bootloader có thể gửi gói tin kiểm tra giao tiếp, yêu cầu nhảy đến application hoặc thực hiện các chức năng hỗ trợ cập nhật firmware. 
+   
+   Trong trường hợp không có hoạt động truyền nhận dữ liệu hoặc thao tác từ người dùng trong một khoảng thời gian xác định, bootloader kích hoạt cơ chế AUTOBOOT để tự động chạy ứng dụng chính, giúp hệ thống không bị dừng vô thời hạn trong chế độ bootloader.
+   
+   Cuối cùng, khi quá trình nhảy đến application hoàn tất, hệ thống bắt đầu thực thi chương trình người dùng.
+
+   \item \textbf{Lưu đồ giải thuật chi tiết:}
+   
+   Sơ đồ trên mô tả luồng khởi tạo và vận hành của Bootloader:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{picture/firmware/Bootloader/init_bootloader.png}
+    \caption{Khởi tạo của Bootloader}
+    \label{fig:khởi-tạo-của-Bootloader}
+\end{figure}
+
+
+    Ngay sau khi cấp nguồn hoặc Reset, hệ thống thực hiện các bước chuẩn bị nền tảng tại khối System Init:
+
+    \item \textbf{SystemTick}: Thiết lập bộ đếm thời gian hệ thống, cung cấp cơ sở dữ liệu về thời gian (tick) cho các hàm trễ (delay) và tính toán timeout.
+    \item \textbf{UART Driver}: Cấu hình các thông số truyền thông (Baudrate, Frame format) cho cổng giao tiếp UART, thiết lập bộ đệm RX, TX để sẵn sàng nhận lệnh.
+    \item \textbf{App Initialization}: Gọi hàm để khởi tạo các ứng dụng con. Tại đây, các ứng dụng cụ thể được thiết lập:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{picture/firmware/Bootloader/init_app.png}
+    \caption{Khởi tạo các ứng dụng của Bootloader}
+    \label{fig:khởi-tạo-cac-ung-dung-cua-Bootloader}
+\end{figure}
+
+    \item \textbf{App Blink}: Bật tắt LED trạng thái.
+    \item \textbf{App Alive}: Duy trì hoạt động của Watchdog.
+    \item \textbf{App xTP}: Thực hiện việc nhận lệnh, cập nhật firmware và nhảy tới user application. 
+
+    Sau khi hoàn tất khởi tạo, chương trình đi vào vùng scheduler để bắt đầu điều phối quá trình hoạt động của các task. App xTP là ứng dụng dụng chính của chương trình Bootloader quản lý toàn bộ logic nghiệp vụ thông qua 3 tiến trình:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{picture/firmware/Bootloader/app-xTP.png}
+    \caption{Các nhiệm vụ của ứng dụng xTP}
+    \label{fig:cac-nhiem-vu-cua-ung-dung-xTP}
+\end{figure}
+
+    Sơ đồ khối hàm xử lí xTP:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/firmware/Bootloader/block-xTP.png}
+    \caption{Sơ đồ khối hàm xử lý xTP}
+    \label{fig:so-do-khoi-ham-xTP}
+\end{figure}
+
+xTP Process(): Chịu trách nhiệm giải mã luồng dữ liệu thô từ UART theo máy trạng thái của giao thức xTP. Hàm này thực hiện các nhiệm vụ kiểm lỗi và điều phối việc ghi dữ liệu vào Flash khi nhận được các gói tin Firmware hợp lệ. Cụ thể:
+\begin{itemize}
+    \item Lấy byte dữ liệu: Hệ thống thực hiện quét liên tục. Nếu không có dữ liệu mới, tiến trình sẽ kết thúc ngay lập tức để nhường tài nguyên cho các tác vụ khác.
+    \item Cập nhật thời gian thực: Ngay khi nhận được một byte dữ liệu hợp lệ, hệ thống sẽ cập nhật biến last rx tick. Đây là mốc thời gian quan trọng dùng để tính toán Timeout, đảm bảo hệ thống nhận biết được luồng dữ liệu đang được duy trì.
+    \item xTP Read(): Byte dữ liệu được đưa vào máy trạng thái (FSM) của giao thức xTP để lắp ghép thành một khung tin (Frame) hoàn chỉnh.
+    \item Sau khi xTP Read() xử lý xong một khối dữ liệu, hệ thống tiến hành kiểm tra tính toàn vẹn:
+        \begin{itemize}
+            \item Nếu Frame hợp lệ: MCU thực hiện gửi phản hồi ACK hoặc NACK về cho MPU để xác nhận trạng thái nhận tin. Sau đó, gói tin nhận được sẽ được xử lí bởi hàm đã được định nghĩa ứng với ID command của nó.
+            \item Nếu dữ liệu nhận được bị dở dang hoặc sai cấu trúc và không có thêm dữ liệu mới trong một khoảng thời gian nhất định, hệ thống trạng thái chờ ban đầu.
+        \end{itemize}
+
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{picture/firmware/Bootloader/command.png}
+    \caption{Bảng mã của các lệnh}
+    \label{fig:bang-ma-cua-cac-lenh}
+\end{figure}
+
+Sơ đồ khối xử lí người dùng nhập phím:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/firmware/Bootloader/block-user-input.png}
+    \caption{Sơ đồ khối xử lý đầu vào người dùng}
+    \label{fig:so-do-khoi-xu-ly-dau-vao-nguoi-dung}
+\end{figure}
+
+Process User Input(): Theo dõi và xử lý các sự kiện từ phía người dùng thông qua các lệnh đơn. Tiến trình này cho phép kỹ sư can thiệp nhanh vào hệ thống mà không cần thông qua giao thức phức tạp. Cụ thể:
+
+\begin{itemize}
+    \item Hệ thống thực hiện các bước kiểm tra tuần tự: Kiểm tra timeout của phím 'j': để xác định xem hai lần nhấn phím 'j' có nằm trong khoảng thời gian cho phép hay không. Sau đó, Hệ thống kiểm tra xem có byte dữ liệu nào mới được gửi từ người dùng hay không.
+    \item Nếu nhận được một phím bấm, hệ thống sẽ phân loại dựa trên các điều kiện sau:
+        \begin{itemize}
+            \item Lệnh Ping (Phím '1'): Mục tiêu: Kiểm tra kết nối vật lý và sự phản hồi của phần mềm.
+            \begin{itemize}
+                \item Phản hồi: Hệ thống sẽ trả về một chuỗi ký tự xác nhận. Điều này giúp người dùng biết MCU đang hoạt động bình thường.
+            \end{itemize}
+            \item Lệnh đồng bộ thời gian (Phím '0'): Mục tiêu: Lấy dữ liệu thời gian thực của vi điều khiển.
+            \begin{itemize}
+                \item Phản hồi: Trả về giá trị SystemTick hiện tại.
+            \end{itemize}
+        \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item Nếu người dùng nhấn phím 'j' hai lần liên tiếp trong khoảng thời gian cho phép, hệ thống sẽ kích hoạt lệnh Jump to Application:
+        \begin{itemize}
+            \item Mục tiêu: Cho phép người dùng nhanh chóng chuyển sang chế độ chạy ứng dụng chính mà không cần phải chờ timeout của AutoBoot.
+            \item Phản hồi: Hệ thống sẽ thực hiện nhảy đến địa chỉ bắt đầu của User Application và bắt đầu thực thi chương trình người dùng.
+
+        \end{itemize}
+
+\end{itemize}
+
+Sơ đồ khối xử lí người dùng nhập phím:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/firmware/Bootloader/block-wait.png}
+    \caption{Sơ đồ khối xử lí trạng thái chờ}
+    \label{fig:so-do-khoi-xu-ly-trang-thai-cho}
+\end{figure}
+
+\begin{itemize}
+    \item Idle Reboot Process(): Quản lý thời gian chờ của hệ thống. Nếu không có hoạt động tương tác trong một khoảng thời gian định trước, hàm này sẽ thực hiện kiểm tra tính toàn vẹn của phần mềm cũ và tự động chuyển đổi sang chế độ thực thi ứng dụng chính (Application). Cụ thể:
+    \begin{itemize}
+        \item Kiểm tra hoạt động nhận tin: Hệ thống kiểm tra xem có dữ liệu nào đang được nhận qua cổng xTP hay terminal hay không. Nếu có hoạt động thì hệ thống gọi hàm Reset timer. Nếu không có hoạt động thì hệ thống tiến hành tính toán thời gian trôi qua kể từ lần cuối cùng nhận được dữ liệu.
+        \item Hệ thống so sánh thời gian trôi qua nếu chưa qua 60s thì hệ thống ghi lại nhật ký đếm ngược để thông báo cho người dùng qua terminal và kết thúc lượt quét để tiếp tục vòng lặp.
+        \item Nếu quá thời gian chờ thì hệ thống hiểu rằng không có yêu cầu cập nhật Firmware nào đang diễn ra và bắt đầu kiểm tra tính toàn vẹn của ứng dụng đã có trong Flash. Nếu firmware hợp lệ, hệ thống thực hiện lệnh nhảy đến địa chỉ ứng dụng để bắt đầu vận hành thiết bị.
+    \end{itemize}
+\end{itemize}
+
+\end{itemize}
+
+
+\section{Thiết kế và thực hiện phần mềm ứng dụng của hệ thống}
+\label{sec:thiet_ke_va_thuc_hien_phan_mem_ung_dung}
+
+Để đảm bảo tính linh hoạt, dễ bảo trì và khả năng mở rộng, firmware của hệ thống được thiết kế theo mô hình phân lớp. Cấu trúc này giúp tách biệt giữa logic ứng dụng và các thao tác điều khiển phần cứng cấp thấp.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/firmware/kien_truc.png}
+    \caption{Kiến trúc phân lớp của hệ thống}
+    \label{fig:kien-truc-phan-lop-cua-he-thong}
+\end{figure}
+
+
+Quá trình thiết kế firmware cần tuân thủ các tiêu chí kỹ thuật khắt khe nhằm đảm bảo hệ thống vận hành ổn định trong môi trường thực tế:
+\begin{itemize}
+
+\item \textbf{Tổ chức phân lớp rõ ràng:}Tách biệt hoàn toàn giữa Driver, Board Support Package, Middleware và Application. Điều này cho phép thay đổi linh kiện phần cứng mà không cần viết lại toàn bộ mã nguồn ứng dụng.
+\item \textbf{Đáp ứng tính thời gian thực (Real-time):} Sử dụng cơ chế lập trình hướng sự kiện kết hợp với FreeRTOS để xử lý nhiều tác vụ như điều khiển nhiệt độ, thực hiện thí nghiệm, lư trữ mẫu, nhận lệnh từ MPU hoặc terminal.
+\item \textbf{Quản lý đa ngoại vi phức tạp:} Firmware phải điều phối nhịp nhàng việc giao tiếp cùng lúc với nhiều mô-đun (Laser, Photo, TEC, HEATER, PRAM).
+\item \textbf{Khả năng mở rộng và tái sử dụng:} Thiết kế theo dạng mô-đun hóa giúp việc nâng cấp tính năng hoặc tích hợp thêm cảm biến mới trở nên đơn giản.
+
+\end{itemize}
+
+Kiến trúc firmware thực hiện được chia thành các lớp chính như sau:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{picture/firmware/tp_kien_truc.png}
+    \caption{Các thành phần của phân lớp của hệ thống}
+    \label{fig:cac-thanh-phan-cua-phan-lop-cua-he-thong}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Application}: Chứa logic điều khiển chính của hệ thống bao gồm quản lý tiến trình thí nghiệm (Experiment), xử lý lệnh người dùng (CLI), điều khiển nhiệt độ (Temperature Control), và duy trì trạng thái hệ thống (Alive).
+    \item \textbf{Board Support Package (BSP)}: Cung cấp các hàm API để tương tác với các khối chức năng cụ thể trên board mạch như Laser, Heater, TEC, NTC, RTC và Watchdog Timer (WDT).
+    \item \textbf{Middleware}: Thành phần trung gian cung cấp các dịch vụ dùng chung, tiêu biểu là hệ điều hành thời gian thực FreeRTOS để quản lý đa nhiệm.
+    \item \textbf{Drivers \& Components}: Bao gồm các trình điều khiển cho các chuẩn giao tiếp vật lý (GPIO, I2C, SPI, UART, ADC) và các linh kiện điện tử cụ thể (như MCP4902, ADS8329, RV 3129).
+    \item \textbf{Utils}: Các công cụ hỗ trợ như quản lý bộ đệm vòng (RingBuffer) và bộ đếm thời gian (Tick).
+
+\end{itemize}
+
+\subsection{Thiết kế và thực hiện phần mềm thí nghiệm}
+\label{sec:yeu_cau_thiet_ke_phan_mem_thi_nghiem}
+
+\subsubsection{Phân tích yêu cầu và phương pháp thực hiện:}
+
+Hệ thống được xây dựng nhằm phục vụ quá trình điều khiển bật tắt và điều chỉnh laser đồng thời thu thập thu và lưu trữ dữ liệu ADC đọc về tốc độ cao từ các diode photo. Vì vậy, mục tiêu thiết kế:
+
+    \begin{itemize}
+        \item Bật tắt và duy trì dòng điện chính xác cho laser.
+        \item Duy trì lấy mẫu liên tục trong những khoảng thời gian nhất định theo thời gian thực.
+        \item Tránh mất dữ liệu khi tốc độ lấy mẫu cao.
+        \item Đồng thời vẫn ghi được dữ liệu xuống bộ nhớ ngoài.
+    \end{itemize}
+    Vì vậy, hệ thống được tổ chức theo hướng xử lý bất đồng bộ (asynchronous processing), trong đó các thành phần lấy mẫu và lưu trữ hoạt động độc lập thông qua Queue.
+    
+    \begin{itemize}
+
+    \item Phân tích kiến trúc hệ thống:
+    \begin{itemize}
+        \item \textbf{Photo Sampling}: Thu thập dữ liệu ADC và đẩy vào Queue.
+        \item \textbf{Laser Control}: Bật tắt laser và điều khiển dòng cho laser thông qua giao tiếp SPI.
+        \item \textbf{Store to PRAM}: Lấy dữ liệu từ Queue lưu vào PRAM.
+    \end{itemize}
+
+    \item Phân tích kịch bản vận hành hệ thống:
+    \begin{itemize}
+        \item \textbf{Khởi động hệ thống}: Sau khi khởi động, hệ thống chờ nhận lệnh bắt đầu thí nghiệm.
+        \item \textbf{Bắt đầu thí nghiệm}: Khi lệnh được nhận, Task điều khiển sẽ: Bật laser theo từng channel, kích hoạt thời gian lấy mẫu, bắt đầu thu dữ liệu ADC và ghi liên tục vào các buffer RAM. Và sau đó, dữ liệu trong buffer sẽ được ghi vào PRAM.
+    \end{itemize}
+
+\end{itemize}
+
+
+\subsubsection{Thực hiện phần mềm thí nghiệm:}
+
+\begin{itemize}
+    
+    \item \textbf{Lưu đồ giải thuật tổng quát:}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.3\textwidth]{picture/firmware/Experiment/block-tong-quat.png}
+        \caption{Lưu đồ giải thuật tổng quát của phần mềm thí nghiệm}
+        \label{fig:lưu-đồ-giải-thuật-tổng-quát-của-phần-mềm-thí-nghiệm}
+    \end{figure}
+
+Tiến trình chính của thí nghiệm được phân chia thành 4 giai đoạn:
+
+    \begin{itemize}
+        \item \textbf{IDLE:} Trạng thái chờ lệnh. Hệ thống sẽ duy trì ở trạng thái này cho đến khi nhận được lệnh EXP CMD RUN
+        \item \textbf{SET UP:} Thực hiện cấu hình các tham số vật lý cho thí nghiệm như: thời gian lấy mẫu, tốc độ lấy mẫu, cường độ Laser và khởi tạo các kênh đo.
+        \item \textbf{RUNNING:} MCU sẽ điều khiển bật/tắt các kênh Laser và Photo tương ứng, đồng thời kích hoạt quá trình thu thập dữ liệu tự động.
+        \item \textbf{DONE:} Kết thúc quá trình đo, giải phóng tài nguyên và quay trở lại trạng thái IDLE để sẵn sàng cho chu kỳ tiếp theo.
+    \end{itemize}
+
+Lược đồ tuần tự cho việc thực hiện tác vụ thí nghiệm:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{picture/firmware/Experiment/sequence.png}
+        \caption{Lược đồ tuần tự của tác vụ thí nghiệm}
+        \label{fig:lược-đo-tuan-tu}
+    \end{figure}
+
+    \begin{itemize}
+        \item Đầu tiên, tác vụ thí nghiệm thực hiện cấu hình và kích hoạt bộ định thời 
+        \item Khi bộ định thời đạt tới giá trị so sánh, nó tự động phát động một yêu cầu đọc SPI, thao tác này chuyển quyền điều khiển từ bộ định thời sang khối giao tiếp ngoại vi SPI.
+        \item Trình phục vụ ngắt SPI tiếp nhận giá trị từ ADC và lưu trữ vào bộ đệm. Khi bộ đệm đầy, ngắt SPI thực hiện gửi vào hàng đợi.
+        \item Tác vụ lưu trữ nhận tín hiệu từ hàng đợi, thực hiện ghi dữ liệu vào chip nhớ PRAM. Trong khi việc này diễn ra, các ngắt SPI vẫn có thể tiếp tục thu thập dữ liệu vào các bộ đệm trống.
+        \item Khi số lượng laser được đã được bật tắt xong, tác vụ chính đưa hệ thống về trạng thái an toàn để chuẩn bị cho chu kỳ tiếp theo.
+    \end{itemize}
+
+    \item \textbf{Lưu đồ giải thuật chi tiết:}
+    
+    Sơ đồ trạng thái RUNNING trong thí nghiệm:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{picture/firmware/Experiment/running-state.png}
+        \caption{Sơ đồ trạng thái RUNNING}
+        \label{fig:running-state}
+    \end{figure}
+    
+    Quá trình xử lý cho mỗi kênh đơn lẻ được chia thành 4 giai đoạn logic kế tiếp nhau:
+
+    \begin{itemize}
+        \item \textbf{SUB ENTER PRE PHASE}: Hệ thống thực hiện chuyển mạch sang kênh photo tương ứng. Kích hoạt cờ sampling enable để bắt đầu lấy mẫu từ ADC. 
+        \item \textbf{SUB WAIT MAIN PHASE}: Hệ thống kiểm tra thời gian trôi qua so với giá trị predelay. Nếu đủ thời gian thì thực hiện nạp mã DAC cường độ sáng và kích hoạt Laser, sau đó chuyển sang giai đoạn đo chính.
+        \item \textbf{SUB WAIT POST PHASE}: Dữ liệu được thu thập liên tục trong khi Laser đang bật. Khi thời gian đạt ngưỡng sample delay, hệ thống ngay lập tức tắt toàn bộ Laser và đưa giá trị DAC về 0.
+        \item \textbf{SUB WAIT DONE POST PHASE}: Hệ thống duy trì việc lấy mẫu thêm một khoảng post delay để ghi nhận sự phản ứng của cảm biến sau khi ngắt nguồn sáng. Kết thúc giai đoạn, lệnh dừng lấy mẫu được thực thi và dữ liệu còn lại trong bộ đệm được đẩy vào fram queue.
+    \end{itemize}
+
+    Sơ đồ xử lí ngắt lấy mẫu ADC:
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{picture/firmware/Experiment/spi_isr.png}
+        \caption{Sơ đồ xử lí ngắt lấy mẫu ADC}
+        \label{fig:spi_isr}
+    \end{figure}
+
+    \begin{itemize}
+        \item Ngay khi ngắt SPI được kích hoạt, hệ thống thực hiện kiểm tra trạng thái vận hành thông qua biến cờ sampling enable:
+        \begin{itemize}
+            \item Trường hợp chưa lấy mẫu: hệ thống tiến hành đọc dữ liệu từ thanh ghi RDR chỉ để nhằm mục đích làm trống bộ đệm phần cứng của SPI.
+            \item Trường hợp đang lấy mẫu: hệ thống đọc giá trị thực tế từ ADC, sau đó lưu trữ kết quả vào vị trí tiếp theo trong bộ đệm hiện tại (current buf).
+        \end{itemize}
+
+        \item Để đảm bảo việc lấy mẫu liên tục ở tần số cao mà không bị mất mát dữ liệu, giải thuật sử dụng cơ chế hoán đổi bộ đệm tự động ngay trong ISR:
+        \begin{itemize}
+            \item Kiểm tra độ đầy: sau mỗi lần ghi dữ liệu, chỉ số buf idx được cập nhật. Hệ thống kiểm tra xem bộ đệm đày chưa. Nếu bộ đệm hiện tại đã đầy, ISR thực hiện hai thao tác đồng thời:
+            \begin{enumerate}
+                \item Đẩy con trỏ bộ đệm vừa đầy vào fram queue để tác vụ lưu trữ PSRAM xử lý.
+                \item Lấy một con trỏ bộ đệm trống từ free queue để gán làm current buf mới và reset chỉ số về 0.
+            \end{enumerate}
+        \end{itemize}
+    \end{itemize}
+
+    Sơ đồ khối tác vụ PSRAM:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\textwidth]{picture/firmware/Experiment/psram.png}
+        \caption{Sơ đồ khối tác vụ PSRAM}
+        \label{fig:psram-task}
+    \end{figure}
+
+    Sau khi nhận được dữ liệu từ hàng đợi, hệ thống thực hiện lưu trữ dữ liệu vào trong PRAM.
+
+\end{itemize}
+
+
+\subsection{Thiết kế và thực hiện phần mềm giám sát nhiệt độ}
+\label{sec:yeu_cau_thiet_ke_phan_mem_giam_sat_nhiet_do}
+
+
+\subsubsection{Phân tích yêu cầu và phương pháp thực hiện}
+
+Hệ thống được thiết kế để điều khiển chính xác nhiệt độ theo các giai đoạn được cấu hình sẵn trong các \textit{Profile}, phục vụ cho các ứng dụng yêu cầu độ ổn định cao và đáp ứng thời gian thực.
+
+\paragraph{Mục tiêu thiết kế}
+\begin{itemize}
+    \item \textbf{Điều khiển chính xác:} Duy trì nhiệt độ bám sát giá trị \textit{setpoint} với sai số tối thiểu thông qua thuật toán PID.
+    
+    \item \textbf{Quản lý quỹ đạo (Profile):} Thực thi liên tục các giai đoạn tăng nhiệt, giảm nhiệt và giữ nhiệt theo cấu hình định trước.
+\end{itemize}
+
+\paragraph{a. Các chức năng của hệ thống}
+\begin{itemize}
+    \item Thu thập dữ liệu ADC từ cảm biến NTC.
+    
+    \item Máy trạng thái điều phối các giai đoạn:
+    \texttt{Disable}, \texttt{Preheat}, \texttt{Ramp}, \texttt{Soak} và \texttt{Error}.
+    
+    \item Xuất tín hiệu PWM để điều khiển công suất thiết bị chấp hành (\textit{Heater}/TEC) dựa trên kết quả tính toán của bộ PID.
+\end{itemize}
+
+\paragraph{b. Phân tích kịch bản vận hành hệ thống}
+
+\begin{itemize}
+
+    \item \textbf{Gia nhiệt sơ bộ (Preheat)}
+    
+    \begin{itemize}
+        \item \textbf{Mô tả:} Xảy ra ngay khi nhận lệnh \texttt{CMD\_AUTO}. Hệ thống đưa nhiệt độ về điểm bắt đầu của quy trình.
+        
+        \item \textbf{Mục tiêu:} Đảm bảo hệ thống đạt trạng thái ổn định (\textit{Thermal Equilibrium}) trước khi bắt đầu đếm thời gian. 
+        
+        Tùy vào nhiệt độ thực tế, hệ thống tự động rẽ nhánh sang:
+        \texttt{PREHEAT\_HEAT} hoặc \texttt{PREHEAT\_COOL}.
+    \end{itemize}
+
+    \item \textbf{Thực thi quỹ đạo}
+    
+    \begin{itemize}
+        \item \textbf{Mô tả:} Đây là kịch bản cốt lõi khi kỹ sư vận hành kích hoạt lệnh \texttt{CMD\_START}.
+        
+        \item \textbf{Mục tiêu:}
+        
+        \begin{itemize}
+            \item \textbf{Giai đoạn Ramp:} Tính toán nội suy \textit{setpoint} theo thời gian thực để nhiệt độ thay đổi tuyến tính, tránh sốc nhiệt cho thiết bị.
+            
+            \item \textbf{Giai đoạn Soak:} Kích hoạt bộ đếm thời gian (\texttt{sw\_timer}) chỉ khi nhiệt độ thực tế nằm trong dải sai số cho phép (\texttt{SOAK\_TEMP\_BAND\_C}).
+            
+            Nếu nhiệt độ vượt khỏi dải cho phép, bộ đếm thời gian sẽ tạm dừng để đảm bảo thời gian ngâm nhiệt thực tế.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Giám sát an toàn và bảo vệ }
+    
+    \begin{itemize}
+        \item \textbf{Mô tả:} Hệ thống hoạt động theo mô hình giám sát song song (\textit{Parallel Monitoring}), liên tục quét các điều kiện biên trong mỗi chu kỳ 100\,ms.
+        
+        \item \textbf{Luồng xử lý:}
+        
+        \begin{itemize}
+            \item \textbf{Phát hiện lỗi:} So sánh chênh lệch giữa cảm biến chính (\textit{Main}) và cảm biến phụ (\textit{Sec}). Nếu vượt ngưỡng \texttt{main\_sec\_delta}, sự kiện \texttt{PROFILE\_EVENT\_TEMP\_ERROR} được kích hoạt.
+            
+            \item \textbf{Xử lý khẩn cấp:} Chuyển trạng thái hệ thống sang \texttt{ERROR}, đồng thời gọi hàm \texttt{all\_output\_off()} để ngắt toàn bộ công suất Heater/TEC ngay lập tức.
+        \end{itemize}
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection{Thực hiện phần mềm giám sát nhiệt độ:}
+
+\begin{itemize}
+
+    
+    \item \textbf{Lưu đồ giải thuật tổng quát:}
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{picture/firmware/Temperature_Control/block-tong-quat.png}
+        \caption{Lưu đồ giải thuật tổng quát của phần mềm giám sát nhiệt độ}
+        \label{fig:lưu-đồ-giải-thuật-tổng-quát-của-phần-mềm-giám-sát-nhiệt-độ}
+    \end{figure}
+
+    \paragraph{Nguyên lý vận hành hệ thống}
+
+Hệ thống vận hành tuần tự qua các giai đoạn điều khiển nhiệt độ khác nhau như sau:
+
+\begin{itemize}
+
+    \item \textbf{DISABLE:} 
+    
+    Đây là trạng thái nghỉ của hệ thống. Toàn bộ đầu ra công suất như Heater và TEC được đưa về mức 0\%.
+    
+    Hệ thống chờ nhận lệnh \texttt{CMD\_AUTO} để bắt đầu nạp dữ liệu \textit{Profile} và chuyển sang giai đoạn \texttt{PREHEAT}.
+
+    \item \textbf{PREHEAT:}
+    
+    Hệ thống tự động so sánh nhiệt độ hiện tại với giá trị đặt (\textit{setpoint}):
+    
+    \begin{itemize}
+        \item Nếu nhiệt độ thấp hơn \textit{setpoint}: chuyển sang trạng thái \texttt{PREHEAT\_HEAT} để kích hoạt Heater.
+        
+        \item Nếu nhiệt độ cao hơn \textit{setpoint}: chuyển sang trạng thái \texttt{PREHEAT\_COOL} để kích hoạt TEC.
+    \end{itemize}
+    
+    Mục tiêu của giai đoạn này là đưa hệ thống vào vùng ổn định nhiệt trước khi thực hiện các bước tiếp theo trong quy trình.
+
+    \item \textbf{PROFILE\_CHECK:}
+    
+    Hệ thống tăng chỉ số \texttt{current\_step} và phân tích thuộc tính \texttt{control\_mode} của bước kế tiếp để quyết định chuyển sang các trạng thái:
+    
+    \begin{itemize}
+        \item \texttt{HEATING}
+        \item \texttt{COOLING}
+        \item \texttt{SOAK}
+    \end{itemize}
+
+    \item \textbf{HEATING / COOLING:}
+    
+    Hệ thống sử dụng thuật toán PID để điều khiển quá trình thay đổi nhiệt độ theo thời gian nhằm đạt được giá trị nhiệt độ yêu cầu (\textit{setpoint}).
+    
+    Quá trình điều khiển đảm bảo nhiệt độ thay đổi mượt, hạn chế hiện tượng quá điều chỉnh (\textit{overshoot}) và sốc nhiệt.
+
+    \item \textbf{SOAK (Ngâm nhiệt):}
+    
+    Hệ thống duy trì nhiệt độ ổn định tại giá trị \textit{setpoint} trong một khoảng thời gian xác định trước.
+    
+    Sau khi hết thời gian quy định, hệ thống quay lại trạng thái \texttt{PROFILE\_CHECK} để thực hiện bước tiếp theo nếu còn tồn tại trong \textit{Profile}.
+
+    \item \textbf{Dừng hệ thống:}
+    
+    Hệ thống sẽ dừng hoạt động trong các trường hợp sau:
+    
+    \begin{itemize}
+        \item Nhận lệnh \texttt{CMD\_STOP} từ người vận hành.
+        
+        \item Phát hiện lỗi trong quá trình hoạt động.
+    \end{itemize}
+
+\end{itemize}
+
+
+    \item \textbf{Lưu đồ giải thuật chi tiết:}
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{picture/firmware/Temperature_Control/task-control.png}
+        \caption{Lưu đồ giải thuật của tác vụ giám sát nhiệt độ}
+        \label{fig:lưu-đồ-giải-thuật-cua-tác-vụ-giám-sát-nhiệt-độ}
+    \end{figure}
+    
+    \paragraph{Chu trình xử lý chính của hệ thống}
+
+\begin{itemize}
+
+    \item \textbf{Kiểm tra trạng thái Profile}
+    
+    Khi bắt đầu mỗi chu kỳ xử lý, hệ thống kiểm tra xem có \textit{Profile} nhiệt độ nào đang hoạt động hoặc cần được xử lý hay không.
+    
+    \begin{itemize}
+        \item Nếu không tồn tại \textit{Profile} hoạt động, tác vụ sẽ thực hiện lệnh \texttt{Delay 100\,ms} trước khi quay lại vòng lặp kiểm tra ban đầu.
+        
+        \item Nếu tồn tại \textit{Profile} đang hoạt động, hệ thống tiếp tục đi sâu vào các bước xử lý logic tiếp theo.
+    \end{itemize}
+
+    \item \textbf{Xử lý lệnh điều khiển}
+    
+    Hệ thống tiếp nhận và thực thi các lệnh điều khiển từ người vận hành hoặc tầng ứng dụng, bao gồm:
+    
+    \begin{itemize}
+        \item Khởi động Profile (\texttt{Start})
+        \item Dừng hệ thống (\texttt{Stop})
+        \item Nạp cấu hình hoặc cập nhật Profile mới
+    \end{itemize}
+    
+    Các lệnh này sẽ tác động trực tiếp đến trạng thái hiện tại của máy trạng thái điều khiển nhiệt độ.
+
+    \item \textbf{Cập nhật dữ liệu hệ thống}
+    
+    Hệ thống thực hiện:
+    
+    \begin{itemize}
+        \item Đọc dữ liệu nhiệt độ từ cảm biến NTC thông qua ADC.
+        
+        \item Tính toán các thông số điều khiển như:
+        \begin{itemize}
+            \item Thuật toán PID
+            \item Nội suy Ramp nhiệt
+            \item Sai số nhiệt độ
+        \end{itemize}
+        
+        \item Cập nhật trạng thái mới nhất cho hệ thống điều khiển.
+    \end{itemize}
+
+    \item \textbf{Kiểm tra điều kiện thời gian}
+    
+    Hệ thống kiểm tra bộ định thời (\textit{timer}) của bước hiện tại:
+    
+    \begin{itemize}
+        \item Nếu hết thời gian quy định:
+        
+        Kích hoạt sự kiện:
+        \texttt{PROFILE\_EVENT\_TIMER\_EXPIRED}.
+        
+        \item Nếu chưa hết thời gian:
+        
+        Kích hoạt sự kiện:
+        \texttt{PROFILE\_EVENT\_NONE},
+        đồng thời duy trì trạng thái hiện tại của hệ thống.
+    \end{itemize}
+
+    \item \textbf{Lặp chu trình điều khiển}
+    
+    Sau khi xử lý sự kiện, luồng điều khiển quay trở lại bước kiểm tra \textit{Profile} để bắt đầu một chu kỳ quét mới.
+    
+    Cơ chế này đảm bảo hệ thống hoạt động liên tục, đáp ứng thời gian thực và duy trì tính ổn định của quá trình điều khiển nhiệt độ.
+
+\end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\textwidth]{picture/firmware/Temperature_Control/handle-cmd.png}
+        \caption{Lưu đồ giải thuật xử lý lệnh điều khiển của phần mềm giám sát nhiệt độ}
+        \label{fig:lưu-đồ-giải-thuật-xử-lý-lệnh-điều-khiển-của-phần-mềm-giám-sát-nhiệt-độ}
+    \end{figure}
+
+Khi một lệnh điều khiển (\textit{Command}) được gửi đến, hệ thống sẽ thực hiện phân loại và kích hoạt các sự kiện tương ứng để điều phối hoạt động của máy trạng thái.
+
+\begin{itemize}
+
+    \item \textbf{Lệnh AUTO}
+    
+    Khi nhận lệnh \texttt{AUTO}, hệ thống kích hoạt sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_ENABLED}
+    \end{center}
+    
+    Sự kiện này đưa hệ thống từ trạng thái nghỉ (\texttt{DISABLE}) sang giai đoạn chuẩn bị (\texttt{PREHEAT}) nhằm thiết lập điều kiện nhiệt độ ban đầu cho quá trình vận hành.
+
+    \item \textbf{Lệnh START}
+    
+    Khi nhận lệnh \texttt{START}, hệ thống kích hoạt sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_START}
+    \end{center}
+    
+    Sự kiện này cho phép hệ thống bắt đầu thực thi các bước trong \textit{Profile} sau khi quá trình ổn định nhiệt độ sơ bộ hoàn tất.
+
+    \item \textbf{Lệnh STOP}
+    
+    Khi nhận lệnh \texttt{STOP}, hệ thống kích hoạt sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_STOP}
+    \end{center}
+    
+    Hệ thống sẽ lập tức dừng toàn bộ hoạt động điều khiển, ngắt các đầu ra công suất và quay trở về trạng thái an toàn (\texttt{DISABLE} hoặc \texttt{ERROR} tùy theo ngữ cảnh vận hành).
+
+\end{itemize}
+
+Sơ đồ khối xử lý sự kiện (Profile Handle Event):
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/firmware/Temperature_Control/profile-handle-event.png}
+    \caption{Lưu đồ giải thuật xử lý sự kiện của phần mềm giám sát nhiệt độ}
+    \label{fig:lưu-đồ-giải-thuật-xử-lý-sự-kiện-của-phần-mềm-giám-sát-nhiệt-độ}
+\end{figure}
+
+\paragraph{Cơ chế chuyển trạng thái và xử lý an toàn}
+
+\begin{itemize}
+
+    \item \textbf{Ưu tiên xử lý sự kiện an toàn}
+    
+    Hai sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_STOP}
+        
+        \texttt{PROFILE\_EVENT\_TEMP\_ERROR}
+    \end{center}
+    
+    luôn được kiểm tra đầu tiên trong chu kỳ xử lý.
+    
+    Khi phát hiện một trong hai sự kiện trên, hệ thống sẽ lập tức gọi:
+    
+    \begin{itemize}
+        \item \texttt{enter\_disabled()}
+        \item hoặc \texttt{enter\_error()}
+    \end{itemize}
+    
+    nhằm đưa hệ thống về trạng thái an toàn và bảo vệ phần cứng ngay khi xảy ra sự cố.
+
+    \item \textbf{Trạng thái nghỉ (\texttt{DISABLE})}
+    
+    Đây là trạng thái mặc định khi hệ thống khởi động.
+    
+    Khi nhận sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_ENABLED}
+    \end{center}
+    
+    hệ thống sẽ gọi hàm:
+    
+    \begin{center}
+        \texttt{enter\_preheat()}
+    \end{center}
+    
+    để bắt đầu quá trình chuẩn bị nhiệt độ ban đầu.
+
+    \item \textbf{Giai đoạn PREHEAT}
+    
+    Trong giai đoạn này, hệ thống liên tục so sánh nhiệt độ thực tế với giá trị đặt:
+    
+    \begin{center}
+        \texttt{temp} $\leftrightarrow$ \texttt{set\_point}
+    \end{center}
+    
+    \begin{itemize}
+        \item Nếu nhiệt độ thấp hơn \textit{setpoint}:
+        
+        Hệ thống chuyển sang trạng thái:
+        \texttt{PREHEAT\_HEAT},
+        
+        đồng thời khởi tạo bộ PID và cấu hình bộ điều khiển cho Heater.
+        
+        \item Nếu nhiệt độ cao hơn \textit{setpoint}:
+        
+        Hệ thống chuyển sang trạng thái:
+        \texttt{PREHEAT\_COOL},
+        
+        đồng thời khởi tạo bộ PID và cấu hình điều khiển cho TEC.
+    \end{itemize}
+    
+    Giai đoạn này kết thúc khi hệ thống nhận:
+    
+    \begin{itemize}
+        \item \texttt{PROFILE\_EVENT\_START}
+        \item hoặc \texttt{PROFILE\_EVENT\_TIMER\_EXPIRED}
+    \end{itemize}
+    
+    Sau đó, hệ thống gọi:
+    
+    \begin{center}
+        \texttt{enter\_profile\_check()}
+    \end{center}
+    
+    để điều phối các trạng thái vận hành tiếp theo.
+
+    \item \textbf{Trạng thái Ramp (\texttt{HEATING}/\texttt{COOLING})}
+    
+    Trong quá trình thay đổi nhiệt độ:
+    
+    \begin{itemize}
+        \item Nếu chưa hết thời gian quy định, hệ thống liên tục thực thi:
+        
+        \begin{itemize}
+            \item \texttt{do\_heating()}
+            \item hoặc \texttt{do\_cooling()}
+        \end{itemize}
+        
+        để cập nhật PID và điều chỉnh công suất đầu ra.
+        
+        \item Khi hết thời gian Ramp:
+        
+        Hệ thống gọi:
+        
+        \begin{center}
+            \texttt{enter\_profile\_check()}
+        \end{center}
+        
+        để chuyển sang bước tiếp theo trong \textit{Profile}.
+    \end{itemize}
+
+    \item \textbf{Trạng thái Soak (\texttt{HOLD\_ON})}
+    
+    Trong giai đoạn giữ nhiệt, hệ thống thực thi:
+    
+    \begin{itemize}
+        \item \texttt{do\_soak\_heat()}
+        \item hoặc \texttt{do\_soak\_cool()}
+    \end{itemize}
+    
+    nhằm duy trì nhiệt độ ổn định quanh giá trị \textit{setpoint}.
+    
+    Quá trình này tiếp tục cho đến khi nhận được sự kiện:
+    
+    \begin{center}
+        \texttt{PROFILE\_EVENT\_TIMER\_EXPIRED}
+    \end{center}
+
+    \item \textbf{Cơ chế dừng khẩn cấp}
+    
+    Hàm:
+    
+    \begin{center}
+        \texttt{all\_output\_off()}
+    \end{center}
+    
+    sẽ được gọi khi hệ thống chuyển sang trạng thái lỗi (\texttt{ERROR}).
+    
+    Hàm này có nhiệm vụ tắt toàn bộ đầu ra bao gồm Heater và TEC nhằm đảm bảo an toàn cho hệ thống và thiết bị phần cứng.
+
+\end{itemize}
+
+Sơ đồ khối của trạng thái HEATING và COOLING:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/firmware/Temperature_Control/heating-cooling.png}
+    \caption{Sơ đồ khối trạng thái HEATING và COOLING}
+    \label{fig:so-do-khoi-heating-cooling}
+\end{figure}
+
+Đầu tiên, hệ thống xác định thông tin của step hiện tại và nhiệt độ mục tiêu là bao nhiêu, thời gian còn lại bao lâu. Bộ điều khiển PID sẽ so sánh nhiệt độ thực tế với nhiệt độ mục tiêu để tính ra duty cần thiết để xuất PWM điều khiển TEC hoặc HEATER.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{picture/firmware/Temperature_Control/soak.png}
+    \caption{Sơ đồ khối trạng thái SOAK HEAT và SOAK COOL}
+    \label{fig:so-do-khoi-soak}
+\end{figure}
+
+Ở trang thái này PID tiếp tục tính toán để duy trì nhiệt độ của step hiện tại chỉ bắt đầu timer khi nhiệt độ đạt trong khoảng setpoint.
+
+\end{itemize}
