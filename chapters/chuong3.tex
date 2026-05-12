@@ -103,15 +103,9 @@ Từ các phân tích trên, phương pháp thiết kế được chọn cho đ�
     \label{fig:so-do-tong-quat}
 \end{figure}
 
-\textbf{Board điều khiển trung tâm (OBC):}
-OBC là khối điều phối ở mức hệ thống, tiếp nhận lệnh từ phía người vận hành và phát lệnh tác vụ xuống khối thí nghiệm.
-Board này đồng thời thu nhận dữ liệu phản hồi từ EXP, tổng hợp trạng thái toàn hệ và lưu các thông tin quan trọng của phiên thí nghiệm để phục vụ theo dõi và hậu kiểm.
-Trong cấu hình triển khai, OBC đóng vai trò \textit{master} của mạng điều khiển nội bộ.
-
 \textbf{Board điều khiển thí nghiệm (EXP):}
-EXP là bộ điều khiển cục bộ của tải thí nghiệm.
-Khi nhận lệnh từ OBC, EXP thực hiện chu trình thí nghiệm: điều khiển board LASER, thu dữ liệu từ board PHOTO, đọc dữ liệu cảm biến môi trường (như NTC) và điều phối phần tử chấp hành nhiệt (HEATER/TEC).
-Sau mỗi chu kỳ đo, EXP chuẩn hóa và đóng gói dữ liệu trước khi gửi ngược lên OBC.
+EXP là bộ phận điều khiển chính của toàn bộ hệ thống thí nghiệm
+Trên board EXP tích hợp 2 core xử lý bao gồm core MPU (SAMA7G54) và core MCU (SAMV71). Core MCU là nơi điều khiển, thu thập, tính toán với các ngoại vi, đồng thời đảm nhận vai trò chính trong việc vận hành thí nghiệm. MCU sẽ điều khiển 2 board thí nghiệm chính bên dưới là LASER và PHOTO. Bên cạnh việc điều khiển, theo dõi và tính toán lượng năng lượng phát - thu được từ 2 board LASER và PHOTO, MCU còn thực hiện các tác vụ kiểm soát nhiệt cho thí nghiệm nói riêng và cho toàn hệ thống nói chung. Các module HEATER, TEC sẽ được điều khiển tùy theo môi trường thực tế đọc về từ các sensor như NTC, BMP390,... Ngoài ra còn một số tác vụ khác cũng được điều khiển bởi MCU. Core MCU không đủ khả năng tính toán và xử lý với khối lượng dữ liệu lớn, MCU chỉ như là một thành phần thu thập và điều khiển, điều này dẫn đến sự thiết yếu của một con chip xử lý tác vụ mạnh hơn MCU, đó là lý do sử dụng thêm một core MPU trên board. MPU như một máy tính nhỏ sẽ chịu trách nhiệm xử lý dữ liệu và giao tiếp ra người dùng. Các lệnh điều khiển hệ thống từ người dùng sẽ được gửi đến core MPU, MPU sẽ điều phối thực hiện lệnh trên chính nó hoặc ra lệnh xuống MCU nếu các lệnh liên quan đến tác vụ thí nghiệm. Khi dữ liệu được thu thập về từ MCU, MPU sẽ xử lý và gửi về người dùng hay là những board interface khác.
 
 \textbf{Board giao tiếp trung gian (IF):}
 IF là tầng \textit{interface}, có nhiệm vụ chuẩn hóa kết nối, tổ chức đường tín hiệu và hỗ trợ mở rộng ngoại vi.
@@ -128,43 +122,9 @@ Khối này tích hợp mạch khuếch đại, lọc nhiễu và chuyển đổ
 Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên board LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
 
 \section{Sơ đồ khối chi tiết}
-\subsection{Board máy tính điều khiển trung tâm - OBC}
-\label{subsec:board-dieu-khien-trung-tam-obc}
-
-Board OBC là trung tâm điều khiển và xử lý dữ liệu của hệ thống, đảm nhiệm vai trò giao tiếp với người vận hành, 
-quản lý các tác vụ điều khiển và lưu trữ dữ liệu thí nghiệm. Sơ đồ khối chi tiết của board OBC được trình bày trong Hình \ref{fig:so-do-chi-tiet-obc}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{picture/OBC.png}
-    \caption{Sơ đồ khối chi tiết của board điều khiển OBC}
-    \label{fig:so-do-chi-tiet-obc}
-\end{figure}
-
-Dựa trên sơ đồ Hình~\ref{fig:so-do-chi-tiet-obc}, chức năng các khối chính của board OBC gồm:
-\begin{itemize}
-    \item \textbf{Khối MCU -- STM32H7:} là bộ xử lý trung tâm của OBC, thực hiện tiếp nhận lệnh điều khiển, điều phối dữ liệu giữa các board mạch và quản lý luồng vận hành tổng thể.
-
-    \item \textbf{Khối Compute Module 4 (CM4):} đảm nhiệm các tác vụ tầng cao như giao tiếp mạng, quản lý cơ sở dữ liệu, truyền nhận lệnh và chạy các tiến trình giám sát hệ thống.
-
-    \item \textbf{Khối SPI Flash \& SPI FRAM:} cung cấp vùng nhớ lưu tham số, nhật ký vận hành và dữ liệu thí nghiệm cần truy cập nhanh và ổn định.
-
-    \item \textbf{Khối Watchdog:} giám sát trạng thái hoạt động phần mềm; khi phát hiện treo hệ thống sẽ kích hoạt cơ chế reset để bảo đảm tính liên tục vận hành.
-
-    \item \textbf{Khối I2C RTC:} duy trì thời gian thực cho hệ thống, phục vụ đóng dấu thời gian cho dữ liệu đo và các sự kiện vận hành.
-
-    \item \textbf{Khối USB VCP:} cung cấp giao diện USB ảo để kết nối với máy tính, hỗ trợ cấu hình, truyền dữ liệu và debug.
-
-    \item \textbf{Khối giao tiếp cách ly:} gồm \textit{UART ISO}, \textit{SPI ISO}, \textit{GPIO ISO}, \textit{I2C ISO}; có chức năng cách ly điện để bảo vệ khối xử lý trước nhiễu và chênh lệch điện áp từ ngoại vi.
-\end{itemize}
-
-
 
 \subsection{Board điều khiển thí nghiệm - EXP}
 \label{subsec:board-dieu-khien-thi-nghiem-exp}
-
-Board điều khiển thí nghiệm (EXP) là trung tâm xử lý và điều phối hoạt động của thí nghiệm, đóng vai trò cầu nối giữa OBC và các khối chức năng như LASER, PHOTO, 
-cảm biến môi trường và phần tử chấp hành nhiệt. Sơ đồ khối chi tiết của board EXP được trình bày trong Hình \ref{fig:so-do-khoi-exp}.
 
 \begin{figure}[H]
     \centering
@@ -258,11 +218,20 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-exp}, chức năng các khối c
     \item \textbf{Khối connector BUMP:} kết nối nhánh bơm qua tín hiệu điều khiển/giám sát \textit{ADC}.
 \end{itemize}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{picture/exp/block-exp-detail-1.png}\\[1em]
+    \includegraphics[width=0.95\textwidth]{picture/exp/block-exp-detail-2.png}
+    \caption{Sơ đồ kết nối chi tiết board EXP}
+    \label{fig:so-do-ket-noi-chi-tiet-exp}
+\end{figure}
+
+
 \subsection{Board giao tiếp - IF}
 \label{subsec:board-giao-tiep-if}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/if/so-do-khoi-if.png}
+    \includegraphics[width=0.95\textwidth]{picture/if/block-if.png}
     \caption{Sơ đồ khối chi tiết board IF}
     \label{fig:so-do-khoi-if}
 \end{figure}
@@ -271,35 +240,40 @@ Board IF giữ vai trò là nơi giao tiếp hệ thống thí nghiệm với c�
 
 Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-if}, chức năng các khối chính của board IF gồm:
 \begin{itemize}
-    \item \textbf{Khối SAMA7D65:} là bộ xử lý trung tâm của IF, đảm nhiệm điều phối toàn bộ luồng giao tiếp, quản lý dữ liệu giữa các cổng kết nối và điều khiển các ngoại vi đi kèm.
+    \item \textbf{Khối SAMA7G54:} là bộ xử lý trung tâm của board IF, đảm nhiệm điều phối truyền thông, quản lý dữ liệu giữa các cổng giao tiếp và điều khiển các khối ngoại vi trên board.
 
-    \item \textbf{Khối CON\_EXP:} là cổng kết nối chính với board EXP, trao đổi các đường \textit{CAN}, \textit{SPI}, \textit{I2C} và \textit{USB} để đồng bộ lệnh và dữ liệu liên board.
+    \item \textbf{Khối CON\_EXP:} là đầu nối giao tiếp với board EXP, qua đó IF trao đổi các tín hiệu CAN, I2C, SPI và một số đường tín hiệu điều khiển khác để phối hợp hoạt động toàn hệ thống.
 
-    \item \textbf{Khối USB micro -- USB\_SWITCH -- CON\_USB:} tạo tuyến giao tiếp USB linh hoạt, cho phép chuyển mạch đường USB giữa cổng vào và cổng ra theo cấu hình vận hành.
+    \item \textbf{Các cổng giao tiếp ngoài:} gồm PC104, CON I2C, CON SPI, CON UART DEBUG, GNSS (OEM719A) và CAN INTERFACE; cung cấp các chuẩn giao tiếp như UART, I2C, SPI, CAN và IO để kết nối thiết bị ngoại vi hoặc phục vụ kiểm thử.
 
-    \item \textbf{Nhóm cổng mở rộng ngoại vi:} gồm \textit{CON\_OEM719A}, \textit{PC104-H1}, \textit{CON\_AX100U}, \textit{CON\_I2C}, \textit{CON\_SPI}, \textit{CON\_RS485/422}; cung cấp các chuẩn giao tiếp \textit{UART/CAN/SPI/I2C/IO} để tích hợp thiết bị ngoài.
+    \item \textbf{Khối USB và RS422:} tạo các kênh giao tiếp tốc độ phù hợp cho việc kết nối ngoài board; trong đó USB phục vụ trao đổi dữ liệu với thiết bị ngoài, còn RS422 hỗ trợ truyền nhận tín hiệu nối tiếp ở môi trường công nghiệp.
 
-    \item \textbf{Khối SN65HVD230DR và LTC2865HMSE\#TRPBF:} là các transceiver truyền thông, thực hiện chuyển mức và tăng khả năng chống nhiễu cho các đường truyền công nghiệp.
+    \item \textbf{Khối FPGA:} là phần tử xử lý logic khả trình, phối hợp với SAMA7G54 qua giao tiếp UART và SPI, đồng thời đảm nhiệm xử lý các tín hiệu tốc độ cao và các đường LVDS trên board IF.
 
-    \item \textbf{Khối SDCARD:} cung cấp lưu trữ rời qua giao tiếp \textit{SDMMC}, phục vụ ghi log, lưu cấu hình và trích xuất dữ liệu hệ thống.
+    \item \textbf{Khối LEVEL SHIFT, SPI FLASH và JTAG của FPGA:} hỗ trợ chuyển mức điện áp, lưu cấu hình cho FPGA và phục vụ nạp/chẩn đoán trong quá trình phát triển, kiểm thử.
 
-    \item \textbf{Khối DDR3L và 2 eMMC:} cung cấp bộ nhớ làm việc tốc độ cao và bộ nhớ lưu trữ không mất dữ liệu cho tác vụ xử lý và vận hành của IF.
+    \item \textbf{Khối STX LVDS, CON MAIN LVDS và CON SUB LVDS:} tạo tuyến truyền nhận tín hiệu LVDS giữa FPGA với các đầu nối ngoài, phục vụ các giao tiếp vi sai tốc độ cao và tăng khả năng chống nhiễu.
 
-    \item \textbf{Khối EEPROM:} lưu các tham số cấu hình và thông tin hiệu chỉnh cần giữ bền vững trong quá trình vận hành.
+    \item \textbf{Khối SDCARD, eMMC, MRAM 4bits và DDR3L:} cung cấp tài nguyên nhớ cho hệ thống, gồm bộ nhớ làm việc tốc độ cao cho MPU, bộ nhớ không mất dữ liệu để lưu chương trình -- cấu hình và bộ nhớ rời phục vụ ghi log hoặc sao lưu dữ liệu.
 
-    \item \textbf{Khối WATCHDOG:} giám sát trạng thái xử lý của bộ điều khiển; khi phát hiện bất thường sẽ kích hoạt cơ chế phục hồi nhằm tăng độ tin cậy hệ thống.
+    \item \textbf{Khối WATCHDOG, TEMP, IMU và RTC:} hỗ trợ giám sát trạng thái hoạt động, theo dõi nhiệt độ, thu thập thông tin quán tính và duy trì mốc thời gian cho hệ thống.
 
-    \item \textbf{Khối TEMP\_SENS/CURENT\_SENS, PMIC và PMIC CURRENT MONITORS:} đo nhiệt độ, dòng tiêu thụ và quản lý nguồn, hỗ trợ giám sát hệ thống theo thời gian thực.
-
-    \item \textbf{Khối RTC, UART\_DEBUG, JTAG và DS90LT012AQ-Q1/CON\_STX:} hỗ trợ đóng dấu thời gian, debug -- nạp chương trình và truyền/nhận tín hiệu chuyên dụng phục vụ kiểm thử, khai thác hệ thống.
+    \item \textbf{Khối PMIC và CURRENT MONITORS:} thực hiện quản lý nguồn, cấp áp cho các miền chức năng và giám sát dòng tiêu thụ nhằm bảo đảm board vận hành ổn định, an toàn.
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{picture/if/block-if-detail.png}
+    \caption{Sơ đồ kết nối chi tiết board IF}
+    \label{fig:so-do-ket-noi-chi-tiet-if}
+\end{figure}
 
 \subsection{Board phát năng lượng ánh sáng - LASER}
 \label{subsec:board-phat-laser}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{picture/laser/so-do-khoi-laser.jpg}
-    \caption{Sơ đồ khối chi tiết board LASER}
+    \caption{Sơ đồ khối board LASER}
     \label{fig:so-do-khoi-laser}
 \end{figure}
 
@@ -347,7 +321,7 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối
     \item \textbf{Khối DAC:} tạo mức tham chiếu/bù offset cho chuỗi xử lý tương tự theo cấu hình đo, giúp tối ưu dải đo tại ngõ vào bộ chuyển đổi số.
 \end{itemize}
 
-\section{Sơ đồ nguyên lí chi tiết}
+\section{Sơ đồ nguyên lý chi tiết}
 
 \subsection{Board máy tính điều khiển trung tâm - OBC}
 \label{subsec:sche-board-dieu-khien-trung-tam-obc}
@@ -400,7 +374,7 @@ Connector này kết nối với board IF thông qua các tín hiệu CAN, SPI, 
     \includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vlp.png}\\[0.8em]
 
     \makebox[\textwidth][c]{\includegraphics[width=0.48\textwidth]{picture/exp/efuse-12vexp-12vheater.png}}
-    \caption{Sơ đồ nguyên lí khối efuse}
+    \caption{Sơ đồ nguyên lý khối efuse}
     \label{fig:exp-efuse}
 \end{figure}
 \textbf{Chức năng:} Các eFuse (cầu chì điện tử) sử dụng IC TPS259470ARPWR có chức năng bảo vệ quá áp, thiếu áp và quá dòng. Ngưỡng bảo vệ có thể thiết lập bằng điện trở ngoài, đồng thời IC hỗ trợ xuất tín hiệu giám sát để MCU theo dõi trạng thái dòng/áp.
@@ -437,7 +411,7 @@ Ngoài những chức năng chính của efuse là bảo vệ quá dòng, quá �
 t_{TIMER}(ms) = \frac{\Delta V_{ITIMER}(V) \times C_{TIMER}(nF)}{I_{TIMER}(\mu A)}
 \end{equation}
 
-Tương ứng với việc có thể ngắt dòng tùy theo thời gian thiết lập, IC cũng hỗ trợ khả năng làm mềm quá trình khởi động. Điều này liên quan đến 2 đại lượng ta phải quan tâm tại thời điểm mở nguồn đó là Inrush Current (dòng xung khi bật nguồn) và Slew Rate (dV/dt tốc độ tăng điện áp đầu ra khi IC bật). Thông thường những mạch có nhiều tải sẽ đi kèm với những tụ lọc nguồn ví dụ như ở các con MCU hay MPU, số lượn tụ lọc nguồn là rất nhiều, bên cạnh đó còn có các IC nhớ hay IC driver khác trong mạch. Với số lượng tụ lớn sẽ dễ tạo ra inrush current lớn ngay thời điểm bật nguồn, vì tại thời điểm khi có nguồn dòng nạp rất lớn sẽ chảy vào các tụ trong thời gian ngắn, dòng lớn này có thể gây sụt áp nguồn hay reset hệ thống. Bên cạnh đó khi điện áp đầu ra IC tại thời điểm bật tăng quá nhanh sẽ kéo dòng nạp tụ lớn hơn nữa ($I = C \times dV/dt$), do đó IC cho phép khả năng điều chỉnh tốc độ tăng điện áp ngõ ra ở chân DVDT (pin 7) bằng việc đặt một tụ kéo xuống đất. Với công thức bên dưới.
+Tương ứng với việc có thể ngắt dòng tùy theo thời gian thiết lập, IC cũng hỗ trợ khả năng làm mềm quá trình khởi động. Điều này liên quan đến 2 đại lượng ta phải quan tâm tại thời điểm mở nguồn đó là Inrush Current (dòng xung khi bật nguồn) và Slew Rate (dV/dt tốc độ tăng điện áp đầu ra khi IC bật). Thông thường những mạch có nhiều tải sẽ đi kèm với những tụ lọc nguồn ví dụ như ở các con MCU hay MPU, số lượng tụ lọc nguồn là rất nhiều, bên cạnh đó còn có các IC nhớ hay IC driver khác trong mạch. Với số lượng tụ lớn sẽ dễ tạo ra inrush current lớn ngay thời điểm bật nguồn, vì tại thời điểm khi có nguồn dòng nạp rất lớn sẽ chảy vào các tụ trong thời gian ngắn, dòng lớn này có thể gây sụt áp nguồn hay reset hệ thống. Bên cạnh đó khi điện áp đầu ra IC tại thời điểm bật tăng quá nhanh sẽ kéo dòng nạp tụ lớn hơn nữa ($I = C \times dV/dt$), do đó IC cho phép khả năng điều chỉnh tốc độ tăng điện áp ngõ ra ở chân DVDT (pin 7) bằng việc đặt một tụ kéo xuống đất. Với công thức bên dưới.
 
 \begin{equation}
 SR(V/ms) = \frac{I_{INRUSH}(mA)}{C_{out}(\mu F)}
@@ -451,12 +425,12 @@ C_{dvdt}(pF) = \frac{2000}{SR(V/ms)}
     \centering
     \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vmcu.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/buck-12vexp-5vperi.png}
-    \caption{Sơ đồ nguyên lí khối BUCK}
+    \caption{Sơ đồ nguyên lý khối BUCK}
     \label{fig:exp-buck}
 \end{figure}
 Sử dụng mạch buck để hạ áp điện áp từ 12V nguồn chính xuống điện áp 5V sử dụng cho MPU, MCU và các IC chức năng khác. Mạch buck dùng khi cần hạ điện áp với một khoảng lớn, điều này sẽ ít hao phí hơn sử dụng LDO để hạ khoảng áp lớn. 
 
-IC TPS5430DDAR có dãy điện áp ngõ vào rộng từ 5V5 đến 36V, cho phép dòng chảy liên tục tối đa lên đến 3A và dòng đỉnh tối đa 4A. Hiệu suất chuyển đổi của IC có thể đạt tới 95\% trong điều kiện hoạt động bình thường với điện trở nội Rds(on) trên mosfet là 100m $\Omega$. Ramp nội bộ 500 kHz làm chuẩn thời gian cho băm xung đầu ra từ việc dùng error voltage từ op-amp (khi so sánh VSENSE với điên áp tham chiếu) so sánh với ramp để tạo duty cycle. IC TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ ngõ ra về chân VSENSE theo công thức bên dưới.
+IC TPS5430DDAR có dãy điện áp ngõ vào rộng từ 5V5 đến 36V, cho phép dòng chảy liên tục tối đa lên đến 3A và dòng đỉnh tối đa 4A. Hiệu suất chuyển đổi của IC có thể đạt tới 95\% trong điều kiện hoạt động bình thường với điện trở nội Rds(on) trên mosfet là 100m $\Omega$. Ramp nội bộ 500 kHz làm chuẩn thời gian cho băm xung đầu ra từ việc dùng error voltage từ op-amp (khi so sánh VSENSE với điện áp tham chiếu) so sánh với ramp để tạo duty cycle. IC TPS5430DDAR có thể điều chỉnh điện áp ngõ ra dựa vào tổ hợp 2 giá trị điện trở ở cầu phân áp từ ngõ ra về chân VSENSE theo công thức bên dưới.
 
 \begin{equation}
 R2 = \frac{R1 \times 1.221}{V_{OUT}- 1.221} 
@@ -464,7 +438,7 @@ R2 = \frac{R1 \times 1.221}{V_{OUT}- 1.221}
 
 Với R1 là điện trở chia áp kéo lên nguồn và R2 là điện trở chia áp kéo xuống đất, $V_{OUT}$ là điện áp ngõ ra mong muốn. Trong quá trình hoạt động ổn định, điện áp tại chân VSENSE phải bằng điện áp tham chiếu 1.221V
 
-Ngõ vào $V_{in}$ thiết kế dùng 2 tụ lọc nguồn 47 $\mu F$ và 1 $\mu F$. Lí do sử dụng 2 tụ ngõ vào với 2 giá trị chênh lệch khá lớn là vì dùng tụ lớn với mục tiêu nạp/xả chậm, phản ứng tốt với dao động chậm, nhiễu ở tần số thấp, điện dung cao năng lượng được tích trữ lớn giúp giữ ổn định nguồn khi xảy ra sụt áp ở tải. Giá trị tụ nhỏ ngược lại sẽ giúp nạp/xả nhanh, phản ứng tốt với nhiễu ở tần số cao, dùng để triệt nhiễu switching, xung nhanh, hoặc làm tụ bypass gần IC.
+Ngõ vào $V_{in}$ thiết kế dùng 2 tụ lọc nguồn 47 $\mu F$ và 1 $\mu F$. Lý do sử dụng 2 tụ ngõ vào với 2 giá trị chênh lệch khá lớn là vì dùng tụ lớn với mục tiêu nạp/xả chậm, phản ứng tốt với dao động chậm, nhiễu ở tần số thấp, điện dung cao năng lượng được tích trữ lớn giúp giữ ổn định nguồn khi xảy ra sụt áp ở tải. Giá trị tụ nhỏ ngược lại sẽ giúp nạp/xả nhanh, phản ứng tốt với nhiễu ở tần số cao, dùng để triệt nhiễu switching, xung nhanh, hoặc làm tụ bypass gần IC.
 
 Cuộn cảm ngõ ra được đặt để dập các gai dòng trên tụ điện gây ra, do khi mosfet đóng ngắt nhanh trong thời gian ngắn dẫn đến dòng qua tụ có biên độ lớn, cuộn cảm được sử dụng để giảm sự thay đổi nhanh dòng qua tụ. Giá trị cuộn cảm được đề xuất tính theo công thức 
 
@@ -499,7 +473,7 @@ Bên cạnh việc thiết kết chủ động từ việc dùng các giá trị
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vmcu-3v3muc.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-5vsam-3v3sam.png}\\
     \includegraphics[width=0.8\textwidth]{picture/exp/ldo-3vsol.png}
-    \caption{Sơ đồ nguyên lí khối LDO}
+    \caption{Sơ đồ nguyên lý khối LDO}
     \label{fig:exp-ldo}
 \end{figure}
 
@@ -516,7 +490,7 @@ Bên cạnh khối PMIC, trong hệ sinh thái quản lý nguồn còn có thêm
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-pmic.png}
-    \caption{Sơ đồ nguyên lí khối PMIC và giám sát dòng}
+    \caption{Sơ đồ nguyên lý khối PMIC và giám sát dòng}
     \label{fig:exp-sche-khoi-pmic}
 \end{figure}
 
@@ -549,7 +523,7 @@ IC MCP16502 hỗ trợ giao thức I2C có thể đạt tốc độ 1MHz để g
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-mpu.png}
-    \caption{Sơ đồ nguyên lí khối nguồn và tín hiệu tốc độ cao SAMA7G54 (MPU)}
+    \caption{Sơ đồ nguyên lý khối nguồn và tín hiệu tốc độ cao SAMA7G54 (MPU)}
     \label{fig:exp-sche-khoi-nguon-tin-hieu-sam-mpu}
 \end{figure}
 
@@ -564,7 +538,7 @@ Khối U29H là các chân nối lên nguồn và nối đất, các chân nối
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-ddr3.png}
-    \caption{Sơ đồ nguyên lí khối DDR3 cho SAMA7G54}
+    \caption{Sơ đồ nguyên lý khối DDR3 cho SAMA7G54}
     \label{fig:exp-sche-khoi-sam-ddr3}
 \end{figure}
 
@@ -581,7 +555,7 @@ Các tín hiệu chính của DDR3 SDRAM bao gồm nhóm nguồn và clock (VDD,
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-sam-pio.png}
-    \caption{Sơ đồ nguyên lí khối chân PIO của SAMA7G54}
+    \caption{Sơ đồ nguyên lý khối chân PIO của SAMA7G54}
     \label{fig:exp-sche-khoi-sam-pio}
 \end{figure}
 
@@ -605,7 +579,7 @@ Bên cạnh đó còn một số tín hiệu IO khác ví dụ như các IO dùn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-mcu.png}
-    \caption{Sơ đồ nguyên lí khối MCU SAMV71Q21B}
+    \caption{Sơ đồ nguyên lý khối MCU SAMV71Q21B}
     \label{fig:exp-sche-khoi-mcu}
 \end{figure}
 \textbf{Chức năng:} MCU SAMV71Q21B xử lý các tác vụ thời gian thực, đọc cảm biến và điều khiển tải chấp hành với độ trễ thấp, đồng thời trao đổi dữ liệu với MPU.
@@ -613,28 +587,28 @@ Bên cạnh đó còn một số tín hiệu IO khác ví dụ như các IO dùn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/fram.png}
-    \caption{Sơ đồ nguyên lí khối FRAM}
+    \caption{Sơ đồ nguyên lý khối FRAM}
     \label{fig:exp-sche-fram}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mram-mpu.png}
-    \caption{Sơ đồ nguyên lí khối MRAM kết nối MPU}
+    \caption{Sơ đồ nguyên lý khối MRAM kết nối MPU}
     \label{fig:exp-sche-mram-mpu}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mram-mcu.png}
-    \caption{Sơ đồ nguyên lí khối MRAM kết nối MCU}
+    \caption{Sơ đồ nguyên lý khối MRAM kết nối MCU}
     \label{fig:exp-sche-mram-mcu}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/pram.png}
-    \caption{Sơ đồ nguyên lí khối PRAM}
+    \caption{Sơ đồ nguyên lý khối PRAM}
     \label{fig:exp-sche-pram}
 \end{figure}
 
@@ -666,7 +640,7 @@ Tổng quan chung về các IC RAM được dùng trong thiết kế, bên cạn
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/rtc.png}
-    \caption{Sơ đồ nguyên lí khối RTC}
+    \caption{Sơ đồ nguyên lý khối RTC}
     \label{fig:exp-sche-rtc}
 \end{figure}
 
@@ -679,7 +653,7 @@ Trong sơ đồ thiết kế, SDA và SCL được kéo lên 3.3V qua điện tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-emmc.png}
-    \caption{Sơ đồ nguyên lí khối eMMC}
+    \caption{Sơ đồ nguyên lý khối eMMC}
     \label{fig:exp-sche-khoi-emmc}
 \end{figure}
 
@@ -692,7 +666,7 @@ Trong sơ đồ thiết kế, CMD và DAT0-DAT7 được kéo lên 3.3 V (VCCQ) 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/sdcard.png}
-    \caption{Sơ đồ nguyên lí khối SD Card}
+    \caption{Sơ đồ nguyên lý khối SD Card}
     \label{fig:exp-sche-sdcard}
 \end{figure}
 
@@ -701,7 +675,7 @@ Bên cạnh eMMC là một thẻ nhớ nhúng dùng để boot, còn dùng thêm
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-debug.png}
-    \caption{Sơ đồ nguyên lí khối Debug}
+    \caption{Sơ đồ nguyên lý khối Debug}
     \label{fig:exp-sche-khoi-debug}
 \end{figure}
 
@@ -710,7 +684,7 @@ Các connector debug console với giao thức UART để thực hiện quá tr�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/CAN-transceiver.png}
-    \caption{Sơ đồ nguyên lí khối CAN transceiver}
+    \caption{Sơ đồ nguyên lý khối CAN transceiver}
     \label{fig:exp-sche-can-transceiver}
 \end{figure}
 
@@ -719,7 +693,7 @@ Thiết kế sửa dụng IC CAN TRANSCEIVER SN65HVD230DR, để chuyển đổi
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/sw-usb.png}
-    \caption{Sơ đồ nguyên lí khối chuyển mạch USB}
+    \caption{Sơ đồ nguyên lý khối chuyển mạch USB}
     \label{fig:exp-sche-sw-usb}
 \end{figure}
 
@@ -731,7 +705,7 @@ Các ưu điểm chính của MAX14662ETI+T gồm: dải nguồn đơn rộng t�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/usb_host_only.png}
-    \caption{Sơ đồ nguyên lí khối USB host only}
+    \caption{Sơ đồ nguyên lý khối USB host only}
     \label{fig:exp-sche-sw-usb-connector}
 \end{figure}
 
@@ -771,7 +745,7 @@ Trong thiết kế đang dùng I2C chung bus I2C dùng cho các IC nội bộ tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/watchdog.png}
-    \caption{Sơ đồ nguyên lí khối watchdog}
+    \caption{Sơ đồ nguyên lý khối watchdog}
     \label{fig:exp-sche-watchdog}
 \end{figure}
 
@@ -817,7 +791,7 @@ Tùy thuộc vào thời gian thiết lập từ đó chọn các tham số a, b
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-heater.png}
-    \caption{Sơ đồ nguyên lí khối Heater}
+    \caption{Sơ đồ nguyên lý khối Heater}
     \label{fig:exp-sche-khoi-heater}
 \end{figure}
 
@@ -826,7 +800,7 @@ Khối heater bao gồm 8 heater được điều khiển bởi tín hiệu PWM 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-tec.png}
-    \caption{Sơ đồ nguyên lí khối TEC}
+    \caption{Sơ đồ nguyên lý khối TEC}
     \label{fig:exp-sche-khoi-tec}
 \end{figure}
 Khối TEC điều khiển phần tử nhiệt điện (làm nóng/làm lạnh), giúp duy trì môi trường nhiệt mục tiêu cho buồng đo.
@@ -838,7 +812,7 @@ Trong thiết kế này, LT8722 đóng vai trò là bộ điều khiển dòng �
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/mpd200a.png}
-    \caption{Sơ đồ nguyên lí khối MPD200A}
+    \caption{Sơ đồ nguyên lý khối MPD200A}
     \label{fig:exp-sche-mpd200a}
 \end{figure}
 Theo schematic của board EXP, khối MPD200A là phần đại diện cho module nguồn HV mà MCU tương tác thông qua các tín hiệu DAC, EN và PWM; trong đó EN dùng để cho phép/khóa hoạt động, còn DAC/PWM dùng để đặt mức hoặc điều chế công suất theo yêu cầu điều khiển. Ngõ ra của khối là cặp cao áp HV\_O+ và HV\_O- đưa ra connector tới tải.
@@ -848,7 +822,7 @@ Theo schematic của board EXP, khối MPD200A là phần đại diện cho modu
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/driver-hd4.png}
-    \caption{Sơ đồ nguyên lí khối driver HD4}
+    \caption{Sơ đồ nguyên lý khối driver HD4}
     \label{fig:exp-sche-driver-hd4}
 \end{figure}
 Module này đóng vai trò là một bộ chuyển đổi DC-AC điện áp cao. Nó lấy nguồn điện một chiều (DC) thấp từ pin hoặc hệ thống và chuyển đổi thành tín hiệu xoay chiều (AC) có biên độ lớn để kích hoạt các màng loa áp điện (piezo membrane) bên trong máy bơm mp6. Đặc biệt, phiên bản mp-Highdriver4 có khả năng lái cùng lúc lên đến 4 máy bơm mp6 một cách độc lập. Giao tiếp I2C để tùy chỉnh tần số, biên độ điện áp, dạng sóng.
@@ -864,16 +838,16 @@ Các tín hiệu được lái từ IC mp-Highdriver4 sẽ được kết nối 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/flow-ic.png}
-    \caption{Sơ đồ nguyên lí khối giao tiếp flow sensor}
+    \caption{Sơ đồ nguyên lý khối giao tiếp flow sensor}
     \label{fig:exp-sche-flow-ic}
 \end{figure}
 
-Cảm biến lưu lượng (flow sensor) là thiết bị dùng để đo tốc độ hoặc khối lượng của chất lỏng hoặc khí chảy qua một ống dẫn. IC được kéo ra connector và được khiển bởi tín hiệu I2C. IC flow kết hợp với IC bump để tạo ra một hệ phản hồi kín, một thành phần đóng vai trò điều khiển công suất bơm lưu và một thành phần đóng vai trò theo dõi lưu lượng bơm để trả về dữ liệu cho MCU xử lí và cân chỉnh IC bump cũng như lưu trữ thông tin bơm. 
+Cảm biến lưu lượng (flow sensor) là thiết bị dùng để đo tốc độ hoặc khối lượng của chất lỏng hoặc khí chảy qua một ống dẫn. IC được kéo ra connector và được điều khiển bởi tín hiệu I2C. IC flow kết hợp với IC bơm để tạo ra một hệ phản hồi kín, trong đó một thành phần đóng vai trò điều khiển công suất bơm lưu và thành phần còn lại đóng vai trò theo dõi lưu lượng bơm để trả về dữ liệu cho MCU xử lý, cân chỉnh IC bơm cũng như lưu trữ thông tin bơm. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-ic.png}
-    \caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ nhất}
+    \caption{Sơ đồ nguyên lý khối điều khiển solenoid thứ nhất}
     \label{fig:exp-sche-solenoid-ic}
 \end{figure}
 
@@ -901,7 +875,7 @@ RS: Chân cảm biến dòng điện đầu ra, thường nối với một đi�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/solenoid-fet.png}
-    \caption{Sơ đồ nguyên lí khối điều khiển solenoid thứ 2}
+    \caption{Sơ đồ nguyên lý khối điều khiển solenoid thứ 2}
     \label{fig:exp-sche-solenoid-fet}
 \end{figure}
 
@@ -912,7 +886,7 @@ Sử dụng IC TCA6416A để mở rộng các pin I/O. TCA6416A là IC mở r�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/khoi-ntc.jpg}
-    \caption{Sơ đồ nguyên lí khối NTC}
+    \caption{Sơ đồ nguyên lý khối NTC}
     \label{fig:exp-sche-khoi-ntc}
 \end{figure}
 
@@ -928,7 +902,7 @@ Với đặc tính NTC, khi nhiệt độ tăng thì $R_{NTC}$ giảm nên $V_{N
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{picture/exp/hole.png}
-    \caption{Sơ đồ nguyên lí khối hole (cơ khí/tiếp địa)}
+    \caption{Sơ đồ nguyên lý khối hole (cơ khí/tiếp địa)}
     \label{fig:exp-sche-hole}
 \end{figure}
 
@@ -961,7 +935,7 @@ Các mounting hole phục vụ cố định cơ khí và/hoặc tiếp địa th
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/connector-exp.png}
-    \caption{Sơ đồ nguyên lí khối connector-exp}
+    \caption{Sơ đồ nguyên lý khối connector-exp}
     \label{fig:if-connector-exp}
 \end{figure}
 
@@ -1017,7 +991,7 @@ Tương tự như trên bo EXP, bo IF dùng chung thiết kế MPU nên khối q
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/powrer-measurement-12V-5VFPGA.png}
-    \caption{Sơ đồ nguyên lí khối đo nguồn 12V và 5V\_FPGA}
+    \caption{Sơ đồ nguyên lý khối đo nguồn 12V và 5V\_FPGA}
     \label{fig:if-powrer-measurement-12V-5VFPGA}
 \end{figure}
 
@@ -1026,7 +1000,7 @@ Bên cạnh dùng PAC1934 để đo dòng tải trên các nguồn MPU tiêu th�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/mpu-core.png}
-    \caption{Sơ đồ nguyên lí khối MPU core}
+    \caption{Sơ đồ nguyên lý khối MPU core}
     \label{fig:if-mpu-core}
 \end{figure}
 
@@ -1079,7 +1053,7 @@ SD Card được bổ sung cho MPU nhằm tăng tính linh hoạt trong phát tr
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{picture/if/mram.png}
-    \caption{Sơ đồ nguyên lí khối MRAM}
+    \caption{Sơ đồ nguyên lý khối MRAM}
     \label{fig:if-mram}
 \end{figure}
 
@@ -1087,9 +1061,16 @@ MRAM vẫn sử dụng part number AS3004204-0108X0PSAY như trên thiết kế 
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/block-usb.png}
+    \caption{Sơ đồ khối USB}
+    \label{fig:if-block-usb}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-in.png}
     \includegraphics[width=1\textwidth]{picture/if/if-usb-sw-out.png}
-    \caption{Sơ đồ nguyên lí khối USB switch}
+    \caption{Sơ đồ nguyên lý khối USB switch}
     \label{fig:if-usb-sw}
 \end{figure}
 
@@ -1098,7 +1079,7 @@ FSUSB42 là bộ chuyển mạch DPDT hai chiều, công suất thấp, được
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/uart-mux.png}
-    \caption{Sơ đồ nguyên lí khối UART MUX}
+    \caption{Sơ đồ nguyên lý khối UART MUX}
     \label{fig:if-uart-mux}
 \end{figure}
 
@@ -1106,23 +1087,31 @@ Thiết bị SN74LV4052A là một bộ ghép kênh và tách kênh tương tự
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/block-stx.png}
+    \caption{Sơ đồ khối khối STX LVDS}
+    \label{fig:if-block-stx}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=0.9\textwidth]{picture/if/spi-sw-lvds-tx.png}
     \includegraphics[width=0.9\textwidth]{picture/if/spi-sw-lvds-rx.png}
-    \caption{Sơ đồ nguyên lí khối SPI switch LVDS TX}
+    \caption{Sơ đồ nguyên lý khối SPI switch LVDS TX}
     \label{fig:if-spi-sw-lvds}
 \end{figure}
+
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/spi-lvds-tx.png}
     \includegraphics[width=0.9\textwidth]{picture/if/spi-lvds-rx.png}
-    \caption{Sơ đồ nguyên lí khối SPI LVDS}
+    \caption{Sơ đồ nguyên lý khối SPI LVDS}
     \label{fig:if-spi-lvds}
 \end{figure}
 
 Trong thiết kế, IC dùng cho việc chuyển đổi dữ liệu phát từ tín hiệu đơn sang LVDS là DS90LV011AQ-Q1 driver, còn IC dùng cho việc thu dữ liệu chuyển từ tín hiệu điện LVDS sang tín hiệu đơn là DS90LT012AQ-Q1 receiver.
 
-Ở dây được thiết kế gồm 2 cặp LVDS. 1 cặp với tín năng phát dữ liệu bao gồm tín hiệu dữ liệu và tín hiệu xung clock. Cặp còn lại sẽ là tín hiệu thu dữ liệu và xung clock.
+Ở đây được thiết kế gồm 2 cặp LVDS. 1 cặp với tính năng phát dữ liệu bao gồm tín hiệu dữ liệu và tín hiệu xung clock. Cặp còn lại sẽ là tín hiệu thu dữ liệu và xung clock.
 
 Đối với bus phát dữ liệu, dùng IC DS90LV011AQ-Q1 để chuyển đổi ngõ vào thành dạng vi sai. Ngõ vào của driver là tín hiệu SPI MOSI và SPI CLK, ngõ ra là tín hiệu điện dạng vi sai (LVDS) từ 2 tín hiệu ngõ vào.  Hai driver này đóng vai trò là nguồn phát nên ở giữa mỗi cặp vi sai không nhất thiết phải có điện trở termination. Tín hiệu MOSI và CLK là ngõ ra của SPI SWITCH TX LVDS (lựa chọn giữa IC driver và FPGA về MPU).
 
@@ -1131,7 +1120,7 @@ Trong thiết kế, IC dùng cho việc chuyển đổi dữ liệu phát từ t
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-rtc.png}
-    \caption{Sơ đồ nguyên lí khối RTC}
+    \caption{Sơ đồ nguyên lý khối RTC}
     \label{fig:if-rtc}
 \end{figure}
 
@@ -1141,7 +1130,7 @@ Thiết kế của RTC cũng tương tự như trên board EXP, tín hiệu giao
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/if-watchdog.png}
-    \caption{Sơ đồ nguyên lí khối watchdog}
+    \caption{Sơ đồ nguyên lý khối watchdog}
     \label{fig:if-watchdog}
 \end{figure}
 
@@ -1149,8 +1138,15 @@ Khối watchdog dùng TPL5010DDCR và cấu hình thời gian tương tự trên
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/block-can.png}
+    \caption{Sơ đồ khối  CAN}
+    \label{fig:if-block-can}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\textwidth]{picture/if/if-can.png}
-    \caption{Sơ đồ nguyên lí khối CAN}
+    \caption{Sơ đồ nguyên lý khối CAN}
     \label{fig:if-can}
 \end{figure}
 
@@ -1158,8 +1154,15 @@ Thiết kế dùng 2 kênh CANTX/RX 0/1 từ MPU sang IC CAN transceiver SN65HVD
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=0.8\textwidth]{picture/if/block-rs422.png}
+    \caption{Sơ đồ khối khối RS422}
+    \label{fig:if-block-rs422}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\textwidth]{picture/if/rs422.png}
-    \caption{Sơ đồ nguyên lí khối RS422}
+    \caption{Sơ đồ nguyên lý khối RS422}
     \label{fig:if-rs422}
 \end{figure}
 
@@ -1168,7 +1171,7 @@ LTC2865HMSE\#TRPBF là bộ thu phát RS485/RS422 công suất thấp, có khả
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/imu.png}
-    \caption{Sơ đồ nguyên lí khối IMU}
+    \caption{Sơ đồ nguyên lý khối IMU}
     \label{fig:if-imu}
 \end{figure}
 
@@ -1177,7 +1180,7 @@ BNO08X (BNO085/BNO086) là cảm biến quán tính dạng SiP tích hợp gia t
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/temp.png}
-    \caption{Sơ đồ nguyên lí khối temp}
+    \caption{Sơ đồ nguyên lý khối temp}
     \label{fig:if-temp}
 \end{figure}
 
@@ -1214,7 +1217,7 @@ Một số IO trên FPGA cần được cấp nguồn 1V8, ví dụ như các IO
     \includegraphics[width=0.6\textwidth]{picture/if/50mhz-fpga.png}
 
     \includegraphics[width=0.6\textwidth]{picture/if/24mhz-fpga.png}
-    \caption{Sơ đồ nguyên lí khối tạo dao động cho FPGA}
+    \caption{Sơ đồ nguyên lý khối tạo dao động cho FPGA}
     \label{fig:clock-fpga}
 \end{figure}
 
@@ -1227,6 +1230,7 @@ FPGA sử dụng một nguồn LVDS tốc độ cao với tần số xung clock 
     \label{fig:tin-hieu-fpga}
 \end{figure}
 
+FPGA sử dụng mã LFD2NX-17-7MG121I của Lattice, thuộc dòng Certus-NX, gói csfBGA121, điện áp lõi 1,0 V, có 17k logic cells, 71 chân I/O, 24 khối nhớ nhúng EBR 18 kb và 24 bộ nhân $18\times18$. Linh kiện này đảm nhiệm xử lý logic khả trình, điều phối các giao tiếp số tốc độ cao, làm cầu nối tín hiệu và lưu cấu hình làm việc của hệ thống. Ưu điểm của FPGA này là công suất tiêu thụ thấp, mật độ I/O cao trong kích thước nhỏ, hỗ trợ giao tiếp vi sai LVDS đến 1,5 Gbps, khởi động nhanh và có cơ chế bảo mật cấu hình bằng AES-256 và ECDSA.
 Các nhóm tín hiệu chính sử dụng trên FPGA bao gồm: tín hiệu UART giao tiếp trực tiếp giữa FPGA và core MPU, tín hiệu SPI/QSPI để FPGA giao tiếp với IC FLASH trên board, các tín hiệu ra connector LVDS chính và phụ.
 
 
@@ -1243,13 +1247,13 @@ Khối SPI Flash sử dụng dòng S25FL-L (S25FL128L/S25FL256L), là bộ nhớ
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/spi-sw.png}
-    \caption{Sơ đồ nguyên lí khối SPI SWITCH giữa MPU và FPGA}
+    \caption{Sơ đồ nguyên lý khối SPI SWITCH giữa MPU và FPGA}
     \label{fig:if-spi-sw}
 \end{figure}
 
 SN3257-Q1 là bộ chuyển mạch CMOS 4 kênh, cấu hình 2:1 (SPDT), thường được dùng để đa hợp các giao thức như SPI, I2S. Thiết bị hoạt động dựa trên chân EN mức thấp để kích hoạt đồng thời các kênh và chân SEL để lựa chọn đường dẫn giữa các cặp chân nguồn (SxA, SxB) với chân máng (Dx) tương ứng. Các tín hiệu kết nối bao gồm 8 cổng nguồn, 4 cổng máng hỗ trợ truyền dẫn analog và digital hai chiều, cùng các chân điều khiển logic tương thích mức 1.8V. Ưu điểm của linh kiện là băng thông 2 GHz, độ trễ lan truyền 78 ps, tích hợp sẵn điện trở kéo xuống 6 MΩ, đi kèm tính năng Fail-safe logic và Powered-off protection (bảo vệ khi mất nguồn) lên đến 3.6V
 
-SPI switch đóng vai trò quản lí tài nguyên dùng chung giữa MPU và FPGA, tài nguyên ở đây là IC SPI FLASH. SPI switch có ngõ vào là 2 kênh tín hiệu SPI của MPU và của FPGA. Tín hiệu ngõ ra để kết nối với SPI FLASH sẽ được chọn một trong hai bus ngõ vào này bằng chân SEL, chân SEL này được điều khiển bởi MPU. MPU là phần tử đóng vai trò cho phép MPU hay FPGA giao tiếp với SPI FLASH để đảm bảo tại một thời điểm chỉ có một phần tử được truy xuất đến SPI FLASH, đều này đảm bảo dữ liệu được toàn vẹn và không gây xung đột dữ liệu.
+SPI switch đóng vai trò quản lý tài nguyên dùng chung giữa MPU và FPGA, tài nguyên ở đây là IC SPI FLASH. SPI switch có ngõ vào là 2 kênh tín hiệu SPI của MPU và của FPGA. Tín hiệu ngõ ra để kết nối với SPI FLASH sẽ được chọn một trong hai bus ngõ vào này bằng chân SEL, chân SEL này được điều khiển bởi MPU. MPU là phần tử cho phép MPU hoặc FPGA giao tiếp với SPI FLASH để bảo đảm tại một thời điểm chỉ có một phần tử được truy xuất đến SPI FLASH; điều này giúp dữ liệu được toàn vẹn và không gây xung đột dữ liệu.
 
 \subsection{Board phát năng lượng ánh sáng - LASER}
 \label{subsec:sche-board-phat-laser}
@@ -1389,7 +1393,7 @@ Vai trò của tụ điện hồi tiếp ở ngõ ra: Tụ điện phản hồi 
 
 Trong hình thể hiện sự dao động ngõ ra khi không có tụ hồi tiếp, cho thấy dòng ngay tại thời điểm bật sẽ chưa ổn định và dao động trong vài chu kỳ do ngõ ra opamp dao động. Trong thiết kế do tần số mạch hoạt động thấp và độ lợi hồi tiếp nhỏ nên giúp tín hiệu dao động tắt dần trong vài chu kỳ. Trong trường hợp xấu nhất thì tín hiệu này có thể không tắt mà còn gây ra dao động và tự biến thành một nguồn dao động.
 
-\subsubsection{Mô phỏng nguyên lí mạch nguồn dòng}
+\subsubsection{Mô phỏng nguyên lý mạch nguồn dòng}
 \label{subsec:simulate-current-source}
 
 Sử dụng phần mềm TINA-TI để mô phỏng nguồn dòng trong thiết kế để từ đó có thể lựa chọn những giá trị linh kiện phù hợp. Do board LASER đang sử dụng opamp OPAx192 thuộc linh kiện của nhà sản xuất TI nên sử dụng phần mềm mô phỏng của chính nhà phân phối để đảm bảo mô phỏng được kết quả tốt nhất.
@@ -1504,7 +1508,7 @@ Tương tự như ở nguồn internal, nguồn external cũng mô phỏng đặ
 
 Tương tự như cách mô phỏng trên mạch internal, mạch external sau khi bật nguồn cũng có một khoảng vọt lố nhỏ và tín hiệu nhanh chóng ổn định.
 
-\subsubsection{Sơ đồ nguyên lí board LASER DIODE}
+\subsubsection{Sơ đồ nguyên lý board LASER DIODE}
 \label{so-do-nguyen-li-laser}
 
 \begin{figure}[H]
@@ -1542,14 +1546,14 @@ Dòng IC MCP4902/4912/4922 là các bộ chuyển đổi kỹ thuật số sang 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/sw-int.png}
-    \caption{Sơ đồ nguyên lí khối LASER - sw-int}
+    \caption{Sơ đồ nguyên lý khối LASER - sw-int}
     \label{fig:laser-sw-int}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/sw-ext.png}
-    \caption{Sơ đồ nguyên lí khối LASER - sw-ext}
+    \caption{Sơ đồ nguyên lý khối LASER - sw-ext}
     \label{fig:laser-sw-ext}
 \end{figure}
 
@@ -1559,21 +1563,21 @@ ADG1414 là IC tích hợp 8 công tắc SPST điều khiển độc lập. Thi�
 \subsection{Board thu năng lượng ánh sáng - PHOTO}
 \label{subsec:sche-board-thu-photo}
 
-\subsubsection{Sơ đồ nguyên lí các khối chính của board PHOTO}
+\subsubsection{Sơ đồ nguyên lý các khối chính của board PHOTO}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-cam.png}
-    \caption{Sơ đồ nguyên lí khối cảm biến ảnh của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối cảm biến ảnh của board PHOTO}
     \label{fig:photo-cam}
 \end{figure}
 
-AR2020 là cảm biến ảnh CMOS số độ phân giải 20 MP của onsemi, dùng để thu nhận ảnh quang học và chuyển trực tiếp thành luồng dữ liệu số tốc độ cao cho khối xử lí phía sau. Theo datasheet, cảm biến này dùng ma trận điểm ảnh BSI 1.4 $\mu$m, mạch đọc rolling shutter và các khối nội tích hợp như khuếch đại, lấy mẫu, số hóa và đóng gói dữ liệu ảnh; việc cấu hình các thanh ghi được thực hiện qua giao tiếp I2C Fast-mode Plus, còn ngõ ra dữ liệu là MIPI D-PHY 2$\times$4 lane cùng cặp clock vi sai. Ưu điểm của AR2020 so với nhiều cảm biến cùng lớp là độ phân giải cao ở mức công suất thấp, hỗ trợ LI-HDR/eDR, đáp ứng NIR tốt tại 850 nm và 940 nm, đồng thời có các tính năng SmartROI, Wake-on-Motion và context switching rất phù hợp cho hệ thống quang điện đa chế độ.
+AR2020 là cảm biến ảnh CMOS số độ phân giải 20 MP của onsemi, dùng để thu nhận ảnh quang học và chuyển trực tiếp thành luồng dữ liệu số tốc độ cao cho khối xử lý phía sau. Theo datasheet, cảm biến này dùng ma trận điểm ảnh BSI 1.4 $\mu$m, mạch đọc rolling shutter và các khối nội tích hợp như khuếch đại, lấy mẫu, số hóa và đóng gói dữ liệu ảnh; việc cấu hình các thanh ghi được thực hiện qua giao tiếp I2C Fast-mode Plus, còn ngõ ra dữ liệu là MIPI D-PHY 2$\times$4 lane cùng cặp clock vi sai. Ưu điểm của AR2020 so với nhiều cảm biến cùng lớp là độ phân giải cao ở mức công suất thấp, hỗ trợ LI-HDR/eDR, đáp ứng NIR tốt tại 850 nm và 940 nm, đồng thời có các tính năng SmartROI, Wake-on-Motion và context switching rất phù hợp cho hệ thống quang điện đa chế độ.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-mipi.png}
-    \caption{Sơ đồ nguyên lí khối chuyển mạch MIPI của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối chuyển mạch MIPI của board PHOTO}
     \label{fig:photo-mipi}
 \end{figure}
 
@@ -1582,7 +1586,7 @@ PI3WVR626 là mạch chuyển mạch analog tốc độ cao chuyên cho tín hi�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-i2c-switching.png}
-    \caption{Sơ đồ nguyên lí khối chuyển mạch I2C của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối chuyển mạch I2C của board PHOTO}
     \label{fig:photo-i2c-switching}
 \end{figure}
 
@@ -1591,7 +1595,7 @@ PCA9544A là bộ ghép kênh I2C 1-trong-4 có logic ngắt, dùng để tách 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-i2c-io.png}
-    \caption{Sơ đồ nguyên lí khối mở rộng I/O điều khiển camera}
+    \caption{Sơ đồ nguyên lý khối mở rộng I/O điều khiển camera}
     \label{fig:photo-i2c-io}
 \end{figure}
 
@@ -1600,7 +1604,7 @@ TCA6416A là bộ mở rộng 16 GPIO điều khiển qua I2C/SMBus, được d�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-osc.png}
-    \caption{Sơ đồ nguyên lí khối dao động và logic điều phối xung clock}
+    \caption{Sơ đồ nguyên lý khối dao động và logic điều phối xung clock}
     \label{fig:photo-osc}
 \end{figure}
 
@@ -1611,7 +1615,7 @@ NL7SZ97DT2G-Q là cổng logic đa chức năng cấu hình được, ở đây 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-ldos.png}
-    \caption{Sơ đồ nguyên lí khối LDO cấp nguồn cho board PHOTO}
+    \caption{Sơ đồ nguyên lý khối LDO cấp nguồn cho board PHOTO}
     \label{fig:photo-ldos}
 \end{figure}
 
@@ -1628,7 +1632,7 @@ NCP139AFCT105T2G là VLDO 1.05 V dòng cao có chân \texttt{VBIAS} riêng, dùn
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-vref.png}
-    \caption{Sơ đồ nguyên lí khối tạo điện áp tham chiếu của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối tạo điện áp tham chiếu của board PHOTO}
     \label{fig:photo-vref}
 \end{figure}
 
@@ -1637,7 +1641,7 @@ REF1930 là IC tham chiếu điện áp kép, tạo đồng thời \texttt{V\_Re
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/photo-sw.png}
-    \caption{Sơ đồ nguyên lí khối chuyển mạch chọn photodiode}
+    \caption{Sơ đồ nguyên lý khối chuyển mạch chọn photodiode}
     \label{fig:photo-sw}
 \end{figure}
 
@@ -1646,7 +1650,7 @@ ADG1414BRUZ là mạch chuyển mạch analog 8 kênh SPST điều khiển nối
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/photo/transimpedance-antialias.png}
-    \caption{Sơ đồ nguyên lí khối khuếch đại chuyển dòng sang áp và lọc khử chồng phổ}
+    \caption{Sơ đồ nguyên lý khối khuếch đại chuyển dòng sang áp và lọc khử chồng phổ}
     \label{fig:photo-tia-antialias}
 \end{figure}
 
@@ -1686,14 +1690,14 @@ Tần số cắt của bộ lọc là:
 f_0 = \frac{\omega_0}{2\pi} = \frac{10000}{2\pi} \approx 1.59\,\mathrm{kHz}
 \end{equation}
 
-Giá trị này nhỏ hơn rất nhiều so với $f_{Nyquist} = 250\,\mathrm{kHz}$ của ADC, do đó về mặt chống chồng lấn phổ thì thiết kế này là an toàn và hợp lí. Tuy nhiên, điều đó cũng cho thấy băng thông tín hiệu hữu ích bị giới hạn chỉ quanh mức vài kHz.
+Giá trị này nhỏ hơn rất nhiều so với $f_{Nyquist} = 250\,\mathrm{kHz}$ của ADC, do đó về mặt chống chồng lấn phổ thì thiết kế này là an toàn và hợp lý. Tuy nhiên, điều đó cũng cho thấy băng thông tín hiệu hữu ích bị giới hạn chỉ quanh mức vài kHz.
 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{picture/photo/photo-adc.png}
-    \caption{Sơ đồ nguyên lí khối ADC của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối ADC của board PHOTO}
     \label{fig:photo-adc}
 \end{figure}
 
@@ -1702,7 +1706,7 @@ ADS8329 là bộ chuyển đổi tương tự-số SAR 16 bit tốc độ đến
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{picture/photo/photo-neg-pwr.png}
-    \caption{Sơ đồ nguyên lí khối tạo nguồn âm của board PHOTO}
+    \caption{Sơ đồ nguyên lý khối tạo nguồn âm của board PHOTO}
     \label{fig:photo-neg-pwr}
 \end{figure}
 
