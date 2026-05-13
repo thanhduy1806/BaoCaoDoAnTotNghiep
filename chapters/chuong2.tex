@@ -9,7 +9,7 @@
 
 Vệ tinh nhỏ, đặc biệt là CubeSat, là nền tảng nghiên cứu và trình diễn công nghệ được sử dụng phổ biến trong các trường đại học, viện nghiên cứu và doanh nghiệp không gian mới. So với vệ tinh truyền thống, CubeSat có ưu điểm nổi bật là chi phí phát triển thấp hơn, thời gian thiết kế ngắn hơn và quy trình tích hợp linh hoạt hơn. Tuy nhiên, các hệ thống trên CubeSat luôn bị ràng buộc đồng thời bởi giới hạn kích thước, khối lượng, công suất và môi trường vận hành khắc nghiệt.
 
-Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch OBC, board mạch EXP, board mạch IF, board mạch LASER, board mạch PHOTO. Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
+Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch EXP (Experiment board để điều khiển thí nghiệm, xử lí dữ liệu và giao tiếp người dùng), board mạch IF (Interface board để giao tiếp với các board khác và giao tiếp người dùng), board mạch LASER (Laser diode board dùng để điều khiển tín hiệu quang), board mạch PHOTO (Photo diode board dùng để thu thập tín hiệu quang). Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
 
 \subsection{Khái niệm CubeSat và phương thức triển khai quỹ đạo}
 \label{subsec:khai_niem_cubesat}
@@ -20,7 +20,7 @@ Về triển khai quỹ đạo, CubeSat thường đi theo hai phương thức c
 
 Tương tự các vệ tinh lớn, hệ CubeSat được phân tách thành hai nhóm chức năng: \textit{satellite bus} và \textit{satellite payload}. \textit{Bus} là phần hạ tầng duy trì hoạt động của vệ tinh trong suốt nhiệm vụ, thường gồm các phân hệ: kết cấu (\textit{STRU}), truyền thông (\textit{COMM}), điều khiển tư thế và quỹ đạo (\textit{AOCS}), nguồn điện (\textit{EPS}), xử lý dữ liệu trên board (\textit{OBDH}), telemetry--tracking--command (\textit{TT\&C}) và điều khiển nhiệt (\textit{TCS}). Ngược lại, \textit{payload} là cụm thiết bị trực tiếp cung cấp năng lực nhiệm vụ của vệ tinh, ví dụ cảm biến quang học đối với vệ tinh quan sát hoặc cụm anten/phát--thu đối với vệ tinh thông tin.
 
-Với cách phân tách này, \textit{bus} không trực tiếp tạo dữ liệu nhiệm vụ nhưng quyết định độ ổn định vận hành của toàn hệ; còn \textit{payload} tạo ra dữ liệu đầu ra nhưng phụ thuộc vào \textit{bus} để được cấp nguồn, điều khiển, đồng bộ và truyền dữ liệu. Trong phạm vi đề tài, OBC và IF thuộc lớp hạ tầng điều khiển/giao tiếp, cụm LASER--PHOTO thuộc lớp tải thí nghiệm, còn EXP đóng vai trò điều phối cục bộ giữa hai lớp này. Cách ánh xạ này là cơ sở để tổ chức kiến trúc kỹ thuật và xác định luồng dữ liệu trong các mục tiếp theo.
+Với cách phân tách này, \textit{bus} không trực tiếp tạo dữ liệu nhiệm vụ nhưng quyết định độ ổn định vận hành của toàn hệ; còn \textit{payload} tạo ra dữ liệu đầu ra nhưng phụ thuộc vào \textit{bus} để được cấp nguồn, điều khiển, đồng bộ và truyền dữ liệu. Trong phạm vi đề tài, IF thuộc lớp hạ tầng điều khiển/giao tiếp, cụm LASER--PHOTO thuộc lớp tải thí nghiệm, còn EXP đóng vai trò điều phối cục bộ giữa hai lớp này và giao tiếp ra ngoài hệ thống để kết nối với người dùng hoặc hệ thống khác. Cách ánh xạ này là cơ sở để tổ chức kiến trúc kỹ thuật và xác định luồng dữ liệu trong các mục tiếp theo.
 
 \subsection{Chuẩn kích thước CubeSat(đơn vị U)}
 \label{subsec:chuan_u}
@@ -73,29 +73,30 @@ Trong khối truyền thông nội bộ, CubeSat thường sử dụng các giao
 
 Nhiều nhiệm vụ CubeSat hiện nay yêu cầu tải thí nghiệm có khả năng cấu hình linh hoạt để phục vụ nhiều kịch bản đo khác nhau. Điều này dẫn đến nhu cầu phát triển các mô đun đa năng theo hướng ``một kiến trúc, nhiều chế độ vận hành''. Với hướng tiếp cận này, hệ thống có thể tiết kiệm thời gian phát triển, giảm chi phí tạo mẫu và tăng khả năng kế thừa cho các phiên bản sau.
 
-Với đề tài hiện tại, mô đun đa năng được thể hiện ở khả năng phối hợp nhiều board mạch: EXP điều khiển LASER/PHOTO và giao tiếp dữ liệu hai chiều với OBC thông qua hạ tầng kết nối mở rộng từ IF. Vì vậy, trọng tâm kỹ thuật của luận văn là thiết kế kiến trúc giao tiếp OBC--EXP--IF và cơ chế truyền dữ liệu hai chiều có độ tin cậy cao.
+\section{Cơ sở lý thuyết kiến trúc hệ thống EXP--IF--LASER--PHOTO}
+\label{sec:kien_truc_exp_if_photo_laser}
 
-\section{Cơ sở lý thuyết kiến trúc hệ thống OBC--EXP--IF}
-\label{sec:kien_truc_obc_exp_if}
-
-Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. OBC là lớp điều khiển cấp cao, chịu trách nhiệm gửi lệnh tác vụ, nhận dữ liệu thí nghiệm và quản lý trạng thái toàn hệ thống. EXP là lớp điều khiển cục bộ cho thí nghiệm, trực tiếp phát lệnh đến board LASER và thu dữ liệu từ board PHOTO. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
-
-Cách chia vai trò này giúp giảm tải cho OBC, đồng thời giữ cho luồng điều khiển thí nghiệm có tính thời gian thực ở phía EXP. Kiến trúc phân lớp cũng giúp cô lập lỗi tốt hơn và thuận lợi cho mở rộng hệ thống.
-
-\subsection{Vai trò board OBC}
-\label{subsec:vai_tro_obc}
-
-Board OBC (On-Board Computer) là trung tâm xử lý ở mức hệ thống. Trong phạm vi đề tài, OBC thực hiện các chức năng chính gồm: phát lệnh khởi tạo/chạy/dừng thí nghiệm, tiếp nhận dữ liệu từ EXP, ghi nhận trạng thái hệ thống và quản lý quá trình trao đổi dữ liệu theo chu kỳ hoặc theo sự kiện.
+Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. EXP là board điều khiển trung tâm của hệ thống, đồng thời tích hợp hai lớp xử lý trên cùng một phần cứng. Trong đó, core MPU đảm nhiệm vai trò giao tiếp cấp cao, tiếp nhận lệnh từ người dùng, xử lý dữ liệu và quản lý trạng thái hệ thống. Core MCU chịu trách nhiệm điều khiển thí nghiệm theo thời gian thực, trực tiếp phát lệnh đến board LASER, thu dữ liệu từ board PHOTO và điều phối các phần tử chấp hành như TEC, HEATER. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
 
 \subsection{Vai trò board EXP}
 \label{subsec:vai_tro_exp}
 
-Board EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó còn thu thập nhiệt độ từ cảm biến nhiệt NTC, và trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. EXP cũng là nơi tổng hợp dữ liệu cục bộ, đóng gói dữ liệu theo khung truyền và gửi lên OBC.
+Board EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó, board còn thu thập dữ liệu từ các cảm biến môi trường như NTC, đồng thời trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. Với kiến trúc hai core, MPU trên EXP đảm nhiệm lớp xử lý và giao tiếp cấp hệ thống, còn MCU đảm nhiệm lớp điều khiển cục bộ thời gian thực. EXP cũng là nơi tổng hợp, xử lý sơ bộ, đóng gói dữ liệu theo khung truyền và gửi ra giao diện ngoài hệ thống.
 
 \subsection{Vai trò board IF}
 \label{subsec:vai_tro_if}
 
-Board IF (Interface board) là lớp giao tiếp mở rộng giữa OBC và EXP, đồng thời có thể bổ sung các cổng kết nối tùy cấu hình hệ thống. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
+Board IF (Interface board) là lớp giao tiếp mở rộng của hệ thống, kết nối EXP với các giao diện ngoài và các thành phần phần cứng bổ sung tùy cấu hình triển khai. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
+
+\subsection{Vai trò board LASER}
+\label{subsec:vai_tro_laser}
+
+Board LASER là khối phát tín hiệu quang của hệ thống thí nghiệm. Board này nhận lệnh điều khiển từ EXP để lựa chọn kênh phát, thiết lập mức kích thích và tạo ra tín hiệu quang theo cấu hình đo đã đặt trước. Vai trò chính của LASER là cung cấp nguồn kích thích quang ổn định, có khả năng điều chỉnh theo từng chế độ vận hành nhằm bảo đảm điều kiện vào nhất quán cho quá trình thí nghiệm. Chất lượng hoạt động của board LASER ảnh hưởng trực tiếp đến độ lặp lại và độ tin cậy của tín hiệu thu được ở phía PHOTO.
+
+\subsection{Vai trò board PHOTO}
+\label{subsec:vai_tro_photo}
+
+Board PHOTO là khối thu nhận tín hiệu quang của hệ thống. Board này tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu thí nghiệm, thực hiện các bước chuyển đổi và điều hòa tín hiệu cần thiết trước khi gửi dữ liệu về EXP để xử lý tiếp. Vai trò của PHOTO là bảo đảm tín hiệu quang thu được được chuyển thành tín hiệu điện có độ chính xác và độ ổn định phù hợp cho quá trình số hóa, từ đó phục vụ việc phân tích, đánh giá và so sánh kết quả thí nghiệm. Cùng với board LASER, board PHOTO tạo thành cặp khối chức năng trung tâm của tải thí nghiệm quang.
 
 \section{Cơ sở lý thuyết các linh kiện}
 
@@ -160,6 +161,28 @@ Về nguyên lý hoạt động, dòng điều khiển tăng đến ngưỡng s�
 
 Một số thông số kỹ thuật cơ bản cần quan tâm gồm: bước sóng danh định (nm), dòng ngưỡng, dải dòng làm việc, điện áp thuận, công suất quang đầu ra, góc phân kỳ chùm tia, hệ số trôi theo nhiệt độ và điều kiện tản nhiệt. Các tham số này quyết định khả năng ghép quang, mức tín hiệu thu và độ ổn định của hệ đo trong quá trình vận hành.
 
+Trong vùng làm việc trên ngưỡng, quan hệ gần đúng giữa dòng lái và công suất quang đầu ra của laser diode thường được biểu diễn theo đặc tuyến \(L\!-\!I\) bởi:
+\begin{equation}
+P_{opt} \approx \eta_s \left(I_F - I_{th}\right), \qquad I_F > I_{th}
+\end{equation}
+
+Nếu xét trong khoảng thời gian phát sáng \(t\), năng lượng ánh sáng phát ra có thể được tính:
+\begin{equation}
+E_{opt} = P_{opt}\,t \approx \eta_s \left(I_F - I_{th}\right)t
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item \(P_{opt}\) là công suất quang đầu ra của laser diode, đơn vị W. Đây là đại lượng biểu diễn tốc độ phát năng lượng ánh sáng tại đầu ra nguồn phát.
+    \item \(E_{opt}\) là năng lượng ánh sáng phát ra trong khoảng thời gian xét, đơn vị J. Khi công suất quang gần như không đổi trong thời gian \(t\), năng lượng bằng công suất nhân với thời gian.
+    \item \(\eta_s\) là hệ số dốc công suất quang theo dòng lái (slope efficiency), đơn vị W/A. Tham số này cho biết khi tăng thêm \(1\,A\) dòng lái trên ngưỡng thì công suất quang đầu ra tăng thêm bao nhiêu watt. Trong datasheet, đại lượng này cũng có thể được ghi dưới dạng mW/mA.
+    \item \(I_F\) là dòng thuận cấp cho laser diode, đơn vị A. Đây là dòng điều khiển thực tế chạy qua linh kiện khi hoạt động.
+    \item \(I_{th}\) là dòng ngưỡng laser, đơn vị A. Đây là giá trị dòng tại đó laser diode bắt đầu chuyển từ vùng phát xạ tự phát sang vùng phát xạ kích thích chiếm ưu thế. Dưới ngưỡng này, công suất quang phát ra nhỏ và quan hệ tuyến tính trên không còn phản ánh đúng chế độ phát laser.
+    \item \(t\) là thời gian phát sáng hoặc thời gian cửa sổ quan sát, đơn vị s. Tham số này cần thiết khi chuyển từ đại lượng công suất sang đại lượng năng lượng.
+\end{itemize}
+
+Hai biểu thức trên cho thấy dòng điện không chuyển trực tiếp thành ``năng lượng ánh sáng'' theo nghĩa tức thời, mà trước hết quyết định công suất quang đầu ra; sau đó năng lượng ánh sáng thu được bằng tích của công suất quang với thời gian phát. Vì vậy, trong thiết kế mạch lái laser, việc ổn định dòng \(I_F\), kiểm soát dòng ngưỡng \(I_{th}\) và giới hạn ảnh hưởng nhiệt độ đến \(\eta_s\) là các yếu tố then chốt để bảo đảm độ lặp lại của tín hiệu quang phát ra.
+
 \subsection{Tổng quan linh kiện Photo Diode}
 \label{subsec:tong-quan-photo-diode}
 
@@ -175,6 +198,38 @@ Photo diode là linh kiện quang bán dẫn dùng để biến đổi tín hi�
 Trong nguyên lý làm việc, photo diode thường được phân cực ngược để mở rộng vùng nghèo, giảm điện dung tiếp giáp và tăng tốc độ đáp ứng. Ở chế độ này, dòng tối tồn tại khi không có ánh sáng; khi có ánh sáng chiếu vào, dòng quang tăng lên và được chuyển đổi thành điện áp qua điện trở tải hoặc mạch khuếch đại chuyển dòng-áp (TIA) để đưa vào kênh đo ADC.
 
 Các thông số kỹ thuật cơ bản cần xem xét gồm: dải bước sóng đáp ứng, độ nhạy (A/W), dòng tối, điện dung tiếp giáp, thời gian đáp ứng, diện tích vùng nhạy quang, điện áp phân cực ngược tối đa và độ tuyến tính theo công suất sáng. Việc chọn đúng các tham số này giúp cải thiện tỉ số tín hiệu trên nhiễu và độ chính xác của hệ đo quang.
+
+Với photo diode, quan hệ cơ bản giữa công suất ánh sáng tới và dòng quang sinh ra được mô tả bởi:
+\begin{equation}
+I_{ph} = R_{\lambda} P_{opt}
+\end{equation}
+
+Trong đó, hệ số đáp ứng quang theo bước sóng có thể viết:
+\begin{equation}
+R_{\lambda} = \eta \frac{q\lambda}{hc}
+\end{equation}
+
+Nếu nguồn sáng gần đơn sắc và công suất tới gần như không đổi trong thời gian \(t\), có thể liên hệ thêm giữa năng lượng ánh sáng tới và điện lượng quang sinh ra:
+\begin{equation}
+Q_{ph} = I_{ph} t = R_{\lambda} E_{opt}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item \(I_{ph}\) là dòng quang sinh ra bởi photo diode, đơn vị A. Đây là thành phần dòng do ánh sáng gây ra, chưa kể đến dòng tối của linh kiện.
+    \item \(R_{\lambda}\) là độ nhạy hay responsivity của photo diode tại bước sóng \(\lambda\), đơn vị A/W. Tham số này cho biết với mỗi watt công suất quang tới ở bước sóng xác định, photo diode tạo ra bao nhiêu ampere dòng quang.
+    \item \(P_{opt}\) là công suất quang tới bề mặt nhạy sáng của photo diode, đơn vị W. Đây là công suất quang thực sự đi vào vùng nhạy quang, không phải toàn bộ công suất phát của nguồn nếu trên đường truyền còn có suy hao.
+    \item \(\eta\) là hiệu suất lượng tử của photo diode, không có đơn vị. Đại lượng này biểu diễn tỉ lệ giữa số hạt tải điện hữu ích được tạo ra và số photon tới vùng nhạy quang.
+    \item \(q\) là điện tích electron, xấp xỉ \(1.602\times10^{-19}\,C\). Đây là điện lượng cơ bản gắn với mỗi hạt tải điện được thu gom.
+    \item \(\lambda\) là bước sóng ánh sáng tới, đơn vị m. Giá trị này ảnh hưởng trực tiếp đến năng lượng của từng photon và do đó ảnh hưởng đến responsivity của linh kiện.
+    \item \(h\) là hằng số Planck, xấp xỉ \(6.626\times10^{-34}\,J\cdot s\).
+    \item \(c\) là tốc độ ánh sáng trong chân không, xấp xỉ \(3\times10^8\,m/s\).
+    \item \(Q_{ph}\) là điện lượng quang thu được trong thời gian quan sát, đơn vị C.
+    \item \(E_{opt}\) là năng lượng ánh sáng tới photo diode trong khoảng thời gian xét, đơn vị J.
+    \item \(t\) là thời gian chiếu sáng hoặc thời gian lấy mẫu, đơn vị s.
+\end{itemize}
+
+Các biểu thức trên cho thấy photo diode thực hiện quá trình biến đổi theo chuỗi: năng lượng ánh sáng tới quyết định công suất quang tới, công suất quang tới cùng với bước sóng xác định responsivity, và responsivity quyết định dòng quang đầu ra. Vì vậy, khi tính toán hệ đo quang, cần đặc biệt chú ý đến bước sóng \(\lambda\), độ nhạy \(R_{\lambda}\), suy hao trên đường truyền quang và thời gian lấy mẫu để dự đoán chính xác mức dòng điện thu được ở đầu vào mạch khuếch đại hoặc ADC.
 
 
 
