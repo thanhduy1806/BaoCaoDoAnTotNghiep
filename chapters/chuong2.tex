@@ -9,7 +9,7 @@
 
 Vệ tinh nhỏ, đặc biệt là CubeSat, là nền tảng nghiên cứu và trình diễn công nghệ được sử dụng phổ biến trong các trường đại học, viện nghiên cứu và doanh nghiệp không gian mới. So với vệ tinh truyền thống, CubeSat có ưu điểm nổi bật là chi phí phát triển thấp hơn, thời gian thiết kế ngắn hơn và quy trình tích hợp linh hoạt hơn. Tuy nhiên, các hệ thống trên CubeSat luôn bị ràng buộc đồng thời bởi giới hạn kích thước, khối lượng, công suất và môi trường vận hành khắc nghiệt.
 
-Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm, mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch EXP (Experiment board để điều khiển thí nghiệm, xử lí dữ liệu và giao tiếp người dùng), board mạch IF (Interface board để giao tiếp với các board khác và giao tiếp người dùng), board mạch LASER (Laser diode board dùng để điều khiển tín hiệu quang), board mạch PHOTO (Photo diode board dùng để thu thập tín hiệu quang). Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
+Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch EXP (Experiment board để điều khiển thí nghiệm, xử lí dữ liệu và giao tiếp người dùng), board mạch IF (Interface board để giao tiếp với các board khác và giao tiếp người dùng), thí nghiệm cụ thể được thiết kế để trực quan hóa hệ thống là hệ thí nghiệm quang học bao gồm board mạch LASER và PHOTO. Board mạch LASER (Laser diode board dùng để điều khiển tín hiệu quang), board mạch PHOTO (Photo diode board dùng để thu thập tín hiệu quang). Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
 
 \subsection{Khái niệm CubeSat và phương thức triển khai quỹ đạo}
 \label{subsec:khai_niem_cubesat}
@@ -105,7 +105,7 @@ Board PHOTO là khối thu nhận tín hiệu quang của hệ thống. Board n�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{picture/components/TEC.jpg}
-    \caption{Cấu tạo của TEC}
+    \caption{Linh kiện TEC}
     \label{fig:tec_module}
 \end{figure}
 
@@ -120,7 +120,7 @@ Từ đó, nguyên lý hoạt động của TEC có thể hiểu là quá trình
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{picture/components/HEATER.jpg}
-    \caption{Cấu tạo của HEATER}
+    \caption{Linh kiện HEATER}
     \label{fig:heater_module}
 \end{figure}
 
@@ -135,7 +135,7 @@ Từ đó, nguyên lý hoạt động của HEATER trong hệ thống điều kh
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{picture/components/SOLENOID.png}
-    \caption{Cấu tạo của SOLENOID}
+    \caption{Linh kiện SOLENOID}
     \label{fig:solenoid_module}
 \end{figure}
 

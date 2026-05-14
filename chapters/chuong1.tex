@@ -7,50 +7,49 @@
 \chapter{Giới thiệu đề tài}
 \label{ch:gioi_thieu}
 
-Chương này trình bày về bối cảnh nghiên cứu, mục tiêu của đề tài và phạm vi thực hiện của đồ án liên quan đến việc thiết kế module thí nghiệm cho vệ tinh nhỏ.
+Chương này trình bày tổng quan về lĩnh vực liên quan đến đề tài, tình hình nghiên cứu trong và ngoài nước, nhiệm vụ cần thực hiện trong luận văn và cấu trúc trình bày của đồ án.
 
-\section{Tổng quan về công nghệ vệ tinh nhỏ}
+\section{Tổng quan}
 \label{sec:tong_quan}
-
-Trong những năm gần đây, kỷ nguyên "New Space" đã chứng kiến sự bùng nổ của các vệ tinh nhỏ, đặc biệt là chuẩn CubeSat. Với ưu điểm chi phí thấp và thời gian phát triển ngắn, CubeSat đã trở thành nền tảng lý tưởng cho các mục tiêu giáo dục và nghiên cứu khoa học.
-
-\subsection{Bối cảnh nghiên cứu}
 
 Trong những năm gần đây, công nghệ vệ tinh nhỏ (Small Satellite, đặc biệt là CubeSat) đã có sự phát triển mạnh mẽ nhờ vào xu hướng thu nhỏ linh kiện điện tử, giảm chi phí phóng và sự tham gia ngày càng lớn của các trường đại học và tổ chức nghiên cứu. Vệ tinh nhỏ cho phép triển khai nhanh các nhiệm vụ thử nghiệm, quan sát Trái Đất, viễn thông và nghiên cứu khoa học với chi phí thấp hơn nhiều so với vệ tinh truyền thống.
 
-Song song với đó, nhu cầu thực hiện các thí nghiệm khoa học trong môi trường không gian ngày càng gia tăng, đặc biệt trong các lĩnh vực như vật lý, sinh học, vật liệu và công nghệ cảm biến. Tuy nhiên, các nền tảng thí nghiệm trên vệ tinh nhỏ hiện nay thường mang tính chuyên biệt, khó tái sử dụng và thiếu tính linh hoạt khi thay đổi mục tiêu nhiệm vụ.
+Trong một hệ vệ tinh nhỏ, payload là phần trực tiếp thực hiện nhiệm vụ khoa học hoặc nhiệm vụ công nghệ. Tùy theo mục tiêu triển khai, payload có thể là camera quan sát, cảm biến môi trường, thiết bị đo bức xạ, mô đun truyền thông hoặc cụm thí nghiệm khoa học. Mặc dù các loại payload khác nhau về đối tượng đo và nguyên lý hoạt động, nhiều hệ thống vẫn có các nhu cầu chung như cấp nguồn, điều khiển ngoại vi, thu nhận dữ liệu, xử lý sơ bộ, lưu trữ và truyền dữ liệu về khối giám sát.
 
-Do đó, việc nghiên cứu và phát triển một mô đun thí nghiệm đa năng có khả năng tích hợp linh hoạt trên vệ tinh nhỏ là một hướng đi tiềm năng, góp phần tối ưu hóa tài nguyên và mở rộng khả năng ứng dụng của các hệ thống vệ tinh.
+Từ đó, việc xây dựng một mô đun tải trọng thí nghiệm có tính đa năng và khả năng mở rộng là hướng tiếp cận phù hợp với đặc thù của vệ tinh nhỏ. Thay vì thiết kế một phần cứng hoàn toàn riêng cho từng thí nghiệm, hệ thống có thể được tổ chức thành các board chức năng có vai trò rõ ràng, trong đó khối điều khiển trung tâm đảm nhiệm điều phối, khối giao tiếp mở rộng hỗ trợ kết nối ngoại vi, còn các board thí nghiệm có thể thay đổi theo từng cấu hình ứng dụng.
 
-\subsection{Lý do chọn đề tài}
-Trong bối cảnh công nghệ vệ tinh nhỏ đang phát triển mạnh mẽ, các quốc gia và tổ chức nghiên cứu ngày càng quan tâm đến việc làm chủ công nghệ thiết kế, chế tạo và vận hành vệ tinh. Đặc biệt, đối với các cơ sở đào tạo và nghiên cứu trong nước, việc tiếp cận và phát triển các hệ thống thử nghiệm trên vệ tinh nhỏ là một bước quan trọng nhằm nâng cao năng lực nghiên cứu và đào tạo nguồn nhân lực trong lĩnh vực công nghệ vũ trụ.
+Trong phạm vi luận văn này, hệ thống được định hướng theo kiến trúc mô đun tải trọng thí nghiệm đa năng cho vệ tinh nhỏ. Board EXP đóng vai trò điều khiển chính, thực hiện điều phối tác vụ, thu nhận và xử lý dữ liệu; board IF đóng vai trò giao tiếp mở rộng; cụm LASER--PHOTO được sử dụng như một cấu hình thử nghiệm quang học để kiểm chứng khả năng vận hành của mô đun.
 
-Bên cạnh đó, việc xây dựng các mô hình thí nghiệm có khả năng hoạt động trong môi trường không gian giúp kiểm chứng các giải pháp kỹ thuật, đánh giá độ tin cậy của linh kiện và hệ thống trước khi triển khai trên các nhiệm vụ thực tế. Điều này có ý nghĩa quan trọng trong việc giảm thiểu rủi ro và tối ưu chi phí cho các dự án vệ tinh.
+\section{Tình hình nghiên cứu trong và ngoài nước}
+\label{sec:tinh_hinh_nghien_cuu}
 
-Xuất phát từ những nhu cầu trên, đề tài “Thiết kế mô đun thí nghiệm đa năng trên vệ tinh nhỏ” được lựa chọn nhằm nghiên cứu và phát triển một giải pháp kỹ thuật có khả năng phục vụ cho mục đích thử nghiệm, đánh giá và ứng dụng trên nền tảng vệ tinh nhỏ.
+Trên thế giới, vệ tinh nhỏ và CubeSat đã được sử dụng rộng rãi trong các nhiệm vụ giáo dục, nghiên cứu khoa học và trình diễn công nghệ. Nhiều nền tảng CubeSat được phát triển theo hướng mô đun hóa, trong đó các phân hệ như nguồn, điều khiển, truyền thông và payload được tách thành các khối chức năng tương đối độc lập. Cách tiếp cận này giúp rút ngắn thời gian phát triển, thuận lợi cho kiểm thử từng phần và tăng khả năng tái sử dụng giữa các nhiệm vụ khác nhau.
 
+Đối với payload thí nghiệm, nhiều nghiên cứu và sản phẩm triển khai theo hướng chuyên biệt cho từng bài toán cụ thể, ví dụ quan sát quang học, đo môi trường không gian, thử nghiệm vật liệu hoặc thí nghiệm sinh học. Các hệ này thường đạt hiệu quả tốt cho nhiệm vụ đã định nghĩa trước, nhưng khả năng thay đổi cấu hình hoặc tái sử dụng cho thí nghiệm khác còn phụ thuộc nhiều vào kiến trúc phần cứng và giao tiếp ban đầu. Vì vậy, xu hướng thiết kế các nền tảng payload có khả năng mở rộng, chuẩn hóa giao tiếp và phân tách rõ vai trò điều khiển--ngoại vi là một hướng có ý nghĩa thực tiễn.
 
-\section{Mục tiêu đề tài}
-\label{sec:muc_tieu}
+Ở trong nước, các nghiên cứu và đồ án liên quan đến vệ tinh nhỏ, hệ thống nhúng, mạch điều khiển và payload thí nghiệm đang ngày càng được quan tâm trong môi trường đại học và phòng thí nghiệm. Một số đề tài trước đã tập trung vào đối tượng thí nghiệm hoặc nguyên lý đo cụ thể, chẳng hạn thí nghiệm mẫu vật sinh hóa sử dụng phương pháp đo quang. Tuy nhiên, để phục vụ mục tiêu thiết kế mô đun đa năng trên vệ tinh nhỏ, luận văn này không đặt trọng tâm vào phân tích bản chất sinh hóa của mẫu vật, mà tập trung vào kiến trúc payload, cách tổ chức phần cứng--phần mềm và khả năng kiểm chứng thông qua một cấu hình đo quang học cụ thể.
 
-Đề tài tập trung vào việc thiết kế và thực hiện module thí nghiệm đa năng với các mục tiêu cụ thể sau:
+\section{Nhiệm vụ luận văn}
+\label{sec:nhiem_vu_luan_van}
+
+Luận văn tập trung thiết kế và kiểm chứng mô đun tải trọng thí nghiệm đa năng cho vệ tinh nhỏ. Trọng tâm của đề tài là xây dựng concept payload theo hướng mô đun, trong đó các board chức năng được phân vai rõ ràng để phục vụ điều khiển, giao tiếp, thu nhận dữ liệu và mở rộng ngoại vi. Các nhiệm vụ chính của luận văn bao gồm:
 
 \begin{itemize}
-    \item \textbf{Thiết kế phần cứng:} Xây dựng cấu trúc PCB đa lớp sử dụng Altium Designer.
-    \item \textbf{Hệ thống nhúng:} Phát triển driver và firmware cho vi điều khiển SAMV71, SAMA7G54.
-    \item \textbf{Xử lý dữ liệu:} Tối ưu hóa thuật toán xử lý dữ liệu ngay trên vệ tinh.
+    \item \textbf{Phân tích yêu cầu hệ thống:} Xác định các yêu cầu cơ bản của một payload thí nghiệm trên vệ tinh nhỏ, bao gồm yêu cầu về kích thước, cấp nguồn, giao tiếp, thu nhận dữ liệu, điều khiển ngoại vi và khả năng kiểm thử.
+    \item \textbf{Xây dựng kiến trúc mô đun:} Đề xuất cấu trúc hệ thống gồm board EXP đóng vai trò điều khiển trung tâm và board IF đóng vai trò giao tiếp mở rộng, thiết kế thành phần board cho mục tiêu thí nghiệm.
+    \item \textbf{Thiết kế phần cứng:} Thiết kế các khối nguồn, xử lý, lưu trữ, giao tiếp và đầu nối ngoại vi phục vụ quá trình tích hợp mô đun tải trọng.
+    \item \textbf{Tổ chức phần mềm điều khiển:} Xây dựng hướng điều khiển phân tán giữa MPU và MCU, trong đó MPU đảm nhiệm các tác vụ cấp hệ thống, còn MCU đảm nhiệm các tác vụ thời gian thực và điều khiển ngoại vi.
+    \item \textbf{Kiểm chứng bằng thí nghiệm quang học:} Sử dụng cụm LASER--PHOTO như một cấu hình thử nghiệm nhằm đánh giá khả năng điều khiển ngoại vi, thu nhận tín hiệu, xử lý dữ liệu và phối hợp hoạt động giữa các board chức năng.
 \end{itemize}
 
-\section{Phạm vi và phương pháp nghiên cứu}
-\label{sec:pham_vi}
-
-Nghiên cứu này tập trung vào phần payload của vệ tinh. Phương pháp thực hiện bao gồm nghiên cứu lý thuyết, thiết kế sơ đồ nguyên lý, layout PCB và thực hiện kiểm thử thực tế.
+Kết quả cần đạt của luận văn là một thiết kế mô đun payload có cấu trúc rõ ràng, có khả năng giao tiếp và phối hợp giữa các board chức năng, đồng thời được kiểm chứng ở mức hệ thống thông qua cấu hình đo quang học. Giới hạn của đề tài là không đi sâu đánh giá đặc tính sinh hóa của mẫu vật, mà tập trung vào nền tảng phần cứng, firmware điều khiển và luồng dữ liệu phục vụ thí nghiệm.
 
 \section{Cấu trúc đồ án}
 \label{sec:cau_truc_do_an}
 
 Nội dung đồ án bao gồm các chương sau:
 \begin{itemize}
+    \item \textbf{Chương 1:} Giới thiệu đề tài.
     \item \textbf{Chương 2:} Cơ sở lý thuyết về hệ thống vệ tinh và vệ tinh nhỏ.
     \item \textbf{Chương 3:} Thiết kế chi tiết phần cứng hệ thống.
     \item \textbf{Chương 4:} Thiết kế và thực hiện phần mềm.

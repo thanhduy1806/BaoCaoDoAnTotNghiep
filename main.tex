@@ -20,6 +20,7 @@
 \usepackage{setspace}
 \usepackage{amsmath}
 \usepackage{caption}
+\usepackage{pdfpages}
 \captionsetup[table]{position=top}
 \captionsetup[figure]{position=bottom}
 \usetikzlibrary{calc}
@@ -53,9 +54,11 @@
 \begin{document}
 
 \include{trangbia} 
+\includepdf[pages=-]{nhiem-vu.pdf}
 
 \pagenumbering{roman}
 \include{chapters/loicamon}
+\include{chapters/tomtatdoan}
 
 \newpage
 \tableofcontents
