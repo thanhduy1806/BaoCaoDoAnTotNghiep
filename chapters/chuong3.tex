@@ -54,31 +54,33 @@ Các yêu cầu trên là nền tảng cho các phần tiếp theo của chươn
 
 Từ yêu cầu ở Mục 3.1 có thể thấy bài toán trọng tâm của hệ thống là bảo đảm giao tiếp dữ liệu tin cậy giữa các board trong khi vẫn duy trì tính mô đun, khả năng mở rộng và độ ổn định vận hành. Vì vậy, quá trình thiết kế được phân tích theo ba hướng chính: kiến trúc kết nối phần cứng, phương thức giao tiếp dữ liệu và cách tổ chức điều khiển hệ thống.
 
-\subsection{Ràng buộc kiến trúc kết nối phần cứng}
+\subsection{Phân tích kiến trúc kết nối phần cứng}
 \label{subsec:phan_tich_kien_truc_ket_noi}
 
 Khác với bài toán lựa chọn kiến trúc thuần túy theo tiêu chí chức năng, trong đề tài này kiến trúc phần cứng trước hết bị chi phối bởi ràng buộc kích thước của payload. Hệ thống phải được tổ chức sao cho phù hợp với không gian lắp đặt, khả năng bố trí cơ khí, đầu nối liên board và cấu trúc tích hợp của mô đun thí nghiệm trong giới hạn kích thước cho phép.
 
-Từ ràng buộc đó, phần cứng không thể triển khai theo hướng gom toàn bộ chức năng lên một board duy nhất, mà bắt buộc phải phân tách thành các board chức năng độc lập gồm EXP, IF, LASER và PHOTO. Cách phân tách này vừa bảo đảm khả năng bố trí theo kích thước payload, vừa tạo thuận lợi cho tổ chức đường tín hiệu, phân bố linh kiện và tích hợp cơ--điện của toàn hệ thống.
+Từ ràng buộc đó, phần cứng không thể triển khai theo hướng gom toàn bộ chức năng lên một board duy nhất, cùng với yêu cầu về mục tiêu là tùy biến thí nghiệm nên phải phân tách thành các board chức năng độc lập gồm điều khiển, giao tiếp, thực hiện thí nghiệm. Cách phân tách này vừa bảo đảm khả năng bố trí theo kích thước payload, vừa tạo thuận lợi cho tổ chức đường tín hiệu, phân bố linh kiện và tích hợp cơ--điện của toàn hệ thống cũng như có thể đáp ứng với nhiều yêu cầu thí nghiệm khác nhau.
 
 Vì vậy, đối với phần cứng, kiến trúc đa board không phải là một phương án tùy chọn mà là hệ quả trực tiếp của yêu cầu kích thước và cấu hình triển khai của payload. Bài toán thiết kế đặt ra khi đó không còn là lựa chọn số lượng board, mà là tổ chức vai trò và kết nối giữa các board sao cho hệ thống hoạt động ổn định, dễ tích hợp và thuận lợi cho kiểm thử.
 
 \subsection{Phân tích theo tổ chức điều khiển hệ thống}
 \label{subsec:phan_tich_to_chuc_dieu_khien}
 
-\textbf{Phương pháp 1: Điều khiển tập trung toàn bộ LASER/PHOTO trên một khối xử lý}
+Xét về phần mềm nhúng, cách tổ chức điều khiển quyết định trực tiếp đến độ phức tạp firmware, khả năng đáp ứng thời gian thực và mức độ mở rộng của hệ thống. Với một payload thí nghiệm gồm nhiều tác vụ khác nhau như điều khiển LASER, thu tín hiệu PHOTO, điều khiển nhiệt, ghi log, truyền dữ liệu và giao tiếp người dùng, có thể tiếp cận bài toán theo hai hướng chính.
+
+\textbf{Phương pháp 1: Điều khiển tập trung trên một chip xử lý}
 \begin{itemize}
-    \item Ưu điểm: logic tập trung tại một điểm, dễ quản lý ở mức tổng thể.
-    \item Khuyết điểm: tăng tải xử lý cho khối điều khiển trung tâm, giảm tính thời gian thực ở khối thí nghiệm, khó mở rộng khi tăng số tác vụ cục bộ.
+    \item Ưu điểm: kiến trúc firmware đơn giản ở giai đoạn đầu vì toàn bộ tác vụ được đặt trong cùng một chương trình; luồng dữ liệu nội bộ ít phải trao đổi qua các giao thức liên chip; quá trình debug ban đầu thuận lợi do chỉ cần theo dõi một bộ xử lý trung tâm.
+    \item Khuyết điểm: khi số lượng tác vụ tăng, firmware dễ trở nên phức tạp và khó bảo trì do một chip phải đồng thời xử lý điều khiển thời gian thực, thu thập dữ liệu, giao tiếp, lưu trữ và phản hồi người dùng. Các tác vụ có yêu cầu thời gian khác nhau có thể ảnh hưởng lẫn nhau, ví dụ tác vụ truyền dữ liệu hoặc ghi log có thể làm trễ tác vụ đọc cảm biến hoặc điều khiển LASER/PHOTO. Ngoài ra, hướng này khó mở rộng khi cần bổ sung thêm board ngoại vi hoặc thêm chế độ thí nghiệm mới.
 \end{itemize}
 
-\textbf{Phương pháp 2: Điều khiển phân cấp trong nội bộ EXP, MPU xử lý cấp cao và MCU điều phối cục bộ}
+\textbf{Phương pháp 2: Điều khiển phân tán theo tác vụ, tương tự mô hình microservice}
 \begin{itemize}
-    \item Ưu điểm: phân tách rõ lớp xử lý cấp cao và lớp điều khiển thời gian thực; EXP xử lý nhanh các tác vụ thời gian thực (điều khiển LASER/PHOTO, đọc nhiệt, điều khiển TEC/HEATER); tăng tính mô đun và khả năng tái sử dụng.
-    \item Khuyết điểm: cần định nghĩa rõ cơ chế phối hợp lệnh-trạng thái giữa MPU và MCU trong nội bộ EXP để tránh xung đột điều khiển.
+    \item Ưu điểm: hệ thống được chia thành các khối xử lý chuyên trách, trong đó mỗi MPU/MCU đảm nhiệm một nhóm tác vụ tương đối độc lập. MCU phù hợp cho các tác vụ thời gian thực như đọc ADC, điều khiển LASER/PHOTO, điều khiển TEC/HEATER và giám sát trạng thái cục bộ. MPU phù hợp cho các tác vụ cấp cao hơn như quản lý kịch bản thí nghiệm, xử lý dữ liệu, lưu trữ, truyền thông và giao tiếp người dùng. Cách phân tách này giúp firmware của từng khối gọn hơn, dễ kiểm thử riêng, giảm ảnh hưởng chéo giữa các tác vụ và thuận lợi khi mở rộng thêm chức năng.
+    \item Khuyết điểm: cần thiết kế rõ giao thức trao đổi lệnh, phản hồi trạng thái và dữ liệu giữa các bộ xử lý. Nếu không có cơ chế đồng bộ phù hợp, hệ thống có thể phát sinh lỗi do trùng quyền điều khiển, mất trạng thái hoặc sai thứ tự thực thi giữa các tác vụ.
 \end{itemize}
 
-Phương pháp 2 được lựa chọn vì phù hợp trực tiếp với kiến trúc lý thuyết đã xây dựng ở Chương 2 và hỗ trợ tốt mục tiêu chính của đề tài là kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu giữa các board.
+Trong đề tài này, phương pháp 2 được lựa chọn. Board EXP không tổ chức firmware theo hướng dồn toàn bộ tác vụ cho một chip duy nhất, mà phân tách vai trò giữa MPU và MCU. MPU đóng vai trò điều phối cấp hệ thống, tiếp nhận lệnh, quản lý dữ liệu và giao tiếp ra ngoài; MCU đóng vai trò điều khiển cục bộ với các tác vụ cần đáp ứng nhanh và ổn định. Cách tổ chức này phù hợp với định hướng mô đun của payload, đồng thời hỗ trợ tốt mục tiêu kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu giữa các board chức năng.
 
 \subsection{Kết luận lựa chọn phương pháp}
 \label{subsec:ket_luan_lua_chon}
@@ -90,7 +92,7 @@ Từ các phân tích trên, phương pháp thiết kế được chọn cho đ�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/so-do-tong-quat.png}
+    \includegraphics[width=0.8\textwidth]{picture/so-do-tong-quat.png}
     \caption{Sơ đồ khối tổng quát}
     \label{fig:so-do-tong-quat}
 \end{figure}
@@ -297,6 +299,8 @@ Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-laser}, chức năng các khối
 
     \item \textbf{Khối CURRENT SOURCE:} tạo dòng kích ổn định cho nhánh phát quang theo mức tham chiếu từ DAC, giúp duy trì cường độ phát theo giá trị đặt.
 
+    \item \textbf{Khối RSHUNT và INA:}  Rshunt là điện trở mắc nối tiếp để đo dòng điện, INA là mạch khuếch đại vi sai để đọc về điện áp trên trở Rshunt từ đó gửi về tín hiệu ADC để theo dõi dòng điện điều khiển.
+
     \item \textbf{Khối SWITCHING: } thực hiện ma trận chọn kênh phát, định tuyến dòng kích từ mạch nguồn dòng đến từng phần tử laser theo lệnh điều khiển.
 
     \item \textbf{Khối LASER: } là ma trận phần tử phát quang đầu ra, phát ánh sáng theo kênh đã được chọn để kích thích mẫu trong buồng đo.
@@ -317,17 +321,22 @@ Sơ đồ khối chi tiết của board PHOTO được trình bày trong Hình \
 
 Dựa trên sơ đồ Hình~\ref{fig:so-do-khoi-photo}, chức năng các khối chính của board PHOTO gồm:
 \begin{itemize}
-    \item \textbf{Khối CONNECTOR:} là giao diện kết nối với board điều khiển, trao đổi tín hiệu điều khiển/thu thập dữ liệu qua bus \textit{SPI}.
+    \item \textbf{Khối CONNECTOR:} là giao diện kết nối giữa board PHOTO và board điều khiển EXP, bao gồm các đường tín hiệu phục vụ thu thập dữ liệu và cấu hình ngoại vi như \textit{SPI}, \textit{I2C}, tín hiệu \textit{MIPI} từ camera và ngõ tín hiệu analog đưa về kênh ADC ngoài nếu cần.
 
-    \item \textbf{Khối PHOTO $6 \times 6$:} là ma trận phần tử thu quang, tiếp nhận tín hiệu ánh sáng từ hệ quang và tạo tín hiệu dòng tương ứng cường độ thu được.
+    \item \textbf{Khối PHOTO:} là tập hợp các phần tử thu quang, tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu thí nghiệm và tạo dòng quang điện có giá trị phụ thuộc vào cường độ ánh sáng thu được.
 
-    \item \textbf{Khối SWITCHING $6 \times 6$:} thực hiện chọn kênh thu trong ma trận PHOTO, định tuyến tín hiệu từ phần tử thu được chọn sang chuỗi xử lý tương tự.
+    \item \textbf{Khối SWITCH:} thực hiện chọn kênh thu từ các phần tử PHOTO, định tuyến dòng quang điện của kênh được chọn sang chuỗi xử lý tín hiệu tương tự phía sau.
 
-    \item \textbf{Khối TRANSIMPEDANCE AMPLIFIER:} chuyển đổi dòng quang điện sang điện áp và khuếch đại tín hiệu mức nhỏ từ cảm biến quang.
+    \item \textbf{Khối I--V CONVERTER:} chuyển đổi dòng quang điện mức nhỏ từ phần tử thu quang sang tín hiệu điện áp. Đây là tầng xử lý đầu tiên của chuỗi đo analog, giúp đưa tín hiệu dòng về dạng điện áp phù hợp cho các tầng lọc và số hóa.
 
-    \item \textbf{Khối ANTIALIAS:} lọc giới hạn băng thông tín hiệu trước khi số hóa, giảm nhiễu cao tần và hạn chế méo aliasing trong quá trình lấy mẫu.
+    \item \textbf{Khối ANTI ALIASING:} lọc giới hạn băng thông tín hiệu trước khi số hóa, giảm nhiễu cao tần và hạn chế hiện tượng aliasing trong quá trình lấy mẫu.
 
-    \item \textbf{Khối DAC:} tạo mức tham chiếu/bù offset cho chuỗi xử lý tương tự theo cấu hình đo, giúp tối ưu dải đo tại ngõ vào bộ chuyển đổi số.
+    \item \textbf{Khối ADC:} số hóa tín hiệu analog sau tầng lọc và truyền dữ liệu số về board điều khiển thông qua bus \textit{SPI}. Ngoài ra, tín hiệu sau lọc cũng có thể được đưa trực tiếp ra connector để sử dụng kênh ADC ngoài tùy theo cấu hình đo.
+
+    \item \textbf{Khối CAMERA SENSOR:} thu nhận hình ảnh hoặc dữ liệu quang học bổ sung trong buồng thí nghiệm. Khối này xuất dữ liệu ảnh qua giao tiếp \textit{MIPI} và nhận cấu hình điều khiển qua bus \textit{I2C}.
+
+    \item \textbf{Khối MIPI SWITCH và I2C MULTIPLEXER:} các tín hiệu MIPI và I2C được kết nối từ EXP thông qua connector, do số lượn tín hiệu có hạn nhưng cần 4 camera sensor nên phải qua khối MIPI switch và I2C multiplexer để phân chia kênh điều khiển.
+
 \end{itemize}
 
 \section{Sơ đồ nguyên lý chi tiết}
@@ -724,14 +733,14 @@ Gần phía connector usb sử dụng 2 IC USBLC6-2SC6 để kẹp mức điện
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/bmp390-onboard.png}
-    \caption{Sơ đồ nguyên lí cảm biến BMP390 onboard}
+    \caption{Sơ đồ nguyên lý cảm biến BMP390 onboard}
     \label{fig:exp-sche-bmp390-onboard}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/bmp390-connector.png}
-    \caption{Sơ đồ nguyên lí connector BMP390}
+    \caption{Sơ đồ nguyên lý connector BMP390}
     \label{fig:exp-sche-bmp390-connector}
 \end{figure}
 
@@ -740,7 +749,7 @@ Thiết kế sử dụng BMP390 onboard và kết nối ra connector để đo �
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/exp/cam-bien-gia-toc.png}
-    \caption{Sơ đồ nguyên lí cảm biến gia tốc}
+    \caption{Sơ đồ nguyên lý cảm biến gia tốc}
     \label{fig:exp-sche-cam-bien-gia-toc}
 \end{figure}
 
@@ -835,7 +844,7 @@ Module này đóng vai trò là một bộ chuyển đổi DC-AC điện áp cao
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{picture/exp/connector-hd4.png}
-    \caption{Sơ đồ nguyên lí connector HD4}
+    \caption{Sơ đồ nguyên lý connector HD4}
     \label{fig:exp-sche-connector-hd4}
 \end{figure}
 
@@ -950,7 +959,7 @@ Các tín hiệu giao tiếp với board EXP bao gồm CAN, RS422, I2C, USB, và
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{\detokenize{picture/if/efuse-12v-mpu .png}}
-    \caption{eFuse 12\,V cho MPU}
+    \caption{Sơ đồ nguyên lý eFuse 12\,V cho MPU}
     \label{fig:if-efuse-12v-mpu}
 \end{figure}
 
@@ -959,7 +968,7 @@ Khối efuse trên board IF được thiết kế như một công tắc nguồn
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/buck-12v-5v.png}
-    \caption{Mạch buck từ 12\,V sang 5\,V}
+    \caption{Sơ đồ nguyên lý nguồn buck từ 12\,V sang 5\,V}
     \label{fig:if-buck-12v-5v}
 \end{figure}
 
@@ -970,7 +979,7 @@ Tương tự như cách thiết kế mạch nguồn buck từ \(12\,V\) sang \(5
     \includegraphics[width=0.7\textwidth]{picture/if/ldo-3v3-emmc.png}
 
     \includegraphics[width=0.7\textwidth]{picture/if/ldo-3v3-driver.png}
-    \caption{LDO 3.3\,V cho các IC trên board}
+    \caption{Sơ đồ nguyên lý LDO 3.3\,V cho các IC trên board}
     \label{fig:if-ldo-3v3-ics}
 \end{figure}
 
@@ -981,13 +990,13 @@ eMMC có LDO riêng do thông thường eMMC sẽ kéo dòng khá lớn trong qu
     \begin{minipage}[t]{0.495\textwidth}
         \centering
         \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{picture/if/pmic.png}
-        \captionof{figure}{Khối quản lý nguồn PMIC}
+        \captionof{figure}{Sơ đồ nguyên lý khối quản lý nguồn PMIC}
         \label{fig:if-pmic}
     \end{minipage}\hspace{0.01\textwidth}%
     \begin{minipage}[t]{0.495\textwidth}
         \centering
         \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{picture/if/power-measurement-mpu.png}
-        \captionof{figure}{Khối đo nguồn}
+        \captionof{figure}{Sơ đồ nguyên lý khối đo nguồn}
         \label{fig:if-power-measurement-mpu}
     \end{minipage}
 \end{figure}
@@ -1013,7 +1022,7 @@ Bên cạnh dùng PAC1934 để đo dòng tải trên các nguồn MPU tiêu th�
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/mpu-ddr.png}
-    \caption{MPU giao tiếp với DRAM (DDR3)}
+    \caption{Sơ đồ nguyên lý khối MPU giao tiếp với DRAM (DDR3)}
     \label{fig:if-mpu-ddr}
 \end{figure}
 
@@ -1023,7 +1032,7 @@ IC DRAM dùng cùng part number là IS43TR16512BL-125KBLI tương tự như trê
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/mpu-pio.png}
-    \caption{Tín hiệu PIO trên MPU}
+    \caption{Sơ đồ nguyên lý tín hiệu PIO trên MPU}
     \label{fig:if-fpga-pio}
 \end{figure}
 
@@ -1041,7 +1050,7 @@ Các tín hiệu trên MPU bao gồm:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/emmc.png}
-    \caption{eMMC}
+    \caption{Sơ đồ nguyên lý  eMMC}
     \label{if-emmc}
 \end{figure}
 
@@ -1050,7 +1059,7 @@ eMMC thường đóng vai trò bộ nhớ không mất dữ liệu chính của 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/sdcard.png}
-    \caption{SDCard cho MPU}
+    \caption{Sơ đồ nguyên lý SDCard cho MPU}
     \label{if-sdcard}
 \end{figure}
 
@@ -1200,7 +1209,7 @@ BNO08X (BNO085/BNO086) là cảm biến quán tính dạng SiP tích hợp gia t
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/temp.png}
-    \caption{Sơ đồ nguyên lý khối temp}
+    \caption{Sơ đồ nguyên lý khối cảm biến nhiệt}
     \label{fig:if-temp}
 \end{figure}
 
@@ -1209,14 +1218,14 @@ Sử dụng một cảm biến nhiệt độ đơn giản onboard TC1047AVNBTR �
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{picture/if/efuse-5v.png}
-    \caption{eFuse 5V cho nguồn FPGA}
+    \caption{Sơ đồ nguyên lý eFuse 5V cho nguồn FPGA}
     \label{fig:tin-hieu-fpga}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{picture/if/3v3-vccio01.png}
-    \caption{Nguồn 3.3\,V cho IO0/1 của FPGA}
+    \caption{Sơ đồ nguyên lý nguồn 3.3\,V cho IO0/1 của FPGA}
     \label{fig:fpga-3v3-io01}
 \end{figure}
 
@@ -1226,7 +1235,7 @@ Các bank IO0/1 của FPGA sử dụng nguồn cấp \(3.3\,V\), ở đây ta l�
     \centering
     \includegraphics[width=0.6\textwidth]{picture/if/ldo-1v8-vccaux.png}
     \includegraphics[width=0.6\textwidth]{picture/if/ldo-1v8-vccio345.png}
-    \caption{LDO 1V8}
+    \caption{Sơ đồ nguyên lý LDO 1V8}
     \label{fig:fpga-ldo-1v8}
 \end{figure}
 
@@ -1246,7 +1255,7 @@ FPGA sử dụng một nguồn LVDS tốc độ cao với tần số xung clock 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/fpga.png}
-    \caption{Tín hiệu trên FPGA}
+    \caption{Sơ đồ nguyên lý tín hiệu trên FPGA}
     \label{fig:tin-hieu-fpga}
 \end{figure}
 
@@ -1257,7 +1266,7 @@ Các nhóm tín hiệu chính sử dụng trên FPGA bao gồm: tín hiệu UART
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{picture/if/fpga-spi-flash.png}
-    \caption{IC FLASH SPI FPGA - MPU}
+    \caption{Sơ đồ nguyên lý khối SPI FPGA - MPU}
     \label{fig:if-fpga-spi-flash}
 \end{figure}
 
@@ -1300,7 +1309,7 @@ SPI switch đóng vai trò quản lý tài nguyên dùng chung giữa MPU và FP
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{picture/laser/ref.jpg}
+    \includegraphics[width=0.8\textwidth]{picture/laser/ref.png}
     \caption{Sơ đồ mạch nguồn áp chuyển sang dòng}
     \label{fig:laser-ref}
 \end{figure}
@@ -1534,14 +1543,14 @@ Tương tự như cách mô phỏng trên mạch internal, mạch external sau k
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/buck-12-5.png}
-    \caption{Mạch nguồn BUCK 12\,V - 5\,V}
+    \caption{Sơ đồ nguyên lý mạch nguồn BUCK 12\,V - 5\,V}
     \label{fig:laser-buck}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{picture/laser/ldo-5-3v3.png}
-    \caption{Mạch nguồn LDO 5\,V - 3.3\,V}
+    \caption{Sơ đồ nguyên lý mạch nguồn LDO 5\,V - 3.3\,V}
     \label{fig:laser-ldo}
 \end{figure}
 
@@ -1549,7 +1558,7 @@ Tương tự như cách mô phỏng trên mạch internal, mạch external sau k
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/current-int.png}
     \includegraphics[width=0.9\textwidth]{picture/laser/current-ext.png}
-    \caption{Mạch tạo nguồn dòng cho laser diode}
+    \caption{Sơ đồ nguyên lý mạch tạo nguồn dòng cho laser diode}
     \label{fig:laser-current}
 \end{figure}
 
@@ -1557,7 +1566,7 @@ Tương tự như cách mô phỏng trên mạch internal, mạch external sau k
     \centering
     \includegraphics[width=0.7\textwidth]{picture/laser/dac-int.png}
     \includegraphics[width=0.7\textwidth]{picture/laser/dac-ext.png}
-    \caption{Mạch DAC tạo mức điện áp}
+    \caption{Sơ đồ nguyên lý tạo mức điện áp DAC}
     \label{fig:laser-dac}
 \end{figure}
 
