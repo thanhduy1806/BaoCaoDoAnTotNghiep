@@ -7,48 +7,6 @@
 
 Chương này trình bày định hướng thiết kế và triển khai phần cứng cho mô đun thí nghiệm đa năng trên vệ tinh nhỏ, bám theo mục tiêu đã nêu ở Chương 1 và cơ sở lý thuyết ở Chương 2. Trọng tâm của chương là chuyển các yêu cầu nhiệm vụ thành các chỉ tiêu kỹ thuật cụ thể để làm cơ sở cho thiết kế sơ đồ khối, lựa chọn linh kiện, thiết kế mạch và kiểm thử.
 
-\section{Yêu cầu thiết kế}
-\label{sec:yeu_cau_thiet_ke}
-
-Từ các mục tiêu đã nêu ở Chương 1 và kiến trúc IF--EXP--LASER-PHOTO trình bày trong Chương 2, yêu cầu của phần cứng trong đề tài không chỉ dừng ở việc vận hành từng board riêng lẻ mà phải bảo đảm toàn hệ hoạt động như một khối thống nhất, trong đó giao tiếp dữ liệu liên board là mục tiêu trung tâm.
-
-\begin{itemize}
-    \item \textbf{Yêu cầu tích hợp hệ thống:}
-    Hệ thống phải được thiết kế để các board EXP, IF, LASER và PHOTO kết nối thành một cấu trúc đồng bộ.
-    Việc bố trí phần cứng phải bảo đảm tín hiệu điều khiển và tín hiệu đo được truyền ổn định giữa các board, giảm sai lệch do nhiễu và sai khác vị trí lắp đặt.
-
-    \item \textbf{Yêu cầu về giao tiếp dữ liệu giữa các board:}
-    Luồng dữ liệu phải được tổ chức rõ ràng theo chiều điều khiển và chiều phản hồi:
-    Người dùng gửi lệnh đến EXP, EXP điều phối hoạt động thí nghiệm, điều khiển board LASER và thu dữ liệu từ PHOTO. Bên cạnh đó còn đọc các điều kiện môi trường thí nghiệm như nhiệt độ, độ ẩm từ các cảm biến để điều khiển môi trường thí nghiệm. Từ dữ liệu thu thập được trên board PHOTO, sau khi phân tích đóng gói dữ liệu board EXP gửi dữ liệu về cho người dùng, bên cạnh đó board IF đóng vai trò là board interface của hệ thống, dùng để giao tiếp với các module phần cứng bên ngoài khác và chuyển đổi một số giao thức kết nối như SPI sang LVDS hay LVDS từ FPGA.
-    Hệ thống đồng thời phải hỗ trợ lưu vết trạng thái hoạt động để phục vụ giám sát và phân tích sau thí nghiệm.
-
-    \item \textbf{Yêu cầu lưu trữ và giám sát:}
-    Hệ thống phải lưu được hành vi thí nghiệm và dữ liệu mẫu vật theo từng phiên đo.
-    Dữ liệu và trạng thái hệ thống cần được chuyển về máy tính giám sát để người vận hành theo dõi và đánh giá kết quả.
-
-    \item \textbf{Yêu cầu an toàn và độ bền:}
-    Phần cứng phải có bảo vệ quá dòng, quá áp cho toàn hệ và cho các khối công suất.
-    Kết cấu và kết nối phải đủ chắc chắn để hệ thống làm việc ổn định lâu dài trong điều kiện phòng thí nghiệm, hạn chế lỗi do rung lắc, tiếp xúc kém hoặc quá nhiệt cục bộ.
-
-    \item \textbf{Yêu cầu đối với khối điều khiển trung tâm:}
-    Khối điều khiển phải hỗ trợ các giao tiếp ngoại vi phục vụ tích hợp mô đun (như UART/I2C/SPI), cho phép tự động hóa quy trình theo kịch bản thí nghiệm.
-    Hệ thống cần hỗ trợ lấy mẫu và truyền tín hiệu với tốc độ phù hợp để đáp ứng bài toán theo dõi tín hiệu quang theo thời gian thực.
-
-    \item \textbf{Yêu cầu đối với khối giám sát và điều khiển nhiệt độ:}
-    Mạch đo nhiệt độ cần sử dụng cảm biến NTC có độ nhạy cao để theo dõi liên tục điều kiện nhiệt của buồng thí nghiệm.
-    Khối gia nhiệt và làm mát (HEATER/TEC) phải phối hợp với bộ điều khiển để duy trì nhiệt độ theo giá trị đặt trước.
-
-    \item \textbf{Yêu cầu đối với khối phát quang (LASER):}
-    Công suất và mức kích hoạt laser cần điều chỉnh được theo từng chế độ làm việc và từng loại mẫu.
-    Mạch điều khiển laser phải bảo đảm hoạt động ổn định, có cơ chế ngắt an toàn khi xuất hiện trạng thái bất thường.
-
-    \item \textbf{Yêu cầu đối với khối thu quang (PHOTO):}
-    Khối thu phải có độ nhạy cao, đi kèm mạch khuếch đại và lọc tín hiệu phù hợp để giảm nhiễu.
-    Tín hiệu quang sau mẫu cần được thu nhận chính xác và chuyển đổi sang dữ liệu số để truyền về khối điều khiển, phục vụ xử lý và đánh giá.
-\end{itemize}
-
-Các yêu cầu trên là nền tảng cho các phần tiếp theo của chương về phân tích phương án, thiết kế sơ đồ khối và triển khai mạch thực tế.
-
 \section{Phân tích phương pháp thiết kế}
 \label{sec:phan_tich_phuong_phap}
 
@@ -59,7 +17,7 @@ Từ yêu cầu ở Mục 3.1 có thể thấy bài toán trọng tâm của h�
 
 Khác với bài toán lựa chọn kiến trúc thuần túy theo tiêu chí chức năng, trong đề tài này kiến trúc phần cứng trước hết bị chi phối bởi ràng buộc kích thước của payload. Hệ thống phải được tổ chức sao cho phù hợp với không gian lắp đặt, khả năng bố trí cơ khí, đầu nối liên board và cấu trúc tích hợp của mô đun thí nghiệm trong giới hạn kích thước cho phép.
 
-Từ ràng buộc đó, phần cứng không thể triển khai theo hướng gom toàn bộ chức năng lên một board duy nhất, cùng với yêu cầu về mục tiêu là tùy biến thí nghiệm nên phải phân tách thành các board chức năng độc lập gồm điều khiển, giao tiếp, thực hiện thí nghiệm. Cách phân tách này vừa bảo đảm khả năng bố trí theo kích thước payload, vừa tạo thuận lợi cho tổ chức đường tín hiệu, phân bố linh kiện và tích hợp cơ--điện của toàn hệ thống cũng như có thể đáp ứng với nhiều yêu cầu thí nghiệm khác nhau.
+Từ ràng buộc đó, phần cứng không thể triển khai theo hướng gom toàn bộ chức năng lên một board duy nhất. Cùng với yêu cầu tùy biến thí nghiệm, hệ thống cần được phân tách thành các board chức năng độc lập gồm điều khiển, giao tiếp và thực hiện thí nghiệm. Cách phân tách này vừa bảo đảm khả năng bố trí theo kích thước payload, vừa tạo thuận lợi cho tổ chức đường tín hiệu, phân bố linh kiện và tích hợp cơ--điện của toàn hệ thống, đồng thời có thể đáp ứng nhiều yêu cầu thí nghiệm khác nhau.
 
 Vì vậy, đối với phần cứng, kiến trúc đa board không phải là một phương án tùy chọn mà là hệ quả trực tiếp của yêu cầu kích thước và cấu hình triển khai của payload. Bài toán thiết kế đặt ra khi đó không còn là lựa chọn số lượng board, mà là tổ chức vai trò và kết nối giữa các board sao cho hệ thống hoạt động ổn định, dễ tích hợp và thuận lợi cho kiểm thử.
 
@@ -97,23 +55,23 @@ Từ các phân tích trên, phương pháp thiết kế được chọn cho đ�
     \label{fig:so-do-tong-quat}
 \end{figure}
 
-\textbf{Board điều khiển thí nghiệm (EXP):}
-EXP là bộ phận điều khiển chính của toàn bộ hệ thống thí nghiệm
-Trên board EXP tích hợp 2 core xử lý bao gồm core MPU (SAMA7G54) và core MCU (SAMV71). Core MCU là nơi điều khiển, thu thập, tính toán với các ngoại vi, đồng thời đảm nhận vai trò chính trong việc vận hành thí nghiệm. MCU sẽ điều khiển 2 board thí nghiệm chính bên dưới là LASER và PHOTO. Bên cạnh việc điều khiển, theo dõi và tính toán lượng năng lượng phát - thu được từ 2 board LASER và PHOTO, MCU còn thực hiện các tác vụ kiểm soát nhiệt cho thí nghiệm nói riêng và cho toàn hệ thống nói chung. Các module HEATER, TEC sẽ được điều khiển tùy theo môi trường thực tế đọc về từ các sensor như NTC, BMP390,... Ngoài ra còn một số tác vụ khác cũng được điều khiển bởi MCU. Core MCU không đủ khả năng tính toán và xử lý với khối lượng dữ liệu lớn, MCU chỉ như là một thành phần thu thập và điều khiển, điều này dẫn đến sự thiết yếu của một con chip xử lý tác vụ mạnh hơn MCU, đó là lý do sử dụng thêm một core MPU trên board. MPU như một máy tính nhỏ sẽ chịu trách nhiệm xử lý dữ liệu và giao tiếp ra người dùng. Các lệnh điều khiển hệ thống từ người dùng sẽ được gửi đến core MPU, MPU sẽ điều phối thực hiện lệnh trên chính nó hoặc ra lệnh xuống MCU nếu các lệnh liên quan đến tác vụ thí nghiệm. Khi dữ liệu được thu thập về từ MCU, MPU sẽ xử lý và gửi về người dùng hay là những board interface khác.
+Từ mục tiêu các khối chức năng thí nghiệm, hệ thống sẽ bao gồm các phần cứng sau:
 
-\textbf{Board giao tiếp trung gian (IF):}
-IF là tầng \textit{interface}, có nhiệm vụ chuẩn hóa kết nối, tổ chức đường tín hiệu và hỗ trợ mở rộng ngoại vi.
-Khối này giúp tách lớp điều khiển chính khỏi các ràng buộc kết nối phần cứng, nhờ đó hệ thống dễ tích hợp thêm module mới, đồng thời giảm độ phức tạp khi thay đổi cấu hình thử nghiệm.
+\begin{itemize}
+    \item \textbf{Board điều khiển thí nghiệm (EXP):}
+    EXP là bộ phận điều khiển chính của toàn bộ hệ thống thí nghiệm. Trên board EXP tích hợp hai core xử lý gồm core MPU (SAMA7G54) và core MCU (SAMV71). Core MCU đảm nhiệm các tác vụ điều khiển, thu thập và tính toán với ngoại vi, đồng thời giữ vai trò chính trong quá trình vận hành thí nghiệm. MCU điều khiển hai board thí nghiệm chính là LASER và PHOTO, theo dõi dữ liệu phát--thu quang, đồng thời thực hiện các tác vụ kiểm soát nhiệt cho buồng thí nghiệm thông qua các module như HEATER và TEC dựa trên dữ liệu cảm biến như NTC, BMP390.
 
-\textbf{Board phát quang (LASER):}
-Board LASER tạo nguồn sáng kích thích cho quá trình đo mẫu.
-Mạch được thiết kế theo cấu trúc nhiều kênh độc lập, cho phép lựa chọn từng kênh phát theo lệnh điều khiển từ EXP.
-Cường độ phát có thể hiệu chỉnh để phù hợp với từng điều kiện thí nghiệm và từng loại mẫu vật.
+    Core MCU phù hợp với các tác vụ điều khiển cục bộ và thời gian thực, nhưng không đủ thuận lợi cho các bài toán xử lý dữ liệu lớn hoặc giao tiếp cấp cao. Vì vậy, board EXP sử dụng thêm core MPU như một lớp xử lý mạnh hơn, có nhiệm vụ xử lý dữ liệu, quản lý giao tiếp với người dùng và điều phối hệ thống ở mức cao. Các lệnh điều khiển từ người dùng được gửi đến MPU; sau đó MPU tự xử lý hoặc gửi lệnh xuống MCU nếu lệnh liên quan đến tác vụ thí nghiệm. Khi dữ liệu được MCU thu thập, MPU sẽ xử lý, đóng gói và gửi kết quả về người dùng hoặc các board interface khác.
 
-\textbf{Board thu quang (PHOTO):}
-Board PHOTO tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu và biến đổi thành tín hiệu điện phục vụ đo lường.
-Khối này tích hợp mạch khuếch đại, lọc nhiễu và chuyển đổi ADC để bảo đảm tín hiệu thu có chất lượng tốt trước khi truyền về EXP.
-Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên board LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
+    \item \textbf{Board giao tiếp trung gian (IF):}
+    IF là tầng \textit{interface}, có nhiệm vụ chuẩn hóa kết nối, tổ chức đường tín hiệu và hỗ trợ mở rộng ngoại vi. Khối này giúp tách lớp điều khiển chính khỏi các ràng buộc kết nối phần cứng, nhờ đó hệ thống dễ tích hợp thêm module mới, đồng thời giảm độ phức tạp khi thay đổi cấu hình thử nghiệm.
+
+    \item \textbf{Board phát quang (LASER):}
+    Board LASER tạo nguồn sáng kích thích cho quá trình đo mẫu. Mạch được thiết kế theo cấu trúc nhiều kênh độc lập, cho phép lựa chọn từng kênh phát theo lệnh điều khiển từ EXP. Cường độ phát có thể hiệu chỉnh để phù hợp với từng điều kiện thí nghiệm và từng loại mẫu vật.
+
+    \item \textbf{Board thu quang (PHOTO):}
+    Board PHOTO tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu và biến đổi thành tín hiệu điện phục vụ đo lường. Khối này tích hợp mạch khuếch đại, lọc nhiễu và chuyển đổi ADC để bảo đảm tín hiệu thu có chất lượng tốt trước khi truyền về EXP. Vị trí các kênh thu được bố trí tương ứng với các kênh phát trên board LASER nhằm bảo đảm tính đồng bộ khi quét mẫu.
+\end{itemize}
 
 \section{Sơ đồ khối chi tiết}
 
@@ -475,13 +433,13 @@ f_{CO} = \frac{f_{LC}^2}{85 \times V_{OUT}}
 C_{OUT} = \frac{1}{3357 \times L_{OUT} \times f_{CO} \times V_{OUT}}
 \end{equation} 
 
-Giữa chân BOOT và PH dùng 1 tụ điện cemeamic nối tiếp với ngõ ra có giá trị 0.01 $\mu F$. Tụ này cung cấp điện áp điều khiển cho MOSFET phía cao. Giá trị 0.01 $\mu F$ vừa đủ để nạp/giữ điện áp gate trong mỗi chu kỳ chuyển mạch. Nếu tụ quá lớn thì tốc độ nạp/xả chậm, làm giảm hiệu quả chuyển mạch. Nếu tụ quá nhỏ thì không giữ được điện áp gate ổn định. 0.01 $\mu F$ là giá trị tối ưu mà hãng đã thử nghiệm, đảm bảo MOSFET high-side bật/tắt nhanh, giảm tổn hao chuyển mạch, đồng thời không gây dao động hay trễ.
+Giữa chân BOOT và PH dùng một tụ điện ceramic nối tiếp với ngõ ra có giá trị 0.01 $\mu F$. Tụ này cung cấp điện áp điều khiển cho MOSFET phía cao. Giá trị 0.01 $\mu F$ vừa đủ để nạp/giữ điện áp gate trong mỗi chu kỳ chuyển mạch. Nếu tụ quá lớn thì tốc độ nạp/xả chậm, làm giảm hiệu quả chuyển mạch. Nếu tụ quá nhỏ thì không giữ được điện áp gate ổn định. 0.01 $\mu F$ là giá trị tối ưu mà hãng đã thử nghiệm, đảm bảo MOSFET high-side bật/tắt nhanh, giảm tổn hao chuyển mạch, đồng thời không gây dao động hay trễ.
 
 Trong mạch TPS5430, cần sử dụng một diode bắt (catch diode) ngoài giữa chân PH và GND. Diode này phải đáp ứng các điều kiện tuyệt đối của ứng dụng: điện áp ngược phải lớn hơn điện áp cực đại tại chân PH (VIN(MAX) + 0.5 V), dòng đỉnh phải lớn hơn IOUT(MAX) cộng với một nửa dòng gợn qua cuộn cảm, và điện áp rơi thuận phải nhỏ để đạt hiệu suất cao. Thời gian dẫn của diode thường dài hơn thời gian MOSFET high-side bật, do đó việc chọn diode phù hợp có thể cải thiện đáng kể hiệu suất tổng thể. Ngoài ra, cần đảm bảo diode có khả năng tản nhiệt cho công suất hao phí. Trong thiết kế này, linh kiện SS54 được sử dụng, với điện áp ngược 40 V, dòng thuận 5 A và điện áp rơi thuận thấp, đáp ứng tốt các yêu cầu trên và đảm bảo hiệu suất cũng như độ tin cậy của hệ thống.
 
 Chân ENA cung cấp điều khiển bật và tắt điện áp cho bộ điều chỉnh. Khi điện áp chân ENA vượt quá điện áp ngưỡng, bộ điều chỉnh bắt đầu hoạt động và chế độ khởi động chậm nội bộ bắt đầu tăng dần. Nếu điện áp chân ENA bị kéo xuống dưới điện áp ngưỡng, bộ điều chỉnh sẽ dừng việc chuyển đổi và chế độ khởi động chậm nội bộ sẽ được thiết lập lại. Nối chân này với đất hoặc bất kỳ điện áp nào thấp hơn \(0.5\,V\) sẽ vô hiệu hóa bộ điều chỉnh và kích hoạt chế độ tắt. Dòng điện không tải của TPS543x trong chế độ tắt thông thường là \(15\,\mu A\).
 
-Bên cạnh việc thiết kết chủ động từ việc dùng các giá trị điện trở, tụ điện, cuộn cảm để thực hiện được giá trị ngõ ra mong muốn, nội bộ IC còn hỗ trợ một số chức năng giúp bảo vệ IC, bảo vệ hệ thống, giúp hệ thống hoạt động ổn định. Ví dụ như khả nănh bảo vệ quá dòng, bằng cách giám sát điện áp drain–source của MOSFET. Khi dòng vượt ngưỡng, mạch sẽ ngắt MOSFET trong chu kỳ hiện tại (cycle-by-cycle limiting). Trong trường hợp ngắn mạch, thiết bị chuyển sang chế độ hiccup, tạm ngừng hoạt động rồi khởi động lại sau thời gian trễ. Nhờ đó, IC được bảo vệ khỏi hư hỏng và hệ thống duy trì độ tin cậy. Cùng với việc bảo vệ quá dòng, IC cũng tích hợp bảo vệ quá áp bằng cách giám sát điện áp hồi tiếp tại chân VSENSE. Khi điện áp này vượt quá $112.5 \%$ giá trị tham chiếu, MOSFET high-side sẽ bị ngắt để tránh hiện tượng overshoot. Khi điện áp giảm xuống dưới ngưỡng, MOSFET được kích hoạt trở lại. Cơ chế này giúp bảo vệ tải và nâng cao độ tin cậy của hệ thống. Trong môi trường không gian với các mức nhiệt độ khắc nghiệt, đòi hỏi một hệ thống phải có khả năng cảm nhận được nhiệt độ và có những cơ chế bảo vệ thích nghi với điều từ nhiệt độ môi trường cũng như là nhiệt độ hoạt động của linh kiện, IC tích hợp mạch bảo vệ nhiệt nhằm ngăn chặn hư hỏng khi nhiệt độ junction vượt ngưỡng cho phép. Khi nhiệt độ vượt ngưỡng, điện áp tham chiếu bị ngắt và MOSFET high-side tắt. Thiết bị sẽ tự động khởi động lại khi nhiệt độ giảm xuống thấp hơn ngưỡng khoảng 14°C, dưới sự kiểm soát của mạch slow-start. Cơ chế này đảm bảo IC hoạt động an toàn và ổn định trong điều kiện môi trường khắc nghiệt.
+Bên cạnh việc thiết kế chủ động bằng các giá trị điện trở, tụ điện, cuộn cảm để thực hiện giá trị ngõ ra mong muốn, nội bộ IC còn hỗ trợ một số chức năng bảo vệ giúp hệ thống hoạt động ổn định. Ví dụ như khả năng bảo vệ quá dòng bằng cách giám sát điện áp drain–source của MOSFET. Khi dòng vượt ngưỡng, mạch sẽ ngắt MOSFET trong chu kỳ hiện tại (cycle-by-cycle limiting). Trong trường hợp ngắn mạch, thiết bị chuyển sang chế độ hiccup, tạm ngừng hoạt động rồi khởi động lại sau thời gian trễ. Nhờ đó, IC được bảo vệ khỏi hư hỏng và hệ thống duy trì độ tin cậy. Cùng với việc bảo vệ quá dòng, IC cũng tích hợp bảo vệ quá áp bằng cách giám sát điện áp hồi tiếp tại chân VSENSE. Khi điện áp này vượt quá $112.5 \%$ giá trị tham chiếu, MOSFET high-side sẽ bị ngắt để tránh hiện tượng overshoot. Khi điện áp giảm xuống dưới ngưỡng, MOSFET được kích hoạt trở lại. Cơ chế này giúp bảo vệ tải và nâng cao độ tin cậy của hệ thống. Trong môi trường không gian với các mức nhiệt độ khắc nghiệt, hệ thống phải có khả năng cảm nhận nhiệt độ và có cơ chế bảo vệ thích nghi với nhiệt độ môi trường cũng như nhiệt độ hoạt động của linh kiện. IC tích hợp mạch bảo vệ nhiệt nhằm ngăn chặn hư hỏng khi nhiệt độ junction vượt ngưỡng cho phép. Khi nhiệt độ vượt ngưỡng, điện áp tham chiếu bị ngắt và MOSFET high-side tắt. Thiết bị sẽ tự động khởi động lại khi nhiệt độ giảm xuống thấp hơn ngưỡng khoảng 14°C, dưới sự kiểm soát của mạch slow-start. Cơ chế này đảm bảo IC hoạt động an toàn và ổn định trong điều kiện môi trường khắc nghiệt.
 
 \begin{figure}[H]
     \centering
@@ -500,7 +458,7 @@ Các tụ lọc ngõ vào và ngõ ra lựa chọn giá trị 10 $\mu F$ và 47 
 
 Bên cạnh IC LM1117 còn dùng TPS74901. So với các LDO thông thường, TPS74901 có nhiều ưu điểm nổi bật. Thiết kế sử dụng NMOS pass transistor giúp đạt dropout rất thấp (chỉ khoảng \(120\,mV\) ở \(3\,A\)), đồng thời hỗ trợ nguồn bias riêng (VBIAS) để duy trì đáp ứng nhanh ngay cả khi điện áp đầu vào thấp. Thiết bị còn có soft‑start lập trình được, giảm dòng xung khi khởi động và hỗ trợ sequencing nhiều rail nguồn nhờ ngõ ra power‑good. Ngoài ra, TPS74901 ổn định với mọi loại tụ \(\ge 2.2\,\mu F\), có độ chính xác cao ±1$\%$, độ nhiễu thấp phù hợp cho mạch nhạy cảm, và được đóng gói trong kích thước nhỏ gọn. Những đặc điểm này khiến TPS74901 trở thành giải pháp LDO cao cấp, vượt trội hơn so với các LDO truyền thống vốn chỉ đáp ứng cơ bản về ổn áp.
 
-Bên cạnh khối PMIC, trong hệ sinh thái quản lý nguồn còn có thêm khối power measurement and distribution, khối này có đầu vào từ các điện trở shunt mắc nối tiếp tại các mức nguồn phát. Mục tiêu là đo được điện áp trên trở shunt từ đó theo dõi được dòng điện tiêu thụ trên mỗi nguồn áp. Trong thiết kế sử dụng 4 điện trở shunt với giá trị khá nhỏ là 0.01R để tránh rơi áp không cần thiết. Các dòng tiêu thụ được đo là các dòng từ VDDCORE (1V15 cho 1 số chân VDDCORE của MPU), VDDCPU (1V15 cho 1 số chân VDDCPU của MPU), VDD3V3 (nguồn cấp cho các chân IO của MPIU cũng như một số chân nguồn cần 3V3) và VDD\_1V35 (dùng cho mức điện áp giao tiếp với IC RAM DDR3).
+Bên cạnh khối PMIC, trong hệ sinh thái quản lý nguồn còn có thêm khối power measurement and distribution. Khối này có đầu vào từ các điện trở shunt mắc nối tiếp tại các mức nguồn phát. Mục tiêu là đo được điện áp trên trở shunt, từ đó theo dõi được dòng điện tiêu thụ trên mỗi nguồn áp. Trong thiết kế sử dụng bốn điện trở shunt với giá trị khá nhỏ là 0.01R để tránh rơi áp không cần thiết. Các dòng tiêu thụ được đo là các dòng từ VDDCORE (1V15 cho một số chân VDDCORE của MPU), VDDCPU (1V15 cho một số chân VDDCPU của MPU), VDD3V3 (nguồn cấp cho các chân IO của MPU cũng như một số chân nguồn cần 3V3) và VDD\_1V35 (dùng cho mức điện áp giao tiếp với IC RAM DDR3).
 
 \begin{figure}[H]
     \centering
@@ -578,7 +536,7 @@ Các chân tín hiệu I/O của SAMA7G54 kết nối đến các ngoại vi đ�
 
 Các tín hiệu ngoại vi chính của MPU gồm:
 \begin{itemize}
-    \item Giao thức SDMMC được sử dụng để kết nối với eMMC và thẻ nhớ SD Card, ở đây sử dụng SDMMC0 của MPU cho eMMC chi tiết ở bên dưới (hình \ref{fig:exp-sche-khoi-emmc}) và SDMMC1 cho thẻ SD Card chi tiết ở hình (hình \ref{fig:exp-sche-sdcard}) .
+    \item Giao thức SDMMC được sử dụng để kết nối với eMMC và thẻ nhớ SD Card. Ở đây, SDMMC0 của MPU được dùng cho eMMC, chi tiết ở Hình~\ref{fig:exp-sche-khoi-emmc}; SDMMC1 được dùng cho thẻ SD Card, chi tiết ở Hình~\ref{fig:exp-sche-sdcard}.
     \item MPU giao tiếp với một IC PRAM (hình \ref{fig:exp-sche-pram}); IC này giao tiếp với MPU thông qua SPI. Khối PRAM sẽ được trình bày chi tiết ở phần tương ứng.
     \item Bên cạnh PRAM, MPU còn giao tiếp với một IC MRAM (hình \ref{fig:exp-sche-mram-mpu}); MRAM giao tiếp với MPU bằng QSPI giúp tăng tốc độ đọc ghi dữ liệu. Chi tiết của MRAM sẽ được trình bày bên dưới (hình \ref{fig:exp-sche-mram-mpu}).
     \item Một IC RAM khác cũng được dùng là FRAM, FRAM được thiết kế để giao tiếp bằng giao thức SPI, nhưng trong thiết kế này do giới hạn về số lượng ngoại vi nên sử dụng USART để giao tiếp với FRAM thay vì SPI sẵn có của IC. Chi tiết về FRAM được trình bày ở bên dưới hình (hình \ref{fig:exp-sche-fram}).
@@ -1050,7 +1008,7 @@ Các tín hiệu trên MPU bao gồm:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/emmc.png}
-    \caption{Sơ đồ nguyên lý  eMMC}
+    \caption{Sơ đồ nguyên lý eMMC}
     \label{if-emmc}
 \end{figure}
 
@@ -1164,7 +1122,7 @@ Khối watchdog dùng TPL5010DDCR và cấu hình thời gian tương tự trên
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/if/block-can.png}
-    \caption{Sơ đồ khối  CAN}
+    \caption{Sơ đồ khối CAN}
     \label{fig:if-block-can}
 \end{figure}
 
@@ -1314,13 +1272,13 @@ SPI switch đóng vai trò quản lý tài nguyên dùng chung giữa MPU và FP
     \label{fig:laser-ref}
 \end{figure}
 
-Các linh kiện laser diode là các linh kiện bán dẫn được điều khiển dựa trên cường độ dòng điện cố định, trong hệ thống phần lớn các linh kiện điện tử điều cố định điện áp còn dòng điện thì tùy tải tiêu thụ. Yêu cầu đặt ra là phải có một nguồn dòng ổn định và có thể tùy ý điều chỉnh ngõ ra theo ngõ vào, từ kiến thức của các môn học và tìm hiểu từ các thiết kế mạch nguồn dòng ( V - I converter) nhóm quyết định chọn thiết kế như hình~\ref{fig:laser-ref}.
+Các linh kiện laser diode là linh kiện bán dẫn được điều khiển dựa trên cường độ dòng điện cố định. Trong hệ thống, phần lớn các linh kiện điện tử đều cố định điện áp, còn dòng điện phụ thuộc vào tải tiêu thụ. Yêu cầu đặt ra là phải có một nguồn dòng ổn định và có thể tùy ý điều chỉnh ngõ ra theo ngõ vào. Từ kiến thức của các môn học và quá trình tìm hiểu các thiết kế mạch nguồn dòng (V-I converter), nhóm quyết định chọn thiết kế như hình~\ref{fig:laser-ref}.
 
 \begin{itemize}
     \item Tùy chỉnh các giá trị tùy ý theo thiết kế: thông qua việc thay đổi các giá trị điện trở trong mạng phản hồi và điện trở lấy mẫu ($R_{sense}$), người thiết kế có thể thiết lập tỷ lệ giữa điện áp điều khiển ($V_{IN}$) và dòng điện ngõ ra ($I_{OUT}$). Điều này cho phép mạch tương thích với nhiều dải tín hiệu từ các bộ DAC khác nhau của vi điều khiển. Bên cạnh đó có thể tùy chỉnh cặp điện trở trên đường feedback và ngõ vào để chọn mức điện áp bật ngõ ra mong muốn.
     \item Khả năng thích ứng với tải: các giá trị điện trở và tụ điện trong mạch bù có thể được tính toán lại để tối ưu hóa thời gian xác lập (settling time) và độ quá chỉnh (overshoot), tùy thuộc vào đặc tính điện cảm hoặc điện dung của tải thực tế trên board mạch.
     \item Cấu trúc high-side với MOSFET kênh P: so với các cấu trúc nguồn dòng kiểu low-side hoặc nguồn dòng dùng transistor lưỡng cực (BJT), thiết kế này sở hữu các ưu điểm kỹ thuật nổi bật. Tối ưu hóa quản lý ground, việc đặt MOSFET ở phía nguồn (high-side) cho phép tải được nối trực tiếp xuống ground. Đây là yếu tố quan trọng trong thiết kế hệ thống vệ tinh, giúp giảm nhiễu điện từ (EMI), đơn giản hóa việc đi dây (routing) và hỗ trợ tản nhiệt trực tiếp cho linh kiện tải qua mặt phẳng ground của PCB. Điều khiển bằng điện áp với trở kháng cao, MOSFET là linh kiện điều khiển bằng điện áp, do đó dòng điện tiêu thụ tại cực G là rất nhỏ. Điều này giúp Op-amp hoạt động ổn định hơn, không bị quá tải dòng điện ngõ ra và giảm thiểu sai số do dòng phân cực gây ra so với khi dùng BJT.
-    \item Đáp ứng tần số và độ ổn định của hệ thống: Sơ đồ tham khảo sử dụng mạng bù RC tại ngõ ra của opamp giúp soát pha phản hồi của tín hiệu ngõ ra với ngõ vào. Cách thiết kế này cho phép người thiết kế tùy chỉnh các giá trị tụ điện và điện trở phản hồi để điều chỉnh lề dự trữ pha (Phase Margin), giúp triệt tiêu hiện tượng tự dao động và ổn định dòng tải.
+    \item Đáp ứng tần số và độ ổn định của hệ thống: Sơ đồ tham khảo sử dụng mạng bù RC tại ngõ ra của opamp giúp kiểm soát pha phản hồi của tín hiệu ngõ ra với ngõ vào. Cách thiết kế này cho phép người thiết kế tùy chỉnh các giá trị tụ điện và điện trở phản hồi để điều chỉnh lề dự trữ pha (Phase Margin), giúp triệt tiêu hiện tượng tự dao động và ổn định dòng tải.
 \end{itemize}
 
 Tính toán công thức ngưỡng $V_{IN}$ bật FET
@@ -1434,7 +1392,7 @@ Sử dụng phần mềm TINA-TI để mô phỏng nguồn dòng trong thiết k
     \label{fig:laser-simulate-current-int}
 \end{figure}
 
-Mạch mô phỏng bao gồm 2 tầng opamp. Tầng đầu tiên là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào và bảo đảm tách rời khỏi tầng opamp thứ hai. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
+Mạch mô phỏng bao gồm hai tầng opamp. Tầng đầu tiên là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào và bảo đảm tách rời khỏi tầng opamp thứ hai. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
 
 Dựa vào công thức tính nguồn dòng:
 
@@ -1471,16 +1429,16 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
     \label{fig:laser-int-v-i}
 \end{figure}
 
-Đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Trong hình thấy được tại ngưỡng ngõ vào khoảng 0.3V thì ngõ ra mới bắt đầu có dòng. Theo công thức (3.14) ở phần tính toán lý thuyết $V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)$, với $R_1=95k\Omega , R_2= 100k\Omega, V_{IN,ngưỡng}= 0.3$ xấp xỉ với mô phỏng. Và sau 0.3 dòng điện sẽ tăng tuyến tính theo điện áp.
+Đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Trong hình có thể thấy tại ngưỡng ngõ vào khoảng 0.3V thì ngõ ra mới bắt đầu có dòng. Theo công thức (3.14) ở phần tính toán lý thuyết $V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)$, với $R_1=95k\Omega$, $R_2=100k\Omega$, giá trị $V_{IN,ngưỡng}=0.3$ xấp xỉ với mô phỏng. Sau ngưỡng 0.3V, dòng điện sẽ tăng tuyến tính theo điện áp.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/current-int-transient.jpg}
-    \caption{Mô phỏng trạng thái mạch internal ở thời diểm cấp nguồn}
+    \caption{Mô phỏng trạng thái mạch internal ở thời điểm cấp nguồn}
     \label{fig:laser-current-int-transient}
 \end{figure}
 
-Sử dụng chức năng transient để mô phỏng thời gian quá độ của mạch, có thể thấy trong khoảng thời gian khoảng $1\,\mu\text{s}$ đầu, ngõ ra có một khoảng vọt lên, nhưng giá trị đỉnh vọt vẫn nằm trong mức cho phép, chỉ vọt một đơn vị dòng rất nhỏ khoảng vài $\text{nA}$. Sau đó thì dòng bắt đầu giảm mượt mà và ổn định, đều đó thể hiện vai trò của tụ điện mắc giữa ngõ ra opamp và tín hiệu feedback. Nếu như không có tụ điện, dòng điện sẽ dao động liên tục như ở Hình \ref{fig:laser-no-cap-out}.
+Sử dụng chức năng transient để mô phỏng thời gian quá độ của mạch, có thể thấy trong khoảng thời gian khoảng $1\,\mu\text{s}$ đầu, ngõ ra có một khoảng vọt lên, nhưng giá trị đỉnh vọt vẫn nằm trong mức cho phép, chỉ vọt một đơn vị dòng rất nhỏ khoảng vài $\text{nA}$. Sau đó dòng bắt đầu giảm mượt mà và ổn định, điều đó thể hiện vai trò của tụ điện mắc giữa ngõ ra opamp và tín hiệu feedback. Nếu không có tụ điện, dòng điện sẽ dao động liên tục như ở Hình \ref{fig:laser-no-cap-out}.
 
 \begin{figure}[H]
     \centering
@@ -1489,7 +1447,7 @@ Sử dụng chức năng transient để mô phỏng thời gian quá độ củ
     \label{fig:laser-simulate-current-ext}
 \end{figure}
 
-Tương tụ như cách Mạch mô phỏng ở sơ đồ mạch laser internal, mạch laser external cũng bao gồm 2 tầng opamp. Tầng đầu tiên vẫn là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
+Tương tự như mạch mô phỏng ở sơ đồ mạch laser internal, mạch laser external cũng bao gồm hai tầng opamp. Tầng đầu tiên vẫn là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
 
 Dựa vào công thức tính nguồn dòng:
 
@@ -1531,7 +1489,7 @@ Tương tự như ở nguồn internal, nguồn external cũng mô phỏng đặ
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/current-ext-transient.jpg}
-    \caption{Mô phỏng trạng thái mạch external ở thời diểm cấp nguồn}
+    \caption{Mô phỏng trạng thái mạch external ở thời điểm cấp nguồn}
     \label{fig:laser-current-ext-transient}
 \end{figure}
 
@@ -1575,7 +1533,7 @@ Dòng IC MCP4902/4912/4922 là các bộ chuyển đổi kỹ thuật số sang 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{picture/laser/sw-int.png}
-    \caption{Sơ đồ nguyên lý khối swich laser internal}
+    \caption{Sơ đồ nguyên lý khối switch laser internal}
     \label{fig:laser-sw-int}
 \end{figure}
 
@@ -1710,7 +1668,7 @@ Trong mạch thiết kế, R1 = $330k\Omega$ đóng vai trò là điện trở p
 f_{\mathrm{TIA}} \approx \frac{1}{2\pi \times R1 \times C1} = \frac{1}{2\pi \times 330000 \times 470 \times 10^{-12}} \approx 1.03\,\mathrm{kHz}
 \end{equation}
 
-Tầng thứ hai sử dụng dụng bộ lọc thông thấp RC để lọc các tín hiệu nhiễu tần số cao, đảm bảo tín hiệu đọc về ADC trong ngưỡng quy định. Sau khi qua bộ lọc RC tín hiệu qua một tầng opamp buffer để điều tiết quá trình chuyển mạch và cách ly trở kháng hai phía của mạch.
+Tầng thứ hai sử dụng bộ lọc thông thấp RC để lọc các tín hiệu nhiễu tần số cao, đảm bảo tín hiệu đọc về ADC trong ngưỡng quy định. Sau khi qua bộ lọc RC, tín hiệu đi qua một tầng opamp buffer để điều tiết quá trình chuyển mạch và cách ly trở kháng hai phía của mạch.
 
 Tầng thứ ba sử dụng bộ lọc Sallen-Key. Bộ lọc Sallen-key là một trong những cấu trúc phổ biến nhất để thiết kế bộ lọc tích cực bậc hai. Trong mạch thiết kế, tầng Sallen-Key được sử dụng ở giai đoạn cuối cùng trước khi đưa tín hiệu vào ADC nhằm thực hiện chức năng Anti-aliasing (chống chồng lấn phổ). Ưu điểm của Sallen-Key là bộ lọc bậc 2, cung cấp độ dốc lên tới $40\text{ dB/decade}$ so với bộ lọc RC đơn giản chỉ có độ dốc $20\text{ dB/decade}$. Nó giúp triệt tiêu các nhiễu tần số cao (nhiễu nguồn, nhiễu EMI trên vệ tinh) nhanh hơn và mạnh hơn, đảm bảo vùng Nyquist của ADC hoàn toàn sạch nhiễu. Theo như thiết kế trên board PHOTO, tần số lấy mẫu $f_s = 500\,\mathrm{kHz}$ nên $f_{Nyquist} = 250\,\mathrm{kHz}$.
 

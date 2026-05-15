@@ -36,7 +36,7 @@ Sau một khoảng thời gian chờ, Bootloader cần tự động chuyển san
     
     Hệ thống được chia thành hai vùng thực thi riêng biệt:
 
-\textbf{Bootloader:} Thành phần quản lý khởi động, đóng vai trò cấp nhật firmware cho User application cho hệ thông chính.
+\textbf{Bootloader:} Thành phần quản lý khởi động, đóng vai trò cập nhật firmware cho User application của hệ thống chính.
 
 \textbf{User Application:} Chương trình ứng dụng chính của người dùng, bắt đầu bằng một vùng Header chứa các thông tin định danh (Metadata) để Bootloader kiểm tra tính hợp lệ trước khi thực thi.
 
@@ -125,7 +125,7 @@ Ngoài ra:
 \end{figure}
 
 
-Sơ đồ mô tả các kịch bản tương tác giữa người dùng với vi điều khiển trong giai đoạn Bootloader. Việc chia tách thành 3 tiến trình giúp tối ưu hóa khả năng đáp ứng của hệ thống trong mọi tình huống thực tế:
+Sơ đồ mô tả các kịch bản tương tác giữa người dùng với vi điều khiển trong giai đoạn Bootloader. Việc chia tách thành ba tiến trình giúp tối ưu hóa khả năng đáp ứng của hệ thống trong mọi tình huống thực tế:
 
 \textbf{Kịch bản 1: Trạng thái chờ}
 
@@ -210,7 +210,7 @@ Mô tả luồng dữ liệu:
     \item \textbf{App Alive}: Duy trì hoạt động của Watchdog.
     \item \textbf{App xTP}: Thực hiện việc nhận lệnh, cập nhật firmware và nhảy tới user application. 
 
-    Sau khi hoàn tất khởi tạo, chương trình đi vào vùng scheduler để bắt đầu điều phối quá trình hoạt động của các task. App xTP là ứng dụng dụng chính của chương trình Bootloader quản lý toàn bộ logic nghiệp vụ thông qua 3 tiến trình:
+    Sau khi hoàn tất khởi tạo, chương trình đi vào vùng scheduler để bắt đầu điều phối quá trình hoạt động của các task. App xTP là ứng dụng chính của chương trình Bootloader, quản lý toàn bộ logic nghiệp vụ thông qua ba tiến trình:
 
 \begin{figure}[H]
     \centering
@@ -219,7 +219,7 @@ Mô tả luồng dữ liệu:
     \label{fig:cac-nhiem-vu-cua-ung-dung-xTP}
 \end{figure}
 
-    Sơ đồ khối hàm xử lí xTP:
+    Sơ đồ khối hàm xử lý xTP:
 
 \begin{figure}[H]
     \centering
@@ -235,8 +235,8 @@ xTP Process(): Chịu trách nhiệm giải mã luồng dữ liệu thô từ UA
     \item xTP Read(): Byte dữ liệu được đưa vào máy trạng thái (FSM) của giao thức xTP để lắp ghép thành một khung tin (Frame) hoàn chỉnh.
     \item Sau khi xTP Read() xử lý xong một khối dữ liệu, hệ thống tiến hành kiểm tra tính toàn vẹn:
         \begin{itemize}
-            \item Nếu Frame hợp lệ: MCU thực hiện gửi phản hồi ACK hoặc NACK về cho MPU để xác nhận trạng thái nhận tin. Sau đó, gói tin nhận được sẽ được xử lí bởi hàm đã được định nghĩa ứng với ID command của nó.
-            \item Nếu dữ liệu nhận được bị dở dang hoặc sai cấu trúc và không có thêm dữ liệu mới trong một khoảng thời gian nhất định, hệ thống trạng thái chờ ban đầu.
+            \item Nếu Frame hợp lệ: MCU thực hiện gửi phản hồi ACK hoặc NACK về cho MPU để xác nhận trạng thái nhận tin. Sau đó, gói tin nhận được sẽ được xử lý bởi hàm đã được định nghĩa ứng với ID command của nó.
+            \item Nếu dữ liệu nhận được bị dở dang hoặc sai cấu trúc và không có thêm dữ liệu mới trong một khoảng thời gian nhất định, hệ thống quay về trạng thái chờ ban đầu.
         \end{itemize}
 
 \end{itemize}
@@ -248,7 +248,7 @@ xTP Process(): Chịu trách nhiệm giải mã luồng dữ liệu thô từ UA
     \label{fig:bang-ma-cua-cac-lenh}
 \end{figure}
 
-Sơ đồ khối xử lí người dùng nhập phím:
+Sơ đồ khối xử lý người dùng nhập phím:
 
 \begin{figure}[H]
     \centering
@@ -284,12 +284,12 @@ Process User Input(): Theo dõi và xử lý các sự kiện từ phía ngườ
 
 \end{itemize}
 
-Sơ đồ khối xử lí người dùng nhập phím:
+Sơ đồ khối xử lý người dùng nhập phím:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{picture/firmware/Bootloader/block-wait.png}
-    \caption{Sơ đồ khối xử lí trạng thái chờ}
+    \caption{Sơ đồ khối xử lý trạng thái chờ}
     \label{fig:so-do-khoi-xu-ly-trang-thai-cho}
 \end{figure}
 
@@ -351,7 +351,7 @@ Kiến trúc firmware thực hiện được chia thành các lớp chính như 
 
 \subsubsection{Phân tích yêu cầu và phương pháp thực hiện:}
 
-Hệ thống được xây dựng nhằm phục vụ quá trình điều khiển bật tắt và điều chỉnh laser đồng thời thu thập thu và lưu trữ dữ liệu ADC đọc về tốc độ cao từ các diode photo. Vì vậy, mục tiêu thiết kế:
+Hệ thống được xây dựng nhằm phục vụ quá trình điều khiển bật/tắt và điều chỉnh laser, đồng thời thu thập và lưu trữ dữ liệu ADC đọc về tốc độ cao từ các photo diode. Vì vậy, mục tiêu thiết kế:
 
     \begin{itemize}
         \item Bật tắt và duy trì dòng điện chính xác cho laser.
@@ -373,7 +373,7 @@ Hệ thống được xây dựng nhằm phục vụ quá trình điều khiển
     \item Phân tích kịch bản vận hành hệ thống:
     \begin{itemize}
         \item \textbf{Khởi động hệ thống}: Sau khi khởi động, hệ thống chờ nhận lệnh bắt đầu thí nghiệm.
-        \item \textbf{Bắt đầu thí nghiệm}: Khi lệnh được nhận, Task điều khiển sẽ: Bật laser theo từng channel, kích hoạt thời gian lấy mẫu, bắt đầu thu dữ liệu ADC và ghi liên tục vào các buffer RAM. Và sau đó, dữ liệu trong buffer sẽ được ghi vào PRAM.
+        \item \textbf{Bắt đầu thí nghiệm}: Khi lệnh được nhận, Task điều khiển sẽ bật laser theo từng channel, kích hoạt thời gian lấy mẫu, bắt đầu thu dữ liệu ADC và ghi liên tục vào các buffer RAM. Sau đó, dữ liệu trong buffer sẽ được ghi vào PRAM.
     \end{itemize}
 
 \end{itemize}
@@ -435,14 +435,14 @@ Lược đồ tuần tự cho việc thực hiện tác vụ thí nghiệm:
         \item \textbf{SUB ENTER PRE PHASE}: Hệ thống thực hiện chuyển mạch sang kênh photo tương ứng. Kích hoạt cờ sampling enable để bắt đầu lấy mẫu từ ADC. 
         \item \textbf{SUB WAIT MAIN PHASE}: Hệ thống kiểm tra thời gian trôi qua so với giá trị predelay. Nếu đủ thời gian thì thực hiện nạp mã DAC cường độ sáng và kích hoạt Laser, sau đó chuyển sang giai đoạn đo chính.
         \item \textbf{SUB WAIT POST PHASE}: Dữ liệu được thu thập liên tục trong khi Laser đang bật. Khi thời gian đạt ngưỡng sample delay, hệ thống ngay lập tức tắt toàn bộ Laser và đưa giá trị DAC về 0.
-        \item \textbf{SUB WAIT DONE POST PHASE}: Hệ thống duy trì việc lấy mẫu thêm một khoảng post delay để ghi nhận sự phản ứng của cảm biến sau khi ngắt nguồn sáng. Kết thúc giai đoạn, lệnh dừng lấy mẫu được thực thi và dữ liệu còn lại trong bộ đệm được đẩy vào fram queue.
+        \item \textbf{SUB WAIT DONE POST PHASE}: Hệ thống duy trì việc lấy mẫu thêm một khoảng post delay để ghi nhận sự phản ứng của cảm biến sau khi ngắt nguồn sáng. Kết thúc giai đoạn, lệnh dừng lấy mẫu được thực thi và dữ liệu còn lại trong bộ đệm được đẩy vào FRAM queue.
     \end{itemize}
 
-    Sơ đồ xử lí ngắt lấy mẫu ADC:
+    Sơ đồ xử lý ngắt lấy mẫu ADC:
         \begin{figure}[H]
         \centering
         \includegraphics[width=0.6\textwidth]{picture/firmware/Experiment/spi_isr.png}
-        \caption{Sơ đồ xử lí ngắt lấy mẫu ADC}
+        \caption{Sơ đồ xử lý ngắt lấy mẫu ADC}
         \label{fig:spi_isr}
     \end{figure}
 
@@ -455,9 +455,9 @@ Lược đồ tuần tự cho việc thực hiện tác vụ thí nghiệm:
 
         \item Để đảm bảo việc lấy mẫu liên tục ở tần số cao mà không bị mất mát dữ liệu, giải thuật sử dụng cơ chế hoán đổi bộ đệm tự động ngay trong ISR:
         \begin{itemize}
-            \item Kiểm tra độ đầy: sau mỗi lần ghi dữ liệu, chỉ số buf idx được cập nhật. Hệ thống kiểm tra xem bộ đệm đày chưa. Nếu bộ đệm hiện tại đã đầy, ISR thực hiện hai thao tác đồng thời:
+            \item Kiểm tra độ đầy: sau mỗi lần ghi dữ liệu, chỉ số buf idx được cập nhật. Hệ thống kiểm tra xem bộ đệm đầy chưa. Nếu bộ đệm hiện tại đã đầy, ISR thực hiện hai thao tác đồng thời:
             \begin{enumerate}
-                \item Đẩy con trỏ bộ đệm vừa đầy vào fram queue để tác vụ lưu trữ PSRAM xử lý.
+                \item Đẩy con trỏ bộ đệm vừa đầy vào FRAM queue để tác vụ lưu trữ PSRAM xử lý.
                 \item Lấy một con trỏ bộ đệm trống từ free queue để gán làm current buf mới và reset chỉ số về 0.
             \end{enumerate}
         \end{itemize}
@@ -906,6 +906,6 @@ Sơ đồ khối của trạng thái HEATING và COOLING:
     \label{fig:so-do-khoi-soak}
 \end{figure}
 
-Ở trang thái này PID tiếp tục tính toán để duy trì nhiệt độ của step hiện tại chỉ bắt đầu timer khi nhiệt độ đạt trong khoảng setpoint.
+Ở trạng thái này, PID tiếp tục tính toán để duy trì nhiệt độ của step hiện tại. Timer chỉ bắt đầu khi nhiệt độ đạt trong khoảng setpoint.
 
 \end{itemize}

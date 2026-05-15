@@ -1,4 +1,4 @@
-% ==========================================================
+﻿% ==========================================================
 % CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
 % ==========================================================
 
@@ -8,8 +8,6 @@
 \label{sec:tong_quan_chuong2}
 
 Vệ tinh nhỏ, đặc biệt là CubeSat, là nền tảng nghiên cứu và trình diễn công nghệ được sử dụng phổ biến trong các trường đại học, viện nghiên cứu và doanh nghiệp không gian mới. So với vệ tinh truyền thống, CubeSat có ưu điểm nổi bật là chi phí phát triển thấp hơn, thời gian thiết kế ngắn hơn và quy trình tích hợp linh hoạt hơn. Tuy nhiên, các hệ thống trên CubeSat luôn bị ràng buộc đồng thời bởi giới hạn kích thước, khối lượng, công suất và môi trường vận hành khắc nghiệt.
-
-Trong đề tài này, luận văn không đi sâu vào mục tiêu của thí nghiệm mà tập trung vào kiến trúc điều khiển và truyền nhận dữ liệu giữa các board mạch chức năng. Cụ thể, hệ thống bao gồm board mạch EXP (Experiment board để điều khiển thí nghiệm, xử lí dữ liệu và giao tiếp người dùng), board mạch IF (Interface board để giao tiếp với các board khác và giao tiếp người dùng), thí nghiệm cụ thể được thiết kế để trực quan hóa hệ thống là hệ thí nghiệm quang học bao gồm board mạch LASER và PHOTO. Board mạch LASER (Laser diode board dùng để điều khiển tín hiệu quang), board mạch PHOTO (Photo diode board dùng để thu thập tín hiệu quang). Mục tiêu cốt lõi là xây dựng và kiểm chứng luồng điều khiển--thu thập--truyền dữ liệu cho bài toán phân tích mô hình thí nghiệm.
 
 \subsection{Khái niệm CubeSat và phương thức triển khai quỹ đạo}
 \label{subsec:khai_niem_cubesat}
@@ -71,79 +69,62 @@ Bên cạnh chuẩn kích thước U, hệ CubeSat còn được hưởng lợi 
 
 Trong khối truyền thông nội bộ, CubeSat thường sử dụng các giao thức chuẩn như SPI, CAN Bus, I2C, UART, SpaceWire và Ethernet để liên kết các phân hệ. Việc lựa chọn giao thức phụ thuộc vào băng thông yêu cầu, độ phức tạp triển khai, khả năng chống nhiễu và mức độ mở rộng hệ thống. Cách tiếp cận theo giao thức chuẩn giúp giảm rủi ro tích hợp, tăng khả năng tương thích giữa các board mạch và thuận lợi cho quá trình kiểm thử.
 
-Nhiều nhiệm vụ CubeSat hiện nay yêu cầu tải thí nghiệm có khả năng cấu hình linh hoạt để phục vụ nhiều kịch bản đo khác nhau. Điều này dẫn đến nhu cầu phát triển các mô đun đa năng theo hướng ``một kiến trúc, nhiều chế độ vận hành''. Với hướng tiếp cận này, hệ thống có thể tiết kiệm thời gian phát triển, giảm chi phí tạo mẫu và tăng khả năng kế thừa cho các phiên bản sau.
-
-\section{Cơ sở lý thuyết kiến trúc hệ thống EXP--IF--LASER--PHOTO}
+\section{Cấu trúc hệ thống thí nghiệm}
 \label{sec:kien_truc_exp_if_photo_laser}
 
-Hệ thống được mô hình hóa theo cấu trúc điều khiển phân cấp. EXP là board điều khiển trung tâm của hệ thống, đồng thời tích hợp hai lớp xử lý trên cùng một phần cứng. Trong đó, core MPU đảm nhiệm vai trò giao tiếp cấp cao, tiếp nhận lệnh từ người dùng, xử lý dữ liệu và quản lý trạng thái hệ thống. Core MCU chịu trách nhiệm điều khiển thí nghiệm theo thời gian thực, trực tiếp phát lệnh đến board LASER, thu dữ liệu từ board PHOTO và điều phối các phần tử chấp hành như TEC, HEATER. IF là lớp trung gian giao tiếp, có nhiệm vụ chuẩn hóa kết nối và cung cấp khả năng mở rộng interface.
+\subsection{Mục tiêu của hệ thống thí nghiệm}
+\label{subsec:muc_tieu_he_thong_thi_nghiem}
 
-\subsection{Vai trò board EXP}
-\label{subsec:vai_tro_exp}
+Mục tiêu vận hành của hệ thống gồm hai nội dung chính. Nội dung thứ nhất là duy trì điều kiện nhiệt độ trong buồng thí nghiệm theo giá trị đặt trước, giúp mẫu vật được đặt trong môi trường ổn định và có khả năng lặp lại giữa các lần đo. Nội dung thứ hai là điều khiển quá trình quang học, bao gồm phát tín hiệu ánh sáng kích thích mẫu, thu nhận tín hiệu quang sau khi tương tác với mẫu và chuyển đổi tín hiệu này thành dữ liệu phục vụ xử lý.
 
-Board EXP là thành phần cốt lõi của hệ thống. EXP chịu trách nhiệm thực thi quy trình thí nghiệm, điều khiển trình tự hoạt động của LASER và PHOTO theo kịch bản định trước, đồng bộ thời điểm phát/thu tín hiệu và giám sát trạng thái thực thi. Bên cạnh đó, board còn thu thập dữ liệu từ các cảm biến môi trường như NTC, đồng thời trực tiếp điều khiển nhiệt độ buồng thí nghiệm qua TEC và HEATER. Với kiến trúc hai core, MPU trên EXP đảm nhiệm lớp xử lý và giao tiếp cấp hệ thống, còn MCU đảm nhiệm lớp điều khiển cục bộ thời gian thực. EXP cũng là nơi tổng hợp, xử lý sơ bộ, đóng gói dữ liệu theo khung truyền và gửi ra giao diện ngoài hệ thống.
+\textbf{Nhóm chức năng điều khiển nhiệt độ buồng thí nghiệm} có nhiệm vụ tạo và duy trì điều kiện nhiệt cho mẫu trong suốt quá trình đo. Hệ thống cần thu nhận nhiệt độ từ các cảm biến trong buồng thí nghiệm, so sánh với giá trị đặt và điều khiển các phần tử gia nhiệt hoặc làm mát để giảm sai lệch. Việc ổn định nhiệt độ giúp tăng tính lặp lại của thí nghiệm, đồng thời hạn chế ảnh hưởng của biến thiên môi trường đến tín hiệu quang thu được.
 
-\subsection{Vai trò board IF}
-\label{subsec:vai_tro_if}
+\textbf{Nhóm chức năng điều khiển quá trình quang học} có nhiệm vụ thực hiện chuỗi kích thích và thu nhận tín hiệu từ mẫu. Hệ thống cần thiết lập kênh phát, mức kích thích và thời điểm phát quang; sau đó thu nhận tín hiệu quang sau khi ánh sáng tương tác với mẫu. Tín hiệu thu được được chuyển đổi sang tín hiệu điện, điều hòa, số hóa và xử lý để đánh giá sự thay đổi của mẫu theo thời gian hoặc theo từng kênh đo.
 
-Board IF (Interface board) là lớp giao tiếp mở rộng của hệ thống, kết nối EXP với các giao diện ngoài và các thành phần phần cứng bổ sung tùy cấu hình triển khai. IF giúp chuẩn hóa tín hiệu điện, tổ chức đầu nối và đơn giản hóa kiến trúc dây nối nội bộ.
+\subsection{Các khối chức năng chính của hệ thống}
+\label{subsec:nhom_chuc_nang_chinh}
 
-\subsection{Vai trò board LASER}
-\label{subsec:vai_tro_laser}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/block-function.png}
+    \caption{Sơ đồ khối hệ thống}
+    \label{fig:block-function}
+\end{figure}
 
-Board LASER là khối phát tín hiệu quang của hệ thống thí nghiệm. Board này nhận lệnh điều khiển từ EXP để lựa chọn kênh phát, thiết lập mức kích thích và tạo ra tín hiệu quang theo cấu hình đo đã đặt trước. Vai trò chính của LASER là cung cấp nguồn kích thích quang ổn định, có khả năng điều chỉnh theo từng chế độ vận hành nhằm bảo đảm điều kiện vào nhất quán cho quá trình thí nghiệm. Chất lượng hoạt động của board LASER ảnh hưởng trực tiếp đến độ lặp lại và độ tin cậy của tín hiệu thu được ở phía PHOTO.
+Từ mục tiêu của hệ thống thí nghiệm, hệ thống được chia thành những khối chính bao gồm khối điều khiển và giám sát thí nghiệm, khối giao tiếp mở rộng, khối phát quang, khối thu quang, khối điều khiển nhiệt và khối giám sát môi trường.
 
-\subsection{Vai trò board PHOTO}
-\label{subsec:vai_tro_photo}
+\begin{itemize}
+    \item \textbf{Khối điều khiển và giám sát thí nghiệm:} đóng vai trò điều phối chung cho toàn bộ quy trình thí nghiệm. Khối này tiếp nhận kịch bản vận hành từ người dùng, quản lý trạng thái hệ thống, phát lệnh đến các khối chức năng và thu nhận dữ liệu phản hồi để phục vụ giám sát.
 
-Board PHOTO là khối thu nhận tín hiệu quang của hệ thống. Board này tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu thí nghiệm, thực hiện các bước chuyển đổi và điều hòa tín hiệu cần thiết trước khi gửi dữ liệu về EXP để xử lý tiếp. Vai trò của PHOTO là bảo đảm tín hiệu quang thu được được chuyển thành tín hiệu điện có độ chính xác và độ ổn định phù hợp cho quá trình số hóa, từ đó phục vụ việc phân tích, đánh giá và so sánh kết quả thí nghiệm. Cùng với board LASER, board PHOTO tạo thành cặp khối chức năng trung tâm của tải thí nghiệm quang.
+    \item \textbf{Khối giao tiếp mở rộng:} hỗ trợ kết nối hệ thống thí nghiệm với các giao diện bên ngoài hoặc các mô đun mở rộng khác. Khối này giúp hệ thống không bị giới hạn trong một cấu hình cố định, đồng thời tạo điều kiện để truyền lệnh, truyền dữ liệu và tích hợp thêm ngoại vi khi cần.
+
+    \item \textbf{Khối phát quang:} tạo tín hiệu ánh sáng kích thích mẫu theo kịch bản đã thiết lập. Các thông số như thời điểm phát, kênh phát và mức kích thích cần được điều khiển để bảo đảm quá trình tác động lên mẫu có tính lặp lại giữa các lần đo.
+
+    \item \textbf{Khối thu quang:} tiếp nhận tín hiệu ánh sáng sau khi tương tác với mẫu thí nghiệm. Tín hiệu thu được là cơ sở để đánh giá phản hồi của mẫu, do đó khối này cần thực hiện chuyển đổi và điều hòa tín hiệu để dữ liệu đầu ra có thể phục vụ quá trình xử lý tiếp theo.
+
+    \item \textbf{Khối điều khiển nhiệt:} có nhiệm vụ điều chỉnh điều kiện nhiệt trong buồng thí nghiệm thông qua quá trình gia nhiệt hoặc làm mát. Mục tiêu của khối này không chỉ là thay đổi nhiệt độ, mà là duy trì môi trường đo ổn định hoặc bám theo một giá trị đặt trước nhằm tăng tính lặp lại của thí nghiệm.
+
+    \item \textbf{Khối giám sát môi trường:} theo dõi các thông số trạng thái của buồng thí nghiệm, đặc biệt là nhiệt độ và các đại lượng liên quan đến điều kiện vận hành. Dữ liệu giám sát được sử dụng làm phản hồi cho khối điều khiển nhiệt, đồng thời giúp người dùng đánh giá trạng thái hệ thống trong suốt quá trình đo.
+\end{itemize}
+
+
 
 \section{Cơ sở lý thuyết các linh kiện}
 
-\subsection{Cấu tạo và nguyên lý hoạt động của TEC}
+Dựa vào mục tiêu và môi trường thí nghiệm đã được trình bày từ đó lựa chọn các linh kiện phù hợp cho chức năng thí nghiệm.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{picture/components/TEC.jpg}
-    \caption{Linh kiện TEC}
-    \label{fig:tec_module}
-\end{figure}
+\begin{itemize}
+    \item Đối với chức năng phát quang, sử dụng linh kiện bán dẫn laser diode, một dạng linh kiện phát quang được điều khiển bởi dòng điện.
 
-TEC (Thermoelectric Cooler) là phần tử bơm nhiệt rắn, hoạt động dựa trên hiệu ứng nhiệt điện. Một mô-đun TEC điển hình gồm nhiều cặp bán dẫn loại p và loại n mắc điện nối tiếp, nhiệt song song; các cặp này được kẹp giữa hai tấm gốm cách điện (thường là alumina) để vừa cách điện vừa truyền nhiệt tốt. Các thanh dẫn kim loại mỏng liên kết các cặp p-n theo dạng ziczac, tạo thành một khối phẳng gọn nhẹ, không có bộ phận chuyển động cơ khí.
+    \item Đối với chức năng thu quang, yêu cầu là thu thập được tín hiệu ánh sáng và chuyển đổi thành dòng điện cho phần cứng, từ đó sử dụng linh kiện photo diode để đáp ứng được mục tiêu.
 
-Hiệu ứng Peltier mô tả hiện tượng hấp thụ hoặc giải phóng nhiệt tại mối nối của hai vật liệu khác nhau khi có dòng điện một chiều đi qua. Trong TEC, khi dòng điện chạy theo một chiều xác định, các hạt tải điện mang năng lượng nhiệt từ một mặt sang mặt còn lại: một mặt sẽ hấp thụ nhiệt (mặt lạnh), mặt kia sẽ thải nhiệt (mặt nóng). Nếu đảo chiều dòng điện, vai trò hai mặt cũng đảo ngược.
+    \item Đối với khối điều khiển nhiệt, sử dụng linh kiện heater cho mục tiêu gia nhiệt buồng thí nghiệm. Ngược lại để làm giảm nhiệt độ, sử dụng linh kiện TEC.
 
-Từ đó, nguyên lý hoạt động của TEC có thể hiểu là quá trình bơm nhiệt chủ động: cấp dòng DC để chuyển nhiệt từ buồng cần làm mát sang phía tản nhiệt. Nhiệt độ thực tế đạt được phụ thuộc vào dòng điều khiển, chênh lệch nhiệt độ hai mặt, khả năng tản nhiệt phía nóng và tải nhiệt của hệ thống. Vì vậy trong ứng dụng thực tế, TEC thường đi kèm khối tản nhiệt/quạt và mạch điều khiển (PWM hoặc điều khiển dòng) để ổn định nhiệt độ theo giá trị đặt.
+    \item Đối với khối giám sát môi trường, yêu cầu thiết kế là hệ thống có thể hoạt động tự động trong môi trường không gian. Vì vậy, những cảm biến môi trường như cảm biến nhiệt độ (NTC), độ ẩm và áp suất được sử dụng trực tiếp tại buồng thí nghiệm. Từ những tín hiệu được phản hồi bởi cảm biến, khối điều khiển sẽ tự động điều khiển các tác nhân nhiệt độ, ánh sáng phù hợp với mục tiêu thí nghiệm.
 
-\subsection{Cấu tạo và nguyên lý hoạt động của HEATER}
+\end{itemize}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{picture/components/HEATER.jpg}
-    \caption{Linh kiện HEATER}
-    \label{fig:heater_module}
-\end{figure}
-
-HEATER là phần tử chuyển đổi điện năng thành nhiệt năng để nâng và duy trì nhiệt độ cho buồng thí nghiệm. Trong các hệ thống nhúng, HEATER thường có cấu tạo dạng điện trở công suất (resistive heater), gồm vật liệu điện trở và lớp cách điện/cách nhiệt phù hợp để truyền nhiệt hiệu quả nhưng vẫn bảo đảm an toàn điện.
-
-Nguyên lý vật lý của HEATER dựa trên hiệu ứng Joule: khi dòng điện đi qua phần tử điện trở, công suất nhiệt sinh ra được xác định gần đúng theo biểu thức $P = I^2R$ (hoặc $P = \frac{V^2}{R}$ với nguồn áp ổn định). Nhiệt lượng này được truyền từ bề mặt HEATER sang môi trường hoặc khối vật liệu cần gia nhiệt thông qua dẫn nhiệt, đối lưu và bức xạ.
-
-Từ đó, nguyên lý hoạt động của HEATER trong hệ thống điều khiển nhiệt là cấp công suất theo nhu cầu tải nhiệt: tăng công suất khi nhiệt độ đo được thấp hơn giá trị đặt và giảm/ngắt khi tiến gần ngưỡng yêu cầu. Trên thực tế, HEATER thường được điều khiển qua MOSFET bằng PWM hoặc điều khiển on-off theo phản hồi cảm biến nhiệt (ví dụ NTC), nhằm giữ nhiệt độ ổn định, giảm dao động và tối ưu tiêu thụ năng lượng.
-
-\subsection{Cấu tạo và nguyên lý hoạt động của SOLENOID}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{picture/components/SOLENOID.png}
-    \caption{Linh kiện SOLENOID}
-    \label{fig:solenoid_module}
-\end{figure}
-
-SOLENOID là cơ cấu chấp hành điện từ dùng để tạo chuyển động tịnh tiến ngắn, thường phục vụ đóng/mở van, chốt cơ khí hoặc kích hoạt cơ cấu đẩy-kéo. Về cấu tạo, solenoid gồm cuộn dây dẫn quấn quanh lõi từ, vỏ dẫn từ, phần ứng (plunger) có thể di chuyển và lò xo hồi vị. Khi không cấp điện, lò xo giữ phần ứng ở vị trí ban đầu.
-
-Nguyên lý vật lý của solenoid dựa trên từ trường sinh ra bởi dòng điện chạy qua cuộn dây. Dòng điện tạo ra từ thông trong mạch từ, sinh lực điện từ hút phần ứng về phía lõi, từ đó biến đổi năng lượng điện thành chuyển động cơ. Khi ngắt điện, từ trường suy giảm, lực hút mất đi và lò xo đưa phần ứng trở về trạng thái nghỉ.
-
-Từ đó, nguyên lý hoạt động của SOLENOID trong hệ thống là điều khiển trạng thái cơ cấu theo tín hiệu điện: cấp điện để tác động (hút/kéo hoặc đẩy tùy cấu hình) và ngắt điện để hồi vị. Trong thực tế, solenoid thường được điều khiển qua mạch công suất MOSFET kèm diode dập xung ngược (flyback diode) để bảo vệ linh kiện chuyển mạch khỏi xung điện áp cảm ứng khi cuộn dây bị ngắt dòng.
+Lý thuyết về các linh kiện sử dụng được trình bày bên dưới.
 
 \subsection{Tổng quan linh kiện Laser Diode}
 \label{subsec:tong-quan-laser-diode}
@@ -231,7 +212,51 @@ Trong đó:
 
 Các biểu thức trên cho thấy photo diode thực hiện quá trình biến đổi theo chuỗi: năng lượng ánh sáng tới quyết định công suất quang tới, công suất quang tới cùng với bước sóng xác định responsivity, và responsivity quyết định dòng quang đầu ra. Vì vậy, khi tính toán hệ đo quang, cần đặc biệt chú ý đến bước sóng \(\lambda\), độ nhạy \(R_{\lambda}\), suy hao trên đường truyền quang và thời gian lấy mẫu để dự đoán chính xác mức dòng điện thu được ở đầu vào mạch khuếch đại hoặc ADC.
 
+\subsection{Cấu tạo và nguyên lý hoạt động của HEATER}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{picture/components/HEATER.jpg}
+    \caption{Linh kiện HEATER}
+    \label{fig:heater_module}
+\end{figure}
+
+HEATER là phần tử chuyển đổi điện năng thành nhiệt năng để nâng và duy trì nhiệt độ cho buồng thí nghiệm. Trong các hệ thống nhúng, HEATER thường có cấu tạo dạng điện trở công suất (resistive heater), gồm vật liệu điện trở và lớp cách điện/cách nhiệt phù hợp để truyền nhiệt hiệu quả nhưng vẫn bảo đảm an toàn điện.
+
+Nguyên lý vật lý của HEATER dựa trên hiệu ứng Joule: khi dòng điện đi qua phần tử điện trở, công suất nhiệt sinh ra được xác định gần đúng theo biểu thức $P = I^2R$ (hoặc $P = \frac{V^2}{R}$ với nguồn áp ổn định). Nhiệt lượng này được truyền từ bề mặt HEATER sang môi trường hoặc khối vật liệu cần gia nhiệt thông qua dẫn nhiệt, đối lưu và bức xạ.
+
+Từ đó, nguyên lý hoạt động của HEATER trong hệ thống điều khiển nhiệt là cấp công suất theo nhu cầu tải nhiệt: tăng công suất khi nhiệt độ đo được thấp hơn giá trị đặt và giảm/ngắt khi tiến gần ngưỡng yêu cầu. Trên thực tế, HEATER thường được điều khiển qua MOSFET bằng PWM hoặc điều khiển on-off theo phản hồi cảm biến nhiệt (ví dụ NTC), nhằm giữ nhiệt độ ổn định, giảm dao động và tối ưu tiêu thụ năng lượng.
+
+\subsection{Cấu tạo và nguyên lý hoạt động của NTC}
+\label{subsec:cau-tao-nguyen-ly-ntc}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{picture/components/ntc.jpg}
+    \caption{Linh kiện NTC}
+    \label{fig:ntc_module}
+\end{figure}
+
+NTC (Negative Temperature Coefficient) là loại điện trở nhiệt có hệ số nhiệt âm, tức là giá trị điện trở giảm khi nhiệt độ tăng và tăng khi nhiệt độ giảm. Về cấu tạo, NTC thường được chế tạo từ vật liệu bán dẫn gốm như các oxit kim loại, sau đó được đóng gói dưới dạng hạt, đĩa, đầu dò hoặc module cảm biến tùy theo ứng dụng. Nhờ kích thước nhỏ, độ nhạy cao và mạch đo đơn giản, NTC được sử dụng phổ biến trong các hệ thống giám sát và điều khiển nhiệt độ.
+
+Nguyên lý hoạt động của NTC dựa trên sự thay đổi điện trở theo nhiệt độ của vật liệu bán dẫn. Khi nhiệt độ tăng, năng lượng nhiệt làm tăng số hạt tải điện tự do trong vật liệu, từ đó khả năng dẫn điện tăng và điện trở giảm. Ngược lại, khi nhiệt độ giảm, số hạt tải điện giảm làm điện trở tăng. Đặc tính này cho phép hệ thống suy ra nhiệt độ môi trường thông qua việc đo giá trị điện trở hoặc điện áp tương ứng trên NTC.
+
+Quan hệ giữa điện trở của NTC và nhiệt độ thường được mô tả gần đúng bằng phương trình tham số \(B\):
+
+\begin{equation}
+R_T = R_0 \exp\left[B\left(\frac{1}{T} - \frac{1}{T_0}\right)\right]
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item \(R_T\) là điện trở của NTC tại nhiệt độ tuyệt đối \(T\), đơn vị \(\Omega\).
+    \item \(R_0\) là điện trở danh định tại nhiệt độ tham chiếu \(T_0\), thường là \(25^\circ C\), đơn vị \(\Omega\).
+    \item \(B\) là hằng số vật liệu của NTC, đặc trưng cho độ nhạy nhiệt của linh kiện.
+    \item \(T\) và \(T_0\) là nhiệt độ tuyệt đối, đơn vị K.
+\end{itemize}
+
+Trong mạch đo thực tế, NTC thường được mắc thành cầu chia áp với một điện trở cố định. Điện áp tại điểm giữa cầu chia thay đổi theo nhiệt độ và được đưa về kênh ADC để vi điều khiển xử lý. Tùy cách mắc kéo lên hoặc kéo xuống, điện áp đo được có thể tăng hoặc giảm khi nhiệt độ tăng. Vì vậy, khi thiết kế phần mềm đọc nhiệt độ, cần xác định đúng cấu hình mạch chia áp để chuyển đổi giá trị ADC sang nhiệt độ tương ứng.
+
+Trong hệ thống thí nghiệm của đề tài, NTC đóng vai trò cảm biến phản hồi cho khối điều khiển nhiệt. Dữ liệu nhiệt độ từ NTC được sử dụng để giám sát trạng thái buồng thí nghiệm, so sánh với nhiệt độ đặt và quyết định mức điều khiển cho các phần tử gia nhiệt hoặc làm mát. Nhờ đó, hệ thống có thể duy trì điều kiện nhiệt ổn định hơn trong quá trình đo quang học, góp phần tăng tính lặp lại và độ tin cậy của dữ liệu thí nghiệm.
 
 \newpage
-
