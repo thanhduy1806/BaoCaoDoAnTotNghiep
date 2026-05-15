@@ -8,10 +8,8 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
-  {\normalfont\fontsize{14pt}{17pt}\selectfont\bfseries\centering}
-  {\MakeUppercase{\chaptertitlename}\ \thechapter}{16pt}
-  {\fontsize{14pt}{17pt}\selectfont\bfseries\MakeUppercase}
-\titlespacing*{\chapter}{0pt}{20pt}{40pt}
+  {\normalfont\LARGE\bfseries\raggedright}{\chaptertitlename\ \thechapter}{16pt}{\LARGE\bfseries\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{50pt}{40pt}
 \usepackage{tikz}
 \usepackage{tabularx}
 \usepackage{float}
@@ -25,7 +23,7 @@
 \usepackage{pdfpages}
 \captionsetup[table]{position=top}
 \captionsetup[figure]{position=bottom}
-\usetikzlibrary{calc,positioning,arrows.meta}
+\usetikzlibrary{calc}
 
 % --- Cấu hình Header/Footer ---
 \pagestyle{fancy}
@@ -48,7 +46,7 @@
 \makeatother
 
 % --- Cấu hình line spacing và paragraph indent ---
-\setstretch{1.3}
+\setstretch{1.5}
 \setlength{\parindent}{2.5em}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
