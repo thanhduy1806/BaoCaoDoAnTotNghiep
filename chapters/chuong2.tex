@@ -227,6 +227,21 @@ Nguyên lý vật lý của HEATER dựa trên hiệu ứng Joule: khi dòng đi
 
 Từ đó, nguyên lý hoạt động của HEATER trong hệ thống điều khiển nhiệt là cấp công suất theo nhu cầu tải nhiệt: tăng công suất khi nhiệt độ đo được thấp hơn giá trị đặt và giảm/ngắt khi tiến gần ngưỡng yêu cầu. Trên thực tế, HEATER thường được điều khiển qua MOSFET bằng PWM hoặc điều khiển on-off theo phản hồi cảm biến nhiệt (ví dụ NTC), nhằm giữ nhiệt độ ổn định, giảm dao động và tối ưu tiêu thụ năng lượng.
 
+\subsection{Cấu tạo và nguyên lý hoạt động của TEC}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{picture/components/TEC.jpg}
+    \caption{Linh kiện TEC}
+    \label{fig:tec_module}
+\end{figure}
+
+TEC (Thermoelectric Cooler), hay module Peltier, là phần tử nhiệt điện có khả năng tạo chênh lệch nhiệt độ giữa hai mặt khi được cấp dòng điện một chiều. Về cấu tạo, TEC thường gồm nhiều cặp bán dẫn loại P và loại N được mắc nối tiếp về điện nhưng song song về nhiệt, đặt xen kẽ giữa hai tấm gốm cách điện. Hai tấm gốm này vừa có nhiệm vụ cố định cơ khí, cách điện, vừa truyền nhiệt giữa module và môi trường bên ngoài.
+
+Nguyên lý vật lý của TEC dựa trên hiệu ứng Peltier: khi dòng điện đi qua mối nối giữa hai vật liệu bán dẫn khác loại, nhiệt lượng sẽ được hấp thụ ở một phía và tỏa ra ở phía còn lại. Vì vậy, một mặt của TEC trở thành mặt lạnh dùng để hấp thụ nhiệt từ buồng thí nghiệm, trong khi mặt kia trở thành mặt nóng và cần được tản nhiệt hiệu quả. Nếu đảo chiều dòng điện cấp vào TEC, chiều truyền nhiệt cũng bị đảo ngược, tức là mặt lạnh và mặt nóng đổi vai trò cho nhau.
+
+Từ đó, nguyên lý hoạt động của TEC trong hệ thống điều khiển nhiệt là bơm nhiệt ra khỏi buồng thí nghiệm khi nhiệt độ đo được cao hơn giá trị đặt. Công suất làm mát của TEC thường được điều khiển thông qua dòng điện cấp, phổ biến là dùng MOSFET hoặc mạch cầu H kết hợp PWM để thay đổi mức công suất và có thể đảo chiều khi cần. Trong thực tế, hiệu quả làm mát của TEC phụ thuộc mạnh vào khả năng tản nhiệt ở mặt nóng; nếu mặt nóng không được giải nhiệt tốt, chênh lệch nhiệt độ giảm và hệ thống khó đạt được nhiệt độ mong muốn.
+
 \subsection{Cấu tạo và nguyên lý hoạt động của NTC}
 \label{subsec:cau-tao-nguyen-ly-ntc}
 
