@@ -593,7 +593,7 @@ Tổng quan chung về các IC RAM được dùng trong thiết kế, bên cạn
     \label{tab:so-sanh-ram}
     \begin{tabularx}{\textwidth}{|X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
     \hline
-    \textbf{} & \textbf{MRAM} & \textbf{PRAM} & \textbf{FRAM} \\
+    \textbf{} & \textbf{MRAM} & \textbf{PSRAM} & \textbf{FRAM} \\
     \hline
     Nguyên lí hoạt động & Sử dụng hiệu ứng từ trở, lưu dữ liệu bằng hướng từ hóa của các lớp từ tính & Thay đổi pha vật liệu chalcogenide giữa trạng thái tinh thể và vô định hình, sử dụng nhiệt để chuyển pha & Sử dụng phân cực điện (polarization) của tinh thể ferroelectric để lưu trữ dữ liệu \\
     \hline
@@ -605,7 +605,7 @@ Tổng quan chung về các IC RAM được dùng trong thiết kế, bên cạn
     \hline
     Mật độ lưu trữ & Thấp hơn flash & Cao, lớn hơn MRAM/FRAM & Thấp nhất trong ba loại \\
     \hline
-    Bay hơi khi mất điện & Không (non-volatile), dữ liệu được giữ nguyên & Không (non-volatile), dữ liệu được giữ nguyên & Không (non-volatile), dữ liệu được giữ nguyên \\
+    Bay hơi khi mất điện & Không (non-volatile)& Có (volatile), dữ liệu được giữ nguyên & Không (non-volatile)\\
     \hline
     \end{tabularx}
 \end{table}
@@ -1660,7 +1660,7 @@ OPA4340 là op-amp CMOS 4 kênh rail-to-rail, được dùng trong mạch này �
 
 Tầng thứ nhất U20A là một bộ biến đổi dòng điện thành điện áp với công thức:
 \begin{equation}
-V_{out} = V_{ref} - (I_{in} \times R_f)
+V_{out} = V_{ref} + (I_{in} \times R_f)
 \end{equation}
 
 Trong mạch thiết kế, R1 = $330k\Omega$ đóng vai trò là điện trở phản hồi, quyết định độ lợi của mạch. Tụ C1 = $470\,\mathrm{pF}$ được mắc song song với R1 để ổn định mạch và giới hạn băng thông. Băng thông tạo ra bởi R1 và C1 được xác định xấp xỉ theo:
