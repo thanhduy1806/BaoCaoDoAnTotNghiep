@@ -909,3 +909,39 @@ Sơ đồ khối của trạng thái HEATING và COOLING:
 Ở trạng thái này, PID tiếp tục tính toán để duy trì nhiệt độ của step hiện tại. Timer chỉ bắt đầu khi nhiệt độ đạt trong khoảng setpoint.
 
 \end{itemize}
+
+
+\section{Giao diện hỗ trợ người dùng}
+\label{sec:GUI}
+
+Thực hiện một giao diện người dùng đơn giản, kết nối với hệ thống qua giao tiếp UART để quá trình phát triển và kiểm thử thí nghiệm có thể dễ dàng thao tác, quan sát và đánh giá. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/gui/main.png}
+    \caption{Giao diện điều khiển và theo dõi}
+    \label{fig:gui-dieu-khien}
+\end{figure}
+
+Giao diện người dùng được chia thành 3 cửa sổ chính theo chiều rộng:
+
+\begin{itemize}
+
+    \item Ở phần cửa sổ trong khung màu vàng, hiển thị các log trong quá trình gửi lệnh và nhận lệnh.
+    \item Phần chính giữa bên trong khung màu hồng bao gồm phần cửa sổ hiển thị quá trình nhiệt độ lý thuyết, công suất điều khiển thay đổi theo PID và giá trị thực tế đọc về từ NTC. Bên dưới, phần temparature graph mô tả sự thay đổi của nhiệt độ nhận từ NTC để trực quan quá trình thay đổi nhiệt độ. 
+    \item Phần bên phải trong khung màu đỏ là giao diện điều khiển cường độ dòng phát quang cho led và chọn vị trí bật led. Ngay bên dưới cửa sổ bật led là màn hình đọc về giá trị từ photo diode. Bên dưới nữa là phần kết nối UART với máy tính và cho phép ở chương trình bootloader hay chương trình ứng dụng.     \item
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{picture/gui/config.png}
+    \caption{Giao diện thiết lập thông số điều khiển nhiệt độ}
+    \label{fig:gui-thiet-lap-nhiet}
+\end{figure}
+
+Trong phần khung màu xanh lá là giao diện thiết lập các kịch bản điều khiển nhiệt độ Bằng việc chọn thông tin profile (Profile ID), chọn ngưỡng nhiệt khi bắt đầu thí nghiệm (Set point), các linh kiện điều khiển HEATER, TEC, và chọn NTC đọc giá trị nhiệt độ. Trong phần Step count là thông tin các step ( bước nhiệt độ) mong muốn đạt được trong quá trình thí nghiệm, trong một khoảng thời gian do người dùng điều chỉnh. Tuỳ theo mục tiêu điều khiển thì có thể vào chế độ tăng nhiệt (HEAT), hạ nhiệt (COOL), ngâm nhiệt (SOAK).
+
+Để gửi thông tin thiết lập kịch bản nhiệt độ thì dùng nút SEND PROFILE, khi thông tin thiết lập được gửi đi, dùng nút AUTO ENA để báo với hệ thống bắt đầu chuẩn bị thực hiện thí nghiệm bằng cách đưa nhiệt độ của buồng thí nghiệm vào trạng thái nhiệt chuẩn bị thực hiện thí nghiệm (chính là giá trị set point được gửi trong profile). Khi nhiệt độ buồng thí nghiệm đạt được ngưỡng bắt đầu, thí nghiệm sẽ lần lượt tiến hành các giai đoạn điều khiển nhiệt (là những giai đoạn thiết lập trong các step). Có thể chủ động thực hiện thí nghiệm bằng cách sử dụng nút AUTO START mà không cần phải chờ hệ thống đến ngưỡng bắt đầu. Nút STOP cho phép dừng thí nghiệm và nút TOGGLE LOG cho phép tạm dừng hiển thị đồ thị cập nhật dữ liệu.
+
+
+\newpage
