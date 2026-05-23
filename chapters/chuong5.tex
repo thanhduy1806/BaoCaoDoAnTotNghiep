@@ -9,41 +9,118 @@ Chương này trình bày các kết quả đạt được sau quá trình thi�
 
 Các kết quả được đánh giá ở mức tích hợp hệ thống, trong đó phần mềm trên máy tính đóng vai trò giám sát và phát lệnh, MPU đảm nhiệm chức năng trung gian điều phối, còn MCU thực hiện các tác vụ điều khiển thời gian thực và tương tác trực tiếp với ngoại vi.
 
-\section{Kết quả tích hợp phần cứng}
-\label{sec:ket-qua-tich-hop-phan-cung}
+\section{Kết quả lắp ráp phần cứng}
+\label{sec:ket-qua-lap-rap-phan-cung}
 
 Sau khi hoàn thành thiết kế các khối chức năng, hệ thống được tích hợp ở mức nguyên mẫu để kiểm tra khả năng kết nối giữa các board và các ngoại vi thí nghiệm. Quá trình tích hợp tập trung vào việc kiểm tra cấp nguồn, kết nối tín hiệu điều khiển, đường truyền UART, các đầu nối mở rộng và khả năng phối hợp giữa board xử lý trung tâm với các board thí nghiệm.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/ket-qua/stack-up-board.jpg}
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/stack-up-board.jpg}
     \caption{Phần cứng thực tế các board chức năng của mô đun thí nghiệm}
     \label{fig:ket-qua-stack-up-board}
 \end{figure}
 
-Hình~\ref{fig:ket-qua-stack-up-board} thể hiện mô hình tích hợp thực tế của hệ thống trong quá trình kiểm thử. Các board được kết nối thông qua cáp tín hiệu và đầu nối mở rộng, trong đó board điều khiển trung tâm đảm nhiệm vai trò điều phối, còn các board ngoại vi phục vụ đo lường và điều khiển thí nghiệm. Việc tích hợp thành công ở mức phần cứng cho phép tiếp tục kiểm thử các chức năng phần mềm như giao tiếp UART, điều khiển laser, đọc dữ liệu cảm biến và cập nhật firmware.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/stack-up-board-coner.jpg}
+    \caption{Phần cứng thực tế các board chức năng của mô đun thí nghiệm góc nhìn xiên}
+    \label{fig:ket-qua-stack-up-coner-board}
+\end{figure}
 
-Kết quả này cho thấy thiết kế cơ khí và bố trí đầu nối đã hỗ trợ được quá trình lắp ráp, tháo rời và kiểm thử từng phần. Đây là yêu cầu quan trọng đối với một mô đun thí nghiệm đa năng, vì hệ thống cần có khả năng thay đổi hoặc bổ sung board chức năng tùy theo cấu hình thí nghiệm.
+Hình~\ref{fig:ket-qua-stack-up-board} và hình~\ref{fig:ket-qua-stack-up-coner-board} là hình ảnh thực tế sau khi lắp ráp các board lại với nhau. Ở đây chúng em chỉ lắp ráp tương đối các phần cứng để thuận tiện cho việc thí nghiệm do không đủ cơ sở vật chất để có thể mô hình hóa chính xác được mô đun payload thực tế. Ở hình~\ref{fig:ket-qua-stack-up-coner-board}, ô vuông màu vàng là phần mô phỏng buồng thí nghiệm để thực hiện kiểm tra khả năng hoạt động của hệ thống. Phần cứng phía trên là board PHOTO để thu năng lượng từ board LASER đặt đối diện phía dưới. Bên dưới phần mica là board EXP điều khiển chính của hệ thống. Bên cạnh buồng thí nghiệm là mô đun IF để giao tiếp với bộ phận vệ tinh như đã trình bày ở trên,
 
-\section{Kết quả xây dựng giao diện giám sát và điều khiển}
-\label{sec:ket-qua-giao-dien}
+\section{Kết quả điều khiển nhiệt độ}
+\label{sec:ket-qua-dieu-khien-nhiet-do}
 
-Giao diện điều khiển trung tâm được xây dựng nhằm hỗ trợ quá trình vận hành, quan sát trạng thái và kiểm thử các chức năng của mô đun cấu hình thí nghiệm. Giao diện cho phép người dùng theo dõi dữ liệu cảm biến, quan sát đáp ứng điều khiển nhiệt độ, cấu hình profile vận hành, điều khiển cụm laser và quản lý kết nối UART với hệ thống phần cứng.
+Thực hiện một số kịch bản điều khiển nhiệt độ để đánh giá sự ổn định của hệ thống.
+
+\subsection{Kiểm tra giới hạn tối đa quá trình gia nhiệt}
+\label{sec:toi-da-nhiet}
+
+Tình huống khi có sự giảm nhiệt trong môi trường không gian, mục tiêu đề ra là hệ thống phải phản ứng kịp thời và hoạt động tối đa. Mô phỏng bằng cách tăng nhiệt từ 30°C đến 35°C trong 50s.
+
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{picture/ket-qua/ui-control.jpg}
-    \caption{Giao diện Mission Control dùng để giám sát và điều khiển hệ thống}
-    \label{fig:ket-qua-ui-control}
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/toi-da-config.png}
+    \caption{Thiết lập thông số kịch bản kiểm tra giới hạn tối đa quá trình tăng nhiệt}
+    \label{fig:thiet-lap-kich-ban-toi-da}
 \end{figure}
 
-Hình~\ref{fig:ket-qua-ui-control} thể hiện giao diện Mission Control sau khi kết nối với hệ thống. Phần bên trái hiển thị dữ liệu nhận được từ UART, bao gồm trạng thái bước điều khiển, giá trị đặt, giá trị đo, sai số và ngõ ra điều khiển. Việc hiển thị liên tục các gói dữ liệu giúp người vận hành kiểm tra được luồng truyền thông giữa máy tính và phần cứng, đồng thời hỗ trợ phát hiện lỗi trong quá trình thử nghiệm.
+Bắt đầu tăng nhiệt độ từ 30°C đến 35°C trong 50s, chỉ là bài kiểm tra tăng nhiệt nên chỉ cần 1 step tăng nhiệt.
 
-Khu vực trung tâm của giao diện hiển thị các thông số chính của bộ điều khiển PID theo thời gian thực. Các giá trị gồm nhiệt độ đặt \textit{Set point}, nhiệt độ đo \textit{Measured}, sai số \textit{Error} và phần trăm ngõ ra \textit{Output}. Trong kết quả thử nghiệm, hệ thống ghi nhận giá trị đặt khoảng 32,00\,$^\circ$C, giá trị đo khoảng 31,59\,$^\circ$C và sai số khoảng 0,41\,$^\circ$C. Sai số này cho thấy bộ điều khiển có khả năng đưa nhiệt độ tiến gần đến giá trị đặt và duy trì trong vùng làm việc mong muốn.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/toi-da-show.png}
+    \caption{Kết quả kiểm tra giới hạn tối đa quá trình tăng nhiệt}
+    \label{fig:ket-qua-kich-ban-toi-da}
+\end{figure}
 
-Đồ thị nhiệt độ trên giao diện cho phép quan sát trực quan đáp ứng của hệ thống theo thời gian. Đường \textit{PV} biểu diễn giá trị nhiệt độ đo được, trong khi đường \textit{Target} biểu diễn nhiệt độ mục tiêu. Khi giá trị đặt thay đổi, nhiệt độ đo có xu hướng bám theo giá trị mục tiêu và ổn định lại sau một khoảng thời gian quá độ. Điều này cho thấy luồng đọc cảm biến, tính toán điều khiển và phản hồi dữ liệu về giao diện đã hoạt động đúng theo thiết kế.
+Hệ thống gia nhiệt (heater) có thể hoạt động ở công suất tối đa 100\% để tốc độ gia nhiệt tối đa, đáp ứng được nhu cầu đặt ra. Tuy vậy trong khoảng thời gian ngắn, nhiệt độ sẽ không thể đáp ứng được mục tiêu đề ra do giới hạn của tốc độ truyền nhiệt trên vật liệu tryền dẫn và khả năng hoạt động của linh kiện. Mục tiêu của bài thí nghiệm là muốn biết nếu hệ thống hoạt động với công suất tối đa thì có thể tăng được khoảng nhiệt bao nhiêu. Từ kết quả thực hiện, chứng tỏ khả năng điều khiển nhiệt độ của hệ thống có thể đáp ứng nhanh và ổn định nhưng vẫn có giới hạn, từ đó người dùng có thể thử nhiều bài thí nghiệm để lựa chọn các khoảng tăng nhiệt và thời gian thích hợp để đạt được hiệu quả tốt nhất.
 
-Bên cạnh chức năng giám sát nhiệt độ, giao diện cũng hỗ trợ cấu hình profile vận hành. Người dùng có thể nhập các tham số như cảm biến NTC chính, cảm biến NTC phụ, mặt nạ TEC, mặt nạ Heater, nhiệt độ đặt, sai số cho phép và số lượng bước trong profile. Các chức năng hiển thị và kiểm tra profile giúp giảm sai sót trước khi gửi cấu hình xuống hệ thống phần cứng.
+\subsection{Thử nghiệm sự ổn định quá trình gia nhiệt}
+
+Kịch bản được đặt ra với mục tiêu đánh giá sự ổn định của hệ thống gia nhiệt khi tăng thời gian nha nhiệt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/on-dinh-config.png}
+    \caption{Thiết lập thông số kịch bản kiểm tra giới hạn tối đa quá trình tăng nhiệt}
+    \label{fig:thiet-lap-kich-ban-on-dinh}
+\end{figure}
+
+Khoảng thay đổi nhiệt 3°C (30°C đến 33°C) trong thời gian 150s.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{picture/ket-qua/on-dinh-show.png}
+    \caption{Kết quả kiểm tra giới hạn tối đa quá trình tăng nhiệt}
+    \label{fig:ket-qua-kich-ban-on-dinh}
+\end{figure}
+
+Kết quả thực hiện:
+\begin{itemize}
+    \item Hệ thống tiệm cận đến ngưỡng mong muốn và quá trình gia nhiệt diễn ra ổn định. 
+    \item Heater hoạt động trong khoảng 43.7\% giúp ổn định dòng tiêu thụ.
+    \item Nhiệt độ tăng dần với độ dốc thấp giúp ổn định nhiệt độ của mẫu thí nghiệm.
+\end{itemize}
+
+Trên thực tế, nhiệt độ có thể không cần phải thay đổi nhanh như kịch bản thí nghiệm ở phần~\ref{sec:toi-da-nhiet}, phần đó chỉ là kiểm tra công suất điều khiển tối đa của hệ thống. Thông thường mẫu thí nghiệm cần sự thay đổi nhiệt ổn định bên cạnh đó cũng để đảm bảo tuổi thọ của linh kiện và hệ thống, hình~\ref{{fig:ket-qua-kich-ban-on-dinh}} thể hiện hệ thống có thể tăng nhiệt độ ổn định và đạt đến ngưỡng xấp xỉ nhiệt độ mong muốn.
+
+Do các yếu tố về vật liệu, linh kiện, quán tính nhiệt của chúng càng lớn khi nhiệt độ chênh lệch càng cao dẫn đến phải có thời gian và khoảng nhiệt hợp lí để hệ thống có thể đáp ứng được nhiệt độ mục tiêu. Qua những kịch bản kiểm tra để lựa chọn khoảng nhiệt và thời gian thích hợp để thực hiện mục tiêu thí nghiệm. 
+
+\subsection{Thử nghiệm quá trình vận hành hoàn chỉnh}
+
+Trong thực tế, hệ thống phải tự động hoạt động tốt ở 3 quá trình: tăng nhiệt, hạ nhiệt và duy trì nhiệt.
+
+Thực hiện một bài kiểm tra khả năng đáp ứng của hệ thống khi xảy ra liên tiếp cả 3 quá trình 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/thi-nghiem-config}
+    \caption{Thiết lập thông số kiểm thử các giai đoạn điều khiển nhiệt độ}
+    \label{fig:thiet-lap-kich-ban-thi-nghiem}
+\end{figure}
+
+Để cấu hình hệ thống hoạt động ở 3 giai đoạn cần cấu hình step count là 3. Mỗi step tương ứng với:
+\begin{itemize}
+    \item Tăng từ 30°C đến 35°C trong thời gian 180s.
+    \item Duy trì mức nhiệt 35°C trong thời gian 180s.
+    \item Giảm từ 35°C đến 29°C trong thời gian 220s.
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{picture/ket-qua/thi-ghiem-show.png}
+    \caption{Kết quả kiểm tra giới hạn tối đa quá trình tăng nhiệt}
+    \label{fig:ket-qua-kich-ban-thi-nghiem}
+\end{figure}
+
+Kết quả cho thấy trong quá trình của từng giai đoạn, nhiệt độ không thể tuyến tính do giải thuật phần mềm và tính chất vật lý phần cứng nhưng kết quả hệ thống vẫn có thể đạt được các mốc nhiệt độ đề ra với thời gian ngắn và công suất điều khiển cũng nằm ở mức trung bình. Những kết quả trên chứng tỏ hệ thống có thể hoạt động tốt khi tự động diễn ra cả ba quá trình.
+
+Sau các kịch bản thí nghiệm được trình bày, cho thấy hệ thống vẫn có những giới hạn hoạt động nhưng những giới hạn đó có thể giải quyết bằng việc chủ động lựa chọn các giá trị ngõ vào phù hợp. Bên cạnh đó hệ thống cũng đã hoạt động đúng, ổn định, đáp ứng được nhu cầu thiết kế.
 
 \section{Kết quả điều khiển cụm laser}
 \label{sec:ket-qua-laser}

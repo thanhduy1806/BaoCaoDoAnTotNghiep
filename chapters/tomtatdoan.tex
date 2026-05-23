@@ -10,11 +10,11 @@
 
 \vspace{1.5em}
 
-Đồ án tập trung nghiên cứu và thiết kế mô đun cấu hình thí nghiệm đa năng cho vệ tinh nhỏ. Mục tiêu chính của đề tài là xây dựng một kiến trúc phần cứng và phần mềm có khả năng điều khiển thí nghiệm, giao tiếp với các board chức năng, thu nhận dữ liệu và hỗ trợ mở rộng cho nhiều cấu hình thí nghiệm khác nhau.
+Đồ án tập trung nghiên cứu và thiết kế mô đun cấu hình thí nghiệm đa năng cho vệ tinh nhỏ. Mục tiêu chính của đề tài là xây dựng một kiến trúc phần cứng và phần mềm có khả năng điều khiển nhiệt độ và ánh sáng phục vụ cho thí nghiệm, giao tiếp với các board chức năng, thu nhận dữ liệu và hỗ trợ mở rộng cho nhiều cấu hình thí nghiệm khác nhau. Hệ thống được đặt trong thành phần payload của vệ tinh, có khả năng kết nối ra các phần cứng bên ngoài của hệ vệ tinh chung.
 
 Hệ thống được tổ chức theo kiến trúc mô đun, trong đó board EXP đóng vai trò điều khiển trung tâm, quản lý trình tự thí nghiệm, xử lý dữ liệu và phối hợp hoạt động giữa các khối ngoại vi. Board IF đóng vai trò giao tiếp mở rộng, hỗ trợ chuẩn hóa kết nối giữa EXP với các thành phần khác trong hệ thống. Cách tổ chức này giúp tách biệt phần điều khiển lõi với phần giao tiếp ngoại vi, từ đó tăng tính linh hoạt khi thay đổi hoặc mở rộng cấu hình thí nghiệm.
 
-Trong phạm vi đồ án, cụm board LASER và PHOTO được sử dụng như một cấu hình thử nghiệm nhằm kiểm chứng khả năng hoạt động của mô đun. Board LASER đảm nhiệm chức năng phát tín hiệu quang, trong khi board PHOTO thu nhận tín hiệu sau khi tương tác với mẫu thí nghiệm và chuyển đổi thành dữ liệu phục vụ xử lý. Thông qua cấu hình này, đồ án đánh giá khả năng điều khiển ngoại vi, thu nhận tín hiệu và truyền dữ liệu của hệ thống.
+Trong phạm vi đồ án, cụm board LASER và PHOTO được sử dụng như một cấu hình thử nghiệm nhằm kiểm chứng khả năng hoạt động của mô đun. Board LASER đảm nhiệm chức năng phát tín hiệu quang, trong khi board PHOTO thu nhận tín hiệu sau khi tương tác với mẫu thí nghiệm và chuyển đổi thành dữ liệu phục vụ xử lý. Bên cạnh đó để đáp ứng môi trường nhiệt độ cho quá trình thí nghiệm, hệ thống dùng các linh kiện HEATER, TEC, NTC và giải thuật PID để tự động điều khiển nhiệt độ theo cái kịch bản đã đặt trước. Thông qua cấu hình này, đồ án đánh giá khả năng điều khiển ngoại vi, thu nhận tín hiệu và truyền dữ liệu của hệ thống.
 
 Kết quả thực hiện của đồ án bao gồm thiết kế phần cứng các board chức năng, xây dựng phần mềm nhúng phục vụ điều khiển và truyền nhận dữ liệu, đồng thời kiểm thử hoạt động của hệ thống theo các kịch bản thí nghiệm. Đề tài hướng đến việc xây dựng một nền tảng cấu hình thí nghiệm có tính mô đun, có khả năng kế thừa và phát triển cho các ứng dụng nghiên cứu trên vệ tinh nhỏ trong tương lai.
 
