@@ -5,7 +5,7 @@
 \chapter{Thiết kế và thực hiện phần cứng}
 \label{ch:thiet_ke_phan_cung}
 
-Chương này trình bày định hướng thiết kế và triển khai phần cứng cho mô đun thí nghiệm đa năng trên vệ tinh nhỏ, bám theo mục tiêu đã nêu ở Chương 1 và cơ sở lý thuyết ở Chương 2. Trọng tâm của chương là chuyển các yêu cầu nhiệm vụ thành các chỉ tiêu kỹ thuật cụ thể để làm cơ sở cho thiết kế sơ đồ khối, lựa chọn linh kiện, thiết kế mạch và kiểm thử.
+Chương này trình bày định hướng thiết kế và triển khai phần cứng cho mô đun thí nghiệm, dựa vào mục tiêu đã nêu ở Chương 1 và cơ sở lý thuyết ở Chương 2. Trọng tâm của chương là chuyển các yêu cầu nhiệm vụ thành các chỉ tiêu kỹ thuật cụ thể để làm cơ sở cho thiết kế sơ đồ khối, lựa chọn linh kiện, thiết kế mạch và kiểm thử.
 
 \section{Phân tích phương pháp thiết kế}
 \label{sec:phan_tich_phuong_phap}
@@ -59,7 +59,7 @@ Từ mục tiêu các khối chức năng thí nghiệm, hệ thống sẽ bao g
 
 \begin{itemize}
     \item \textbf{Board điều khiển thí nghiệm (EXP):}
-    EXP là bộ phận điều khiển chính của toàn bộ hệ thống thí nghiệm. Trên board EXP tích hợp hai core xử lý gồm core MPU (SAMA7G54) và core MCU (SAMV71). Core MCU đảm nhiệm các tác vụ điều khiển, thu thập và tính toán với ngoại vi, đồng thời giữ vai trò chính trong quá trình vận hành thí nghiệm. MCU điều khiển hai board thí nghiệm chính là LASER và PHOTO, theo dõi dữ liệu phát--thu quang, đồng thời thực hiện các tác vụ kiểm soát nhiệt cho buồng thí nghiệm thông qua các module như HEATER và TEC dựa trên dữ liệu cảm biến như NTC, BMP390.
+    EXP là bộ phận điều khiển chính của toàn bộ hệ thống thí nghiệm. Trên board EXP tích hợp hai core xử lý gồm core MPU (SAMA7G54) và core MCU (SAMV71). Core MCU đảm nhiệm các tác vụ điều khiển, thu thập và tính toán với ngoại vi, đồng thời giữ vai trò chính trong quá trình vận hành thí nghiệm. MCU điều khiển hai board thí nghiệm chính là LASER và PHOTO, theo dõi dữ liệu phát--thu quang, đồng thời thực hiện các tác vụ kiểm soát nhiệt cho buồng thí nghiệm thông qua các module như HEATER và TEC dựa trên dữ liệu cảm biến NTC.
 
     Core MCU phù hợp với các tác vụ điều khiển cục bộ và thời gian thực, nhưng không đủ thuận lợi cho các bài toán xử lý dữ liệu lớn hoặc giao tiếp cấp cao. Vì vậy, board EXP sử dụng thêm core MPU như một lớp xử lý mạnh hơn, có nhiệm vụ xử lý dữ liệu, quản lý giao tiếp với người dùng và điều phối hệ thống ở mức cao. Các lệnh điều khiển từ người dùng được gửi đến MPU; sau đó MPU tự xử lý hoặc gửi lệnh xuống MCU nếu lệnh liên quan đến tác vụ thí nghiệm. Khi dữ liệu được MCU thu thập, MPU sẽ xử lý, đóng gói và gửi kết quả về người dùng hoặc các board interface khác.
 
@@ -1131,7 +1131,74 @@ Các linh kiện laser diode là linh kiện bán dẫn được điều khiển
     \item Đáp ứng tần số và độ ổn định của hệ thống: Sơ đồ tham khảo sử dụng mạng bù RC tại ngõ ra của opamp giúp kiểm soát pha phản hồi của tín hiệu ngõ ra với ngõ vào. Cách thiết kế này cho phép người thiết kế tùy chỉnh các giá trị tụ điện và điện trở phản hồi để điều chỉnh lề dự trữ pha (Phase Margin), giúp triệt tiêu hiện tượng tự dao động và ổn định dòng tải.
 \end{itemize}
 
-Tính toán công thức ngưỡng $V_{IN}$ bật FET
+\textbf{Chứng minh công thức dòng $I_{OUT}$ theo $V_{IN}$:}
+
+Điện áp tại nút so sánh của op-amp được tạo bởi cầu chia áp $R_3$--$R_4$ nên được viết trực tiếp là:
+\begin{equation*}
+    V_{CC}\times\frac{R_4}{R_3+R_4}
+\end{equation*}
+
+Dòng ngõ ra đi qua điện trở lấy mẫu được xác định theo điện áp tại source của P-MOSFET:
+\begin{equation*}
+    I_{OUT}=\frac{V_{CC}-V_S}{R_{shunt}}
+\end{equation*}
+
+Áp dụng định luật Kirchhoff dòng điện tại nút so sánh của op-amp:
+\begin{equation*}
+    \frac{V_S - V_{CC}\times\dfrac{R_4}{R_3+R_4}}{R_2}
+    =
+    \frac{V_{CC}\times\dfrac{R_4}{R_3+R_4}-V_{IN}}{R_1}
+\end{equation*}
+
+Suy ra điện áp tại source của P-MOSFET:
+\begin{equation*}
+    V_S=
+    \frac{R_2}{R_1}\times
+    \left(V_{CC}\times\frac{R_4}{R_3+R_4}-V_{IN}\right)
+    +
+    V_{CC}\times\frac{R_4}{R_3+R_4}
+\end{equation*}
+
+Thay biểu thức $V_S$ vào công thức dòng ngõ ra, ta thu được:
+\begin{equation}
+    \boxed{
+    I_{OUT}=
+    \frac{
+    V_{CC}
+    -
+    \dfrac{R_2}{R_1}\times
+    \left(V_{CC}\times\frac{R_4}{R_3+R_4}-V_{IN}\right)
+    -
+    V_{CC}\times\frac{R_4}{R_3+R_4}
+    }{R_{shunt}}
+    }
+\end{equation}
+
+Với mạch đang thiết kế có $R_3=R_4=10\,k\Omega$, thay vào phương trình vừa chứng minh ta được:
+\begin{equation*}
+    V_{CC}\times\frac{R_4}{R_3+R_4}
+    =
+    V_{CC}\times\frac{10\,k\Omega}{10\,k\Omega+10\,k\Omega}
+    =
+    \frac{V_{CC}}{2}
+\end{equation*}
+
+Khi đó, công thức dòng ngõ ra theo điện áp điều khiển $V_{IN}$ của mạch đang thiết kế là:
+\begin{equation}
+    \boxed{
+    I_{OUT}=
+    \frac{
+    V_{CC}
+    -
+    \dfrac{R_2}{R_1}\times
+    \left(\dfrac{V_{CC}}{2}-V_{IN}\right)
+    -
+    \dfrac{V_{CC}}{2}
+    }{R_{shunt}}
+    }
+\end{equation}
+
+\textbf{Tính toán công thức ngưỡng $V_{IN}$ bật FET:}
 \begin{itemize}
     \item Điều kiện tại ngưỡng bật (op-amp lý tưởng):
     \begin{equation*}
@@ -1140,7 +1207,7 @@ Tính toán công thức ngưỡng $V_{IN}$ bật FET
 
     \item Điện áp chân không đảo (cầu chia áp $1\,k\Omega$ -- $1\,k\Omega$):
     \begin{equation*}
-    V_+ = \frac{V^+}{2}
+    V_+ = \frac{V_{CC}}{2}
     \end{equation*}
 
     \item Điện áp chân đảo theo nguyên lý chồng chập:
@@ -1149,23 +1216,23 @@ Tính toán công thức ngưỡng $V_{IN}$ bật FET
     \end{equation*}
     Tại ngưỡng bắt đầu dẫn lấy xấp xỉ:
     \begin{equation*}
-    V_S \approx V^+
+    V_S \approx V_{CC}
     \Rightarrow
-    V_-=\frac{V_{IN}\times R_2+V^+\times R_1}{R_1+R_2}
+    V_-=\frac{V_{IN}\times R_2+V_{CC}\times R_1}{R_1+R_2}
     \end{equation*}
 
-    \item Áp dụng điều kiện ngưỡng $V_-=V_+=\dfrac{V^+}{2}$:
+    \item Áp dụng điều kiện ngưỡng $V_-=V_+=\dfrac{V_{CC}}{2}$:
     \begin{equation*}
-    \frac{V_{IN}\times R_2+V^+\times R_1}{R_1+R_2}=\frac{V^+}{2}
+    \frac{V_{IN}\times R_2+V_{CC}\times R_1}{R_1+R_2}=\frac{V_{CC}}{2}
     \end{equation*}
     \begin{equation*}
-    2\times\left(V_{IN}\times R_2+V^+\times R_1\right)=V^+\times(R_1+R_2)
+    2\times\left(V_{IN}\times R_2+V_{CC}\times R_1\right)=V_{CC}\times(R_1+R_2)
     \end{equation*}
     \begin{equation*}
-    2\times V_{IN}\times R_2=V^+\times(R_2-R_1)
+    2\times V_{IN}\times R_2=V_{CC}\times(R_2-R_1)
     \end{equation*}
     \begin{equation}
-    \boxed{V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)}
+    \boxed{V_{IN,ngưỡng}=\frac{V_{CC}}{2}\left(1-\frac{R_1}{R_2}\right)}
     \end{equation}
 \end{itemize}
 
@@ -1279,7 +1346,7 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
     \label{fig:laser-int-v-i}
 \end{figure}
 
-Đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Trong hình có thể thấy tại ngưỡng ngõ vào khoảng 0.3V thì ngõ ra mới bắt đầu có dòng. Theo công thức (3.14) ở phần tính toán lý thuyết $V_{IN,ngưỡng}=\frac{V^+}{2}\left(1-\frac{R_1}{R_2}\right)$, với $R_1=95k\Omega$, $R_2=100k\Omega$, giá trị $V_{IN,ngưỡng}=0.3$ xấp xỉ với mô phỏng. Sau ngưỡng 0.3V, dòng điện sẽ tăng tuyến tính theo điện áp.
+Đặc tuyến mô tả quá trình tăng dần ngõ vào và theo dõi ngõ ra. Trong hình có thể thấy tại ngưỡng ngõ vào khoảng 0.3V thì ngõ ra mới bắt đầu có dòng. Theo công thức (3.14) ở phần tính toán lý thuyết $V_{IN,ngưỡng}=\frac{V_{CC}}{2}\left(1-\frac{R_1}{R_2}\right)$, với $R_1=95k\Omega$, $R_2=100k\Omega$, giá trị $V_{IN,ngưỡng}=0.3$ xấp xỉ với mô phỏng. Sau ngưỡng 0.3V, dòng điện sẽ tăng tuyến tính theo điện áp.
 
 \begin{figure}[H]
     \centering

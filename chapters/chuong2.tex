@@ -127,10 +127,9 @@ Dựa vào mục tiêu và môi trường thí nghiệm đã được trình bà
 
     \item Đối với chức năng thu quang, yêu cầu là thu thập được tín hiệu ánh sáng và chuyển đổi thành dòng điện cho phần cứng, từ đó sử dụng linh kiện photo diode để đáp ứng được mục tiêu.
 
-    \item Đối với khối điều khiển nhiệt, sử dụng linh kiện heater cho mục tiêu gia nhiệt buồng thí nghiệm. Ngược lại để làm giảm nhiệt độ, sử dụng linh kiện TEC.
+    \item Đối với khối điều khiển nhiệt, sử dụng linh kiện HEATER cho mục tiêu gia nhiệt buồng thí nghiệm. Ngược lại để làm giảm nhiệt độ, sử dụng linh kiện TEC.
 
-    \item Đối với khối giám sát môi trường, yêu cầu thiết kế là hệ thống có thể hoạt động tự động trong môi trường không gian. Vì vậy, những cảm biến môi trường như cảm biến nhiệt độ (NTC), độ ẩm và áp suất được sử dụng trực tiếp tại buồng thí nghiệm. Từ những tín hiệu được phản hồi bởi cảm biến, khối điều khiển sẽ tự động điều khiển các tác nhân nhiệt độ, ánh sáng phù hợp với mục tiêu thí nghiệm.
-
+    \item Để theo dõi nhiệt độ trong buồng thí nghiệm, sử dụng linh kiện NTC.
 \end{itemize}
 
 Lý thuyết về các linh kiện sử dụng được trình bày bên dưới.
@@ -140,7 +139,7 @@ Lý thuyết về các linh kiện sử dụng được trình bày bên dưới
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{picture/components/laser-diode.png}
+    \includegraphics[width=0.6\textwidth]{picture/components/laser-diode.png}
     \caption{Linh kiện laser diode}
     \label{fig:component-laser-diode}
 \end{figure}
@@ -171,14 +170,14 @@ Trong đó:
     \item \(t\) là thời gian phát sáng hoặc thời gian cửa sổ quan sát, đơn vị s. Tham số này cần thiết khi chuyển từ đại lượng công suất sang đại lượng năng lượng.
 \end{itemize}
 
-Hai biểu thức trên cho thấy dòng điện không chuyển trực tiếp thành ``năng lượng ánh sáng'' theo nghĩa tức thời, mà trước hết quyết định công suất quang đầu ra; sau đó năng lượng ánh sáng thu được bằng tích của công suất quang với thời gian phát. Vì vậy, trong thiết kế mạch lái laser, việc ổn định dòng \(I_F\), kiểm soát dòng ngưỡng \(I_{th}\) và giới hạn ảnh hưởng nhiệt độ đến \(\eta_s\) là các yếu tố then chốt để bảo đảm độ lặp lại của tín hiệu quang phát ra.
+Hai biểu thức trên cho thấy dòng điện không chuyển trực tiếp thành năng lượng ánh sáng theo nghĩa tức thời, mà trước hết quyết định công suất quang đầu ra; sau đó năng lượng ánh sáng thu được bằng tích của công suất quang với thời gian phát. Vì vậy, trong thiết kế mạch lái laser, việc ổn định dòng \(I_F\), kiểm soát dòng ngưỡng \(I_{th}\) và giới hạn ảnh hưởng nhiệt độ đến \(\eta_s\) là các yếu tố then chốt để bảo đảm độ lặp lại của tín hiệu quang phát ra.
 
 \subsection{Tổng quan linh kiện Photo Diode}
 \label{subsec:tong-quan-photo-diode}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{picture/components/photo-diode.png}
+    \includegraphics[width=0.6\textwidth]{picture/components/photo-diode.png}
     \caption{Linh kiện photo diode}
     \label{fig:component-photo-diode}
 \end{figure}
