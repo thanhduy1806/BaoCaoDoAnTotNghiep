@@ -8,22 +8,26 @@
 \section{Kết luận}
 \label{sec:ket-luan}
 
-Luận văn đã thực hiện thiết kế và kiểm chứng mô đun cấu hình thí nghiệm đa năng cho vệ tinh nhỏ theo hướng mô đun hóa. Hệ thống được tổ chức thành các khối chức năng rõ ràng, bao gồm khối xử lý trung tâm, khối giao tiếp, khối điều khiển ngoại vi, khối nguồn, khối điều khiển nhiệt độ và các thành phần phục vụ thí nghiệm quang học. Cách tiếp cận này giúp hệ thống có khả năng mở rộng, thuận lợi cho việc thay đổi cấu hình thí nghiệm và kiểm thử từng phần trước khi tích hợp toàn bộ.
+Trong quá trình thực hiện đồ án tốt nghiệp, chúng em đã có cơ hội tiếp cận và tìm hiểu sâu hơn những kiến thức thực tiễn của ngành hệ thống nhúng nói riêng và điện tử viễn thông nói chung. Từ đó chúng em đã học hỏi và tích lũy được những kiến thức, kinh nghiệm quan trọng cho bản thân.
 
-Về phần cứng, luận văn đã phân tích yêu cầu hệ thống và triển khai thiết kế các board chức năng phục vụ mô đun cấu hình thí nghiệm. Các khối nguồn, giao tiếp, lưu trữ, cảm biến, điều khiển laser, điều khiển nhiệt và các đầu nối mở rộng được tổ chức nhằm đáp ứng nhu cầu vận hành của một cấu hình thí nghiệm. Thiết kế phần cứng không chỉ phục vụ một bài toán thử nghiệm cụ thể mà còn tạo nền tảng để tích hợp các ngoại vi khác trong những cấu hình sau.
+\section{Ưu điểm}
+\label{sec:uu-diem}
 
-Về phần mềm, luận văn đã xây dựng kiến trúc điều khiển gồm phần mềm trên máy tính, phần mềm trên MPU và firmware trên MCU. Phần mềm Mission Control hỗ trợ giám sát dữ liệu, cấu hình profile, điều khiển laser, quan sát đáp ứng nhiệt độ và quản lý trạng thái firmware. Firmware trên MCU đảm nhiệm các tác vụ thời gian thực như đọc cảm biến, điều khiển PID, xử lý profile nhiệt độ, điều khiển ngoại vi và phản hồi dữ liệu cho giao diện giám sát.
+Về lý thuyết, nền tảng kiến thức lý thuyết là vô cùng quan trọng. Từ những lý thuyết cốt lõi về phần cứng lẫn phần mềm giúp cho quá trình nghiên cứu và phát triển hệ thống được chính xác, tiết kiệm thời gian phát triển và đảm bảo được sự ổn định khi đưa vào sử dụng thực tế.
 
-Một kết quả quan trọng khác là chức năng Bootloader đã được thiết kế và kiểm chứng. Bootloader cho phép cập nhật firmware cho MCU thông qua MPU bằng giao thức truyền dữ liệu có phản hồi ACK. Kết quả thử nghiệm cho thấy hệ thống có thể kết nối, truyền firmware theo từng gói, kiểm soát quá trình ghi dữ liệu và hỗ trợ chuyển sang ứng dụng chính sau khi cập nhật. Chức năng này có ý nghĩa thực tiễn đối với các hệ thống nhúng cần bảo trì phần mềm sau khi đã tích hợp vào môi trường vận hành.
+Về thiết kế phần cứng, quá trình tham khảo và tìm hiểu thiết kế giúp chúng em có được tư duy thiết kế và đảm bảo yêu cầu ràng buộc của hệ thống. Quá trình thiết kế sơ đồ nguyên lý và layout cho mạch in giúp chúng em hiểu rõ hơn về những nguyên tắc xử lý các dạng tín hiệu trên một mạch điện để chúng hoạt động tốt nhất. Quá trình thực hiện phần mềm trên phần cứng giúp chúng em có tư duy tìm lỗi và gỡ lỗi trên cả phần cứng và phần mềm.
 
-Các kết quả trình bày ở Chương~\ref{ch:ket-qua} cho thấy hệ thống đã đạt được mục tiêu chính của luận văn: xây dựng được một nền tảng cấu hình thí nghiệm có khả năng điều khiển, giám sát, giao tiếp và cập nhật firmware. Giao diện điều khiển đã hỗ trợ quan sát trạng thái hệ thống theo thời gian thực; bộ điều khiển nhiệt độ có khả năng bám theo giá trị đặt; khối điều khiển laser đã được tích hợp vào giao diện vận hành; và Bootloader đã chứng minh được khả năng cập nhật chương trình thông qua MPU.
+Về lập trình Firmware, chúng em đã học được cách tổ chức một hệ thống các lớp firmware hợp lý, giúp tối ưu hiệu năng phần cứng và có khả năng tái sử dụng ở những mục đích khác. Bên cạnh đó chúng em còn học được tư duy tìm lỗi và gỡ lỗi, một trong những yếu tố quan trọng trong ngành hệ thống nhúng.
 
-Nhìn chung, luận văn đã hoàn thành việc thiết kế nền tảng phần cứng và phần mềm cho mô đun thí nghiệm đa năng ở mức nguyên mẫu. Hệ thống đáp ứng được yêu cầu kiểm chứng chức năng, tạo cơ sở cho các bước thử nghiệm định lượng sâu hơn và phát triển thành một mô đun cấu hình thí nghiệm hoàn chỉnh hơn trong tương lai.
+Về lập trình Software, thông qua quá trình thiết kế giao diện người dùng, chúng em được hiểu rõ hơn về nhu cầu của người dùng khi sử dụng hệ thống để từ đó tạo ra một giao diện thân thiện và dễ sử dụng.
 
+Từ những kết quả đạt được sau khi hoàn thành được đề tài, chúng em không những có những kiến thức chuyên môn mà còn có được những tư duy về ngành hệ thống nhúng, từ đó giúp tụi em có định hướng và kế hoạch rõ ràng hơn để phát triển trong tương lai.
 \section{Hạn chế}
 \label{sec:han-che}
 
-Bên cạnh các kết quả đạt được, hệ thống vẫn còn một số hạn chế cần được cải thiện. Thứ nhất, quá trình thử nghiệm hiện tại chủ yếu tập trung vào kiểm chứng chức năng và luồng vận hành, chưa thực hiện đầy đủ các đánh giá định lượng trong thời gian dài. Các thông số như độ ổn định nhiệt, độ lặp lại của đáp ứng điều khiển, sai số giữa các cảm biến và độ tin cậy khi vận hành liên tục cần được đo đạc với nhiều kịch bản hơn.
+Bên cạnh các kết quả đạt được, hệ thống vẫn còn một số hạn chế cần được cải thiện. 
+
+Thứ nhất, quá trình thử nghiệm hiện tại chủ yếu tập trung vào kiểm chứng chức năng và luồng vận hành, chưa thực hiện đầy đủ các đánh giá định lượng trong thời gian dài. Các thông số như độ ổn định nhiệt, độ lặp lại của đáp ứng điều khiển, sai số giữa các cảm biến và độ tin cậy khi vận hành liên tục cần được đo đạc với nhiều kịch bản hơn.
 
 Thứ hai, chức năng điều khiển laser đã được tích hợp vào giao diện và có khả năng thao tác theo kênh, tuy nhiên cần bổ sung thêm các phép đo thực nghiệm để đánh giá độ chính xác công suất, độ đồng đều giữa các kênh và đáp ứng khi chuyển đổi nhanh giữa các trạng thái bật/tắt.
 
@@ -34,22 +38,22 @@ Thứ tư, giao diện Mission Control hiện đã hỗ trợ các chức năng 
 \section{Hướng phát triển}
 \label{sec:huong-phat-trien}
 
-Trong thời gian tới, hệ thống có thể được phát triển theo các hướng sau:
+Trong thời gian tới, chúng em sẽ phát triển và hoàn thiện một số khả năng của hệ thống như:
 
 \begin{itemize}
-    \item \textbf{Đánh giá định lượng hệ thống điều khiển nhiệt:} Thực hiện các bài thử nghiệm dài hạn với nhiều mức nhiệt độ đặt khác nhau để đánh giá độ ổn định, thời gian đáp ứng, độ quá điều chỉnh và sai số xác lập của bộ điều khiển PID.
+    \item Đánh giá định lượng hệ thống điều khiển nhiệt: Thực hiện các bài thử nghiệm dài hạn với nhiều mức nhiệt độ đặt khác nhau để đánh giá độ ổn định, thời gian đáp ứng, độ quá điều chỉnh và sai số xác lập của bộ điều khiển PID.
 
-    \item \textbf{Hoàn thiện kiểm thử cụm laser:} Bổ sung phép đo công suất quang, độ đồng đều giữa các kênh laser và độ ổn định khi vận hành theo profile tự động. Kết quả này giúp đánh giá chính xác hơn khả năng phục vụ các thí nghiệm quang học.
+    \item Hoàn thiện kiểm thử cụm laser: Bổ sung phép đo công suất quang, độ đồng đều giữa các kênh laser và độ ổn định khi vận hành theo profile tự động. Kết quả này giúp đánh giá chính xác hơn khả năng phục vụ các thí nghiệm quang học.
 
-    \item \textbf{Tăng độ tin cậy của Bootloader:} Bổ sung các cơ chế bảo vệ như xác thực firmware, kiểm tra chữ ký số, cơ chế rollback khi cập nhật thất bại và kiểm thử khả năng khôi phục sau lỗi nguồn hoặc lỗi truyền thông.
+    \item Tăng độ tin cậy của Bootloader: Bổ sung các cơ chế bảo vệ như xác thực firmware, kiểm tra chữ ký số, cơ chế rollback khi cập nhật thất bại và kiểm thử khả năng khôi phục sau lỗi nguồn hoặc lỗi truyền thông.
 
-    \item \textbf{Mở rộng giao diện Mission Control:} Phát triển thêm chức năng lưu log tự động, xuất dữ liệu thí nghiệm, hiển thị cảnh báo lỗi, quản lý nhiều profile và hỗ trợ chạy kịch bản kiểm thử tự động.
+    \item Mở rộng giao diện Mission Control: Phát triển thêm chức năng lưu log tự động, xuất dữ liệu thí nghiệm, hiển thị cảnh báo lỗi, quản lý nhiều profile và hỗ trợ chạy kịch bản kiểm thử tự động.
 
-    \item \textbf{Tích hợp thêm cảm biến và ngoại vi thí nghiệm:} Tận dụng kiến trúc mô đun để kết nối thêm các cảm biến hoặc cơ cấu chấp hành khác, từ đó mở rộng phạm vi ứng dụng của payload cho nhiều loại thí nghiệm.
+    \item Tích hợp thêm cảm biến và ngoại vi thí nghiệm: Tận dụng kiến trúc mô đun để kết nối thêm các cảm biến hoặc cơ cấu chấp hành khác, từ đó mở rộng phạm vi ứng dụng của payload cho nhiều loại thí nghiệm.
 
-    \item \textbf{Kiểm thử môi trường và độ bền phần cứng:} Thực hiện các bài kiểm tra rung, nhiệt, chu kỳ nguồn và vận hành liên tục nhằm đánh giá khả năng đáp ứng của hệ thống trong các điều kiện gần với môi trường làm việc thực tế.
+    \item Kiểm thử môi trường và độ bền phần cứng: Thực hiện các bài kiểm tra rung, nhiệt, chu kỳ nguồn và vận hành liên tục nhằm đánh giá khả năng đáp ứng của hệ thống trong các điều kiện gần với môi trường làm việc thực tế.
 
-    \item \textbf{Chuẩn hóa quy trình tích hợp hệ thống:} Xây dựng quy trình kiểm thử từng board, kiểm thử liên board và kiểm thử toàn hệ thống để giảm rủi ro trong các lần tích hợp sau.
+    \item Chuẩn hóa quy trình tích hợp hệ thống: Xây dựng quy trình kiểm thử từng board, kiểm thử liên board và kiểm thử toàn hệ thống để giảm rủi ro trong các lần tích hợp sau.
 \end{itemize}
 
 Các hướng phát triển trên sẽ giúp mô đun cấu hình thí nghiệm tiến gần hơn đến một nền tảng hoàn chỉnh, có thể tái sử dụng cho nhiều nhiệm vụ khác nhau trên vệ tinh nhỏ. Đặc biệt, việc kết hợp giữa kiến trúc phần cứng mô đun, firmware có khả năng cập nhật và giao diện vận hành tập trung sẽ tạo điều kiện thuận lợi cho quá trình mở rộng hệ thống trong các nghiên cứu tiếp theo.
