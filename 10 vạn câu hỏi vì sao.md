@@ -1,3 +1,6 @@
+## 1. Hardware:
+
+
 ## 2. Firmware:
 
 1. Setpoint của nhiệt độ sẽ thay đổi theo thời gian cho đến khi đạt đến giá trị mong muốn chứ không phải là đặt setpoint là target?
@@ -6,7 +9,14 @@
 
 - Nếu chỉ tool thông số PID thì thường giảm Kp(để giảm phản ứng theo sai số hiện tại), giảm Ki(giảm tích lũy lỗi theo thời gian), tăng Kd(tằng phản ứng khi gặp thay đỏi sai số) thì hệ sẽ chậm hơn, lên xuống nhiệt chậm hơn, phản ứng kém hơn.
 
+2. Tại sao phải có 8 profile, và phải đi config cho từng profile, gây khó khan cho người dung mà không set nhiệt độ chung và cả 8 cái tự động điều chỉnh?
 
+- Vì mục tiêu là mỗi profile sẽ phục vụ cho 1 buồng thí nghiệm riêng, còn phạm vi đồ án chỉ demo 1 cái buồng thí nghiệm.
+
+3. Header : 512 byte, tại sao? Vì muốn để Header tron page riêng, SAMV71 xóa bộ nhớ theo page nên nếu ghi vào page đso thì 
+sẽ phair xóa trước khi ghi thì có thể làm mất Header --> nguy hiểm
+
+4. ECC là sử dụng Lightweight Reed-Solomon để sửa lỗi 1 byte. CRC để kiểm tra tinh đúng sai của data rồi mới đưa vào ECC để sửa lỗi nếu có. Nếu ECC sửa lỗi thành công thì sẽ trả về data đã được sửa lỗi, nếu không sửa lỗi được thì sẽ trả về lỗi.
 
 1. Tại sao phải cần board MPU làm trung gian? Còn phải xử lí camera, muốn MPU làm CAN Bus--hỏi kỉ  hơn là node chính hay node trong heej thoongs lowns
 2. Tại sao bootloader không tự động nhảy sau 1 khoảng thời gian sau khi check header?
@@ -18,7 +28,7 @@
 8. Status của BLD là làm gì, nhận gì về vậy? Thử go lệnh bping, bverify từ terminal debug EXP thử được không? Xem thử tại sao chờ timeout nó không tự nhảy đến application?
 9. bsp_photo_start_sampling() nó gọi TC0_CH1 đếm timer trong bao lâu thì mới gọi spi đầu tiên ra?
 10. Nhiệt độ hiển thị ra là gì, 
-11. Tại sao phải có 8 profile, và phải đi config cho từng profile, gây khó khan cho người dung mà không set nhiệt độ chung và cả 8 cái tự động điều chỉnh, hay là hiển thi nhiệt độ 8 NTC nhỉ ( hay chỉ log nhiệt độ 8 NTC khi chạy thôi)
+
 12. Tại sao lại cần board IF?
-13. Tại sao phải lại dung double queue của  PRAM?
+13. Tại sao phải lại dung double queue của PRAM?
 
