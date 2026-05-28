@@ -1127,7 +1127,7 @@ Các linh kiện laser diode là linh kiện bán dẫn được điều khiển
 \begin{itemize}
     \item Tùy chỉnh các giá trị tùy ý theo thiết kế: thông qua việc thay đổi các giá trị điện trở trong mạng phản hồi và điện trở lấy mẫu ($R_{sense}$), người thiết kế có thể thiết lập tỷ lệ giữa điện áp điều khiển ($V_{IN}$) và dòng điện ngõ ra ($I_{OUT}$). Điều này cho phép mạch tương thích với nhiều dải tín hiệu từ các bộ DAC khác nhau của vi điều khiển. Bên cạnh đó có thể tùy chỉnh cặp điện trở trên đường feedback và ngõ vào để chọn mức điện áp bật ngõ ra mong muốn.
     \item Khả năng thích ứng với tải: các giá trị điện trở và tụ điện trong mạch bù có thể được tính toán lại để tối ưu hóa thời gian xác lập (settling time) và độ quá chỉnh (overshoot), tùy thuộc vào đặc tính điện cảm hoặc điện dung của tải thực tế trên board mạch.
-    \item Cấu trúc high-side với MOSFET kênh P: so với các cấu trúc nguồn dòng kiểu low-side hoặc nguồn dòng dùng transistor lưỡng cực (BJT), thiết kế này sở hữu các ưu điểm kỹ thuật nổi bật. Tối ưu hóa quản lý ground, việc đặt MOSFET ở phía nguồn (high-side) cho phép tải được nối trực tiếp xuống ground. Đây là yếu tố quan trọng trong thiết kế hệ thống vệ tinh, giúp giảm nhiễu điện từ (EMI), đơn giản hóa việc đi dây (routing) và hỗ trợ tản nhiệt trực tiếp cho linh kiện tải qua mặt phẳng ground của PCB. Điều khiển bằng điện áp với trở kháng cao, MOSFET là linh kiện điều khiển bằng điện áp, do đó dòng điện tiêu thụ tại cực G là rất nhỏ. Điều này giúp Op-amp hoạt động ổn định hơn, không bị quá tải dòng điện ngõ ra và giảm thiểu sai số do dòng phân cực gây ra so với khi dùng BJT.
+    \item Cấu trúc high-side với MOSFET kênh P: so với các cấu trúc nguồn dòng kiểu low-side hoặc nguồn dòng dùng transistor lưỡng cực (BJT), thiết kế này sở hữu các ưu điểm kỹ thuật nổi bật. Tối ưu hóa quản lý ground, việc đặt MOSFET ở phía nguồn (high-side) cho phép tải được nối trực tiếp xuống ground.
     \item Đáp ứng tần số và độ ổn định của hệ thống: Sơ đồ tham khảo sử dụng mạng bù RC tại ngõ ra của opamp giúp kiểm soát pha phản hồi của tín hiệu ngõ ra với ngõ vào. Cách thiết kế này cho phép người thiết kế tùy chỉnh các giá trị tụ điện và điện trở phản hồi để điều chỉnh lề dự trữ pha (Phase Margin), giúp triệt tiêu hiện tượng tự dao động và ổn định dòng tải.
 \end{itemize}
 
@@ -1185,6 +1185,7 @@ Với mạch đang thiết kế có $R_3=R_4=10\,k\Omega$, thay vào phương tr
 
 Khi đó, công thức dòng ngõ ra theo điện áp điều khiển $V_{IN}$ của mạch đang thiết kế là:
 \begin{equation}
+    \label{eq:iout}
     \boxed{
     I_{OUT}=
     \frac{
@@ -1276,16 +1277,88 @@ V_{REF} = \frac{V_{IN(max)} + V_{S(min)}}{2}
     \item $V_{REF}$ quá thấp: opamp dễ rơi vào trạng thái bão hòa âm, điện áp ngõ ra tiến gần về $0\,V$, P-MOSFET mở mạnh làm dòng điện tăng cao ngoài kiểm soát, gây nguy cơ hỏng laser diode hoặc linh kiện công suất.
 \end{itemize}
 
-Vai trò của tụ điện hồi tiếp ở ngõ ra: Tụ điện phản hồi $C$ đặt song song với trở phản hồi tạo nên một vòng lặp phụ hoạt động dựa trên sự phân tách tần số tín hiệu:
+\textbf{Vai trò của tụ điện hồi tiếp ở ngõ ra:} Trong mạch này, tụ bù $C_1$ được mắc từ ngõ ra opamp về nút hồi tiếp $V_-$. Ở chế độ DC, tụ điện xem như hở mạch nên không làm thay đổi điểm làm việc tĩnh. Ở miền tần số cao, tụ tạo thêm đường hồi tiếp AC để giới hạn băng thông vòng lặp và bù pha.
 
-\begin{itemize}
-    \item Tách biệt đáp ứng AC và DC: Ở tần số thấp (DC), tụ điện có trở kháng vô cùng lớn, vòng phản hồi được quyết định bởi mạng điện trở. Ở tần số cao (nhiễu, vọt lố), trở kháng tụ giảm mạnh, tạo thành một đường tắt (Low-impedance path) dẫn trực tiếp biến động từ ngõ ra về chân đảo (-).
-    \item Triệt tiêu tức thời: Cơ chế này cho phép Op-amp nhận diện các xung nhọn (Spikes) tại ngõ ra ngay lập tức mà không phải đợi thông tin truyền qua các linh kiện có quán tính lớn như MOSFET. Phản ứng bù trừ của Op-amp diễn ra đồng thời với sự phát sinh nhiễu, giúp triệt tiêu dao động từ giai đoạn khởi tạo.
-    \item Quá trình nạp xả năng lượng của tụ điện ngăn cản sự thay đổi đột ngột điện áp tại ngõ ra Op-amp. Chính nhờ việc nhận tin nhanh, Op-amp có thể chủ động thực hiện điều chỉnh mượt mà. Hệ quả là đáp ứng bước (Step response) của hệ thống chuyển từ trạng thái vọt lố, dao động (Underdamped) sang trạng thái ổn định, không vọt lố (Overdamped/Critically damped).
-    \item Các dao động tự kích thực chất là tổng hợp của các thành phần sóng sin tần số cao. Việc thiết lập tần số cắt $f_c = 1 / (2\pi RC)$ tạo ra một bộ lọc thông thấp (Low-pass filter) tích cực. Bằng cách chọn giá trị $C$ sao cho $f_c$ thấp hơn tần số dao động ký sinh của mạch, các thành phần Fourier gây nhiễu bị suy giảm biên độ mạnh trước khi quay lại ngõ vào đảo. Điều này đảm bảo Op-amp chỉ xử lý các lệnh điều khiển hữu dụng và bỏ qua các thành phần nhiễu cao tần.
-    \item Tụ điện được tính toán để ép độ lợi vòng lặp (Loop Gain) xuống dưới mức đơn vị ($0\text{dB}$) trước khi độ trễ pha chạm ngưỡng $180^\circ$. Khi độ lợi nhỏ hơn 1 tại tần số nhạy cảm, mọi dao động không thể tự duy trì và bị triệt tiêu, đảm bảo hệ thống luôn hội tụ về giá trị xác lập DC.
+    Cơ sở gây mất ổn định do điện dung ký sinh:
+    Trong mạch nguồn dòng điều khiển tuyến tính lái MOSFET, sự kết hợp giữa trở kháng ngõ ra nội tại của Op-amp ($R_o$), điện trở cực cổng ($R_5$) và điện dung ký sinh cực cổng ($C_{gs}$) tạo nên một điểm cực ký sinh dải cao tần tại ngõ ra Op-amp. Công thức xác định điểm cực ký sinh nguy hiểm này được tính bằng:
+    \begin{equation*}
+    f_{p\_\mathrm{gate}} = \frac{1}{2\pi \times (R_o + R_5) \times C_{gs}}
+    \end{equation*}
+    Thế các thông số linh kiện thực tế bao gồm $R_o = 375\,\Omega$, $R_5 = 140\,\Omega$, và $C_{gs} = 27.2\,\mathrm{pF}$, tần số điểm cực ký sinh được xác định tại:
+    \begin{equation*}
+    f_{p\_\mathrm{gate}} = \frac{1}{2\pi \times (375\,\Omega + 140\,\Omega) \times (27.2 \times 10^{-12}\,\mathrm{F})} \approx 11.36\,\mathrm{MHz}
+    \end{equation*}
+    Do Op-amp tích hợp trong mạch có băng thông độ lợi ($GBW$) bằng $10\,\mathrm{MHz}$, điểm cực ký sinh $f_{p\_\mathrm{gate}} \approx 11.36\,\mathrm{MHz}$ xuất hiện quá sát mốc tần số cắt đơn vị. Hệ quả là khi chưa có mạch bù, pha của vòng lặp bị xoay nhanh về hướng $-180^\circ$ trong khi độ lợi vòng lặp chưa kịp giảm về dưới $0\,\mathrm{dB}$ ($1$ lần). Trạng thái này thỏa mãn tiêu chuẩn Barkhausen, làm triệt tiêu dự trữ pha (Phase Margin) và khiến hệ thống rơi vào trạng thái mất ổn định, gây hiện tượng tự kích dao động dải cao hoặc quá độ hiện sóng vọt lố nghiêm trọng. Điều kiện tự dao động được viết dưới dạng:
+    \begin{equation*}
+    |A(j\omega)\beta(j\omega)| \geq 1,\qquad \angle A(j\omega)\beta(j\omega) \approx -180^\circ
+    \end{equation*}
+    Trong đó $A(j\omega)$ là độ lợi của opamp kèm tầng MOSFET và $\beta(j\omega)$ là hệ số hồi tiếp.
 
-\end{itemize}
+    Cơ chế hoạt động của mạch bù và giải trình lựa chọn giá trị thực tế $C_1 = 2200\,\mathrm{pF}$:
+    Để triệt tiêu hoàn toàn nguy cơ tự kích dao động, mạng hồi tiếp AC địa phương bao gồm điện trở $R_2$ và tụ điện $C_1$ được cấu hình để chủ động can thiệp vào đáp ứng tần số của hệ thống. Trở kháng tương đương nhìn từ nút hồi tiếp âm (chân số 6) của Op-amp được xác định bởi mạch song song giữa $R_1$ và $R_2$:
+    \begin{equation*}
+    R_{eq} = R_1 \parallel R_2 = \frac{R_1 R_2}{R_1 + R_2}
+    \end{equation*}
+    Khi cấu hình giá trị tụ thực tế $C_1 = 2200\,\mathrm{pF}$ theo sơ đồ nguyên lý, hằng số thời gian nạp xả của cụm linh kiện bù tạo ra một điểm bẻ tần số (tần số bù xấp xỉ) tại mốc:
+    \begin{equation*}
+    f_{\mathrm{comp}} \approx \frac{1}{2\pi \times R_{eq} \times C_1}
+    \end{equation*}
+    Với thiết kế đang xét, $R_1=94\,k\Omega$ và $R_2=100\,k\Omega$, nên:
+    \begin{equation*}
+    R_{eq} = 94\,k\Omega \parallel 100\,k\Omega \approx 48.45\,k\Omega
+    \end{equation*}
+    Tần số bù xấp xỉ của hệ thống được xác định tại:
+    \begin{equation*}
+    f_{\mathrm{comp}} \approx \frac{1}{2\pi \times 48.45\,k\Omega \times 2200\,\mathrm{pF}} \approx 1.49\,\mathrm{kHz}
+    \end{equation*}
+      
+
+Thay vì để độ lợi vòng lặp duy trì ở mức cao và chờ đến tận vùng dải tần số cao sát $10\,\mathrm{MHz}$ mới suy giảm theo đặc tính tự nhiên của Op-amp, việc sử dụng tụ $C_1$ đã chủ động ép biên độ độ lợi vòng lặp phải sụt giảm rất sớm ngay từ mốc $1.49\,\mathrm{kHz}$. Ở dải tần cao, tụ $C_1$ ngắn mạch AC, biến Op-amp thành mạch đệm điện áp (Voltage Follower). Nhờ đó, độ lợi toàn vòng lặp được kéo giảm xuống dưới $0\text{ dB}$ từ rất sớm, giúp mạch an toàn tuyệt đối trước khi tín hiệu kịp tiếp cận hay kích động điểm cực nguy hiểm $11.36\text{ MHz}$ của MOSFET.
+
+
+% \begin{itemize}
+%     \item Cơ sở gây mất ổn định do điện dung ký sinh: khi có tải điện dung, điện dung tải hoặc điện dung ký sinh $C_L$ tại ngõ ra opamp kết hợp với điện trở ngõ ra $R_O$ tạo thêm một cực:
+%     \begin{equation*}
+%     f_{p,L}=\frac{1}{2\pi R_O C_L}
+%     \end{equation*}
+%     Cực này làm pha trong vòng lặp trễ thêm. Với mạch nguồn dòng, $C_L$ không chỉ là một tụ rời mà còn gồm điện dung cổng MOSFET, điện dung ngõ vào opamp và điện dung ký sinh trên đường mạch. Khi pha vòng lặp tiến gần $-180^\circ$ trong vùng độ lợi vòng lặp còn lớn, tín hiệu hồi tiếp âm có thể trở thành tương đương phản hồi dương. Điều kiện tự dao động có thể viết dưới dạng:
+%     \begin{equation*}
+%     |A(j\omega)\beta(j\omega)| \geq 1,\qquad \angle A(j\omega)\beta(j\omega) \approx -180^\circ
+%     \end{equation*}
+%     Trong đó $A(j\omega)$ là độ lợi của opamp kèm tầng MOSFET và $\beta(j\omega)$ là hệ số hồi tiếp.
+
+%     \item Cách chọn ban đầu cho mạch nguồn dòng: Để chọn giá trị ban đầu của $C_1$, có thể đặt các nguồn tín hiệu về mass trong phân tích AC và tính điện trở tương đương nhìn từ nút hồi tiếp:
+%     \begin{equation*}
+%     R_{eq}=R_1\parallel R_2=\frac{R_1R_2}{R_1+R_2}
+%     \end{equation*}
+%     Tụ $C_1$ tạo tần số bù xấp xỉ:
+%     \begin{equation*}
+%     f_{\mathrm{comp}}\approx\frac{1}{2\pi R_{eq}C_1}
+%     \end{equation*}
+%     Suy ra giá trị tụ bù ban đầu:
+%     \begin{equation*}
+%     C_1\approx\frac{1}{2\pi R_{eq}f_{\mathrm{comp}}}
+%     \end{equation*}
+%     Nếu mô phỏng mạch không có tụ cho thấy dao động, giá trị $f_{\mathrm{comp}}$ được chọn theo hướng bảo đảm dự trữ pha, sau đó hiệu chỉnh lại bằng mô phỏng transient hoặc phân tích AC vòng lặp.
+
+%     Với thiết kế đang xét, $R_1=95\,k\Omega$ và $R_2=100\,k\Omega$, nên:
+%     \begin{equation*}
+%     R_{eq}=95\,k\Omega\parallel100\,k\Omega\approx48.7\,k\Omega
+%     \end{equation*}
+%     Nếu chọn $C_1=2200\,\mathrm{pF}$ theo sơ đồ nguyên lý, tần số bù xấp xỉ:
+%     \begin{equation*}
+%     f_{\mathrm{comp}}\approx\frac{1}{2\pi\times48.7\,k\Omega\times2200\,\mathrm{pF}}\approx1.49\,kHz
+%     \end{equation*}
+%     Giá trị này dùng để giảm đáp ứng vòng lặp tại vùng cao tần và tăng dự trữ pha. Do tầng MOSFET có điện dung cổng thay đổi theo điểm làm việc, giá trị $C_1$ cuối cùng cần được xác nhận bằng mô phỏng transient hoặc phân tích AC vòng lặp.
+
+% \end{itemize}
+
+% // Các item cũ được giữ lại để tham khảo:
+% // \item Tách biệt đáp ứng AC và DC: Ở tần số thấp (DC), tụ điện có trở kháng vô cùng lớn, vòng phản hồi được quyết định bởi mạng điện trở. Ở tần số cao (nhiễu, vọt lố), trở kháng tụ giảm mạnh, tạo thành một đường tắt (Low-impedance path) dẫn trực tiếp biến động từ ngõ ra về chân đảo (-).
+% // \item Triệt tiêu tức thời: Cơ chế này cho phép Op-amp nhận diện các xung nhọn (Spikes) tại ngõ ra ngay lập tức mà không phải đợi thông tin truyền qua các linh kiện có quán tính lớn như MOSFET. Phản ứng bù trừ của Op-amp diễn ra đồng thời với sự phát sinh nhiễu, giúp triệt tiêu dao động từ giai đoạn khởi tạo.
+% // \item Quá trình nạp xả năng lượng của tụ điện ngăn cản sự thay đổi đột ngột điện áp tại ngõ ra Op-amp. Chính nhờ việc nhận tin nhanh, Op-amp có thể chủ động thực hiện điều chỉnh mượt mà. Hệ quả là đáp ứng bước (Step response) của hệ thống chuyển từ trạng thái vọt lố, dao động (Underdamped) sang trạng thái ổn định, không vọt lố (Overdamped/Critically damped).
+% // \item Các dao động tự kích thực chất là tổng hợp của các thành phần sóng sin tần số cao. Việc thiết lập tần số cắt $f_c = 1 / (2\pi RC)$ tạo ra một bộ lọc thông thấp (Low-pass filter) tích cực. Bằng cách chọn giá trị $C$ sao cho $f_c$ thấp hơn tần số dao động ký sinh của mạch, các thành phần Fourier gây nhiễu bị suy giảm biên độ mạnh trước khi quay lại ngõ vào đảo. Điều này đảm bảo Op-amp chỉ xử lý các lệnh điều khiển hữu dụng và bỏ qua các thành phần nhiễu cao tần.
+% // \item Tụ điện được tính toán để ép độ lợi vòng lặp (Loop Gain) xuống dưới mức đơn vị ($0\text{dB}$) trước khi độ trễ pha chạm ngưỡng $180^\circ$. Khi độ lợi nhỏ hơn 1 tại tần số nhạy cảm, mọi dao động không thể tự duy trì và bị triệt tiêu, đảm bảo hệ thống luôn hội tụ về giá trị xác lập DC.
 
 
 \begin{figure}[H]
@@ -1295,7 +1368,7 @@ Vai trò của tụ điện hồi tiếp ở ngõ ra: Tụ điện phản hồi 
     \label{fig:laser-no-cap-out}
 \end{figure}
 
-Trong hình thể hiện sự dao động ngõ ra khi không có tụ hồi tiếp, cho thấy dòng ngay tại thời điểm bật sẽ chưa ổn định và dao động trong vài chu kỳ do ngõ ra opamp dao động. Trong thiết kế do tần số mạch hoạt động thấp và độ lợi hồi tiếp nhỏ nên giúp tín hiệu dao động tắt dần trong vài chu kỳ. Trong trường hợp xấu nhất thì tín hiệu này có thể không tắt mà còn gây ra dao động và tự biến thành một nguồn dao động.
+Trong hình thể hiện sự dao động ngõ ra khi không có tụ hồi tiếp, cho thấy dòng ngay tại thời điểm bật sẽ chưa ổn định và dao động trong vài chu kỳ do ngõ ra opamp dao động. Trong thiết kế do tần số mạch hoạt động thấp và độ lợi hồi tiếp nhỏ nên giúp tín hiệu dao động tắt dần trong vài chu kỳ. Trong trường hợp xấu nhất thì tín hiệu này có thể không tắt mà còn gây ra dao động và tự biến thành một nguồn dao động. Hình \ref{fig:laser-current-int-transient} mô phỏng khi có tụ hồi tiếp.
 
 \subsubsection{Mô phỏng nguyên lý mạch nguồn dòng}
 \label{subsec:simulate-current-source}
@@ -1304,22 +1377,16 @@ Sử dụng phần mềm TINA-TI để mô phỏng nguồn dòng trong thiết k
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/simulate-current-int.JPG}
+    \includegraphics[width=0.9\textwidth]{picture/laser/simulate-current-int.png}
     \caption{Sơ đồ mô phỏng nguồn dòng cho internal laser}
     \label{fig:laser-simulate-current-int}
 \end{figure}
 
 Mạch mô phỏng bao gồm hai tầng opamp. Tầng đầu tiên là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào và bảo đảm tách rời khỏi tầng opamp thứ hai. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
 
-Dựa vào công thức tính nguồn dòng:
+Dựa vào công thức \ref{eq:iout}, ở đây cần thiết kế một nguồn dòng tối đa khoảng 11.2\,mA khi điện áp tối đa ngõ vào là 3.3V, do đó chọn giá trị điện trở shunt; trong thiết kế $R_{shunt} = 280\,\Omega$.
 
-\begin{equation}
-I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
-\end{equation}
-
-Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 12\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $R_{shunt} = 280\,\Omega$.
-
-Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2.2V, với dòng thiết kế 12\,mA nên giả sử trong mạch mô phỏng thay OPV302 bằng điện trở có giá trị nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser OPV302 khi có dòng chạy qua.
+Do sụt áp trên laser internal OPV302 theo datasheet là tối đa khoảng 2.2V, với dòng thiết kế 11.2\,mA nên giả sử trong mạch mô phỏng thay OPV302 bằng điện trở có giá trị khoảng  $370\,\Omega$ nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser OPV302 khi có dòng chạy qua.
 
 \begin{figure}[H]
     \centering
@@ -1350,7 +1417,7 @@ Sử dụng tính năng DC Analysis Table để đo các mức điện áp tại
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/current-int-transient.jpg}
+    \includegraphics[width=0.9\textwidth]{picture/laser/current-int-transient.png}
     \caption{Mô phỏng trạng thái mạch internal ở thời điểm cấp nguồn}
     \label{fig:laser-current-int-transient}
 \end{figure}
@@ -1359,22 +1426,16 @@ Sử dụng chức năng transient để mô phỏng thời gian quá độ củ
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/simulate-current-ext.JPG}
+    \includegraphics[width=0.9\textwidth]{picture/laser/simulate-current-ext.png}
     \caption{Sơ đồ mô phỏng nguồn dòng cho external laser}
     \label{fig:laser-simulate-current-ext}
 \end{figure}
 
 Tương tự như mạch mô phỏng ở sơ đồ mạch laser internal, mạch laser external cũng bao gồm hai tầng opamp. Tầng đầu tiên vẫn là tầng mạch đệm có thêm bộ lọc để triệt nhiễu ngõ vào. Tầng thứ hai là tầng chính để thực hiện mạch chuyển đổi điện áp sang dòng điện (V-I converter). Tín hiệu ngõ vào có dải điện áp từ 0 đến 3.3V.
 
-Dựa vào công thức tính nguồn dòng:
+Dựa vào công thức \ref{eq:iout}, ở đây cần thiết kế một nguồn dòng tối đa khoảng 38\,mA khi điện áp tối đa ngõ vào là 3.3V, do đó chọn giá trị điện trở shunt trong thiết kế là $R_{shunt} = 75\,\Omega$, giá trị này cũng phù hợp do có thể phối hợp từ những điện trở shunt có giá trị theo tiêu chuẩn.
 
-\begin{equation}
-I_{source} = \frac{V_{cc} - V_{s}}{R_{5}}
-\end{equation}
-
-Ở đây khi mô phỏng và tính toán, dòng mong muốn khoảng 38\,mA, do đó chọn giá trị điện trở shunt; trong thiết kế $R_{shunt} = 85.8\,\Omega$.
-
-Do sụt áp trên laser external RLD65NZX1 trong quá trình hoạt động theo datasheet là tối đa khoảng $2.8\,V$, với dòng thiết kế $38\,mA$ nên trong mạch mô phỏng thay RLD65NZX1 bằng điện trở có giá trị khoảng $70\,\Omega$, nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser RLD65NZX1 khi có dòng chạy qua.
+Do sụt áp trên laser external RLD65NZX1 trong quá trình hoạt động theo datasheet là tối đa khoảng $2.8\,V$, với dòng thiết kế $38\,mA$ nên trong mạch mô phỏng thay RLD65NZX1 bằng điện trở có giá trị khoảng $64\,\Omega$, nhỏ hơn ngưỡng compliance voltage và cũng thỏa điều kiện rơi áp trên laser RLD65NZX1 khi có dòng chạy qua.
 
 \begin{figure}[H]
     \centering
@@ -1405,7 +1466,7 @@ Tương tự như ở nguồn internal, nguồn external cũng mô phỏng đặ
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{picture/laser/current-ext-transient.jpg}
+    \includegraphics[width=0.9\textwidth]{picture/laser/current-ext-transient.png}
     \caption{Mô phỏng trạng thái mạch external ở thời điểm cấp nguồn}
     \label{fig:laser-current-ext-transient}
 \end{figure}
